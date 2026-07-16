@@ -1,0 +1,215 @@
+<?php
+
+namespace App\Filament\Pages;
+
+use BackedEnum;
+use Filament\Pages\Page;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Storage;
+use UnitEnum;
+use Throwable;
+
+class SystemHealthCheck extends Page
+{
+
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-shield-check';
+
+
+
+    protected static string | UnitEnum | null $navigationGroup = 'Settings';
+
+    protected static ?int $navigationSort = 5;
+
+    protected static ?string $navigationLabel = 'System Health';
+
+    protected string $view = 'filament.pages.system-health-check';
+
+    public static function canAccess(): bool
+    {
+        return auth()->user()?->hasPermission('settings.manage') ?? false;
+    }
+
+    public function getChecks(): array
+    {
+        return [
+            'Database' => $this->databaseChecks(),
+            'Storage' => $this->storageChecks(),
+            'Google Drive Backup' => $this->googleDriveChecks(),
+            'Routes' => $this->routeChecks(),
+            'Core Tables' => $this->tableChecks(),
+        ];
+    }
+
+    private function databaseChecks(): array
+    {
+        try {
+            DB::connection()->getPdo();
+
+            return [
+                [
+                    'name' => 'Database Connection',
+                    'status' => true,
+                    'message' => 'Database connection working.',
+                ],
+                [
+                    'name' => 'Database Name',
+                    'status' => true,
+                    'message' => config('database.connections.mysql.database') ?: '-',
+                ],
+            ];
+        } catch (Throwable $exception) {
+            return [
+                [
+                    'name' => 'Database Connection',
+                    'status' => false,
+                    'message' => $exception->getMessage(),
+                ],
+            ];
+        }
+    }
+
+    private function storageChecks(): array
+    {
+        $publicStoragePath = public_path('storage');
+        $backupDirectoryExists = Storage::disk('local')->exists('backups');
+        $customerDocumentsDirectoryExists = Storage::disk('public')->exists('customer-documents');
+
+        return [
+            [
+                'name' => 'Public Storage Link',
+                'status' => file_exists($publicStoragePath),
+                'message' => file_exists($publicStoragePath)
+                    ? 'public/storage link exists.'
+                    : 'public/storage link missing. Run: php artisan storage:link',
+            ],
+            [
+                'name' => 'Backup Directory',
+                'status' => $backupDirectoryExists,
+                'message' => $backupDirectoryExists
+                    ? 'storage/app/backups available.'
+                    : 'Backup directory missing. Create one backup to generate it.',
+            ],
+            [
+                'name' => 'Customer Documents Directory',
+                'status' => $customerDocumentsDirectoryExists,
+                'message' => $customerDocumentsDirectoryExists
+                    ? 'customer-documents directory available.'
+                    : 'Directory will be created after first document upload.',
+            ],
+        ];
+    }
+
+    private function googleDriveChecks(): array
+    {
+        $enabled = filter_var(env('GOOGLE_DRIVE_BACKUP_ENABLED', false), FILTER_VALIDATE_BOOLEAN);
+        $clientJson = base_path(env('GOOGLE_DRIVE_OAUTH_CLIENT_JSON', 'storage/app/google-drive/oauth-client.json'));
+        $tokenJson = base_path(env('GOOGLE_DRIVE_OAUTH_TOKEN_JSON', 'storage/app/google-drive/oauth-token.json'));
+        $folderId = env('GOOGLE_DRIVE_FOLDER_ID');
+
+        return [
+            [
+                'name' => 'Google Drive Backup Enabled',
+                'status' => $enabled,
+                'message' => $enabled ? 'Enabled' : 'Disabled',
+            ],
+            [
+                'name' => 'OAuth Client JSON',
+                'status' => file_exists($clientJson),
+                'message' => file_exists($clientJson)
+                    ? 'OAuth client file found.'
+                    : 'OAuth client file missing.',
+            ],
+            [
+                'name' => 'OAuth Token JSON',
+                'status' => file_exists($tokenJson),
+                'message' => file_exists($tokenJson)
+                    ? 'Google Drive connected.'
+                    : 'Google Drive not connected. Open /google-drive/oauth/redirect',
+            ],
+            [
+                'name' => 'Google Drive Folder ID',
+                'status' => filled($folderId),
+                'message' => filled($folderId)
+                    ? $folderId
+                    : 'Folder ID blank. Backup will upload to My Drive root if code allows blank folder.',
+            ],
+        ];
+    }
+
+    private function routeChecks(): array
+    {
+        $routes = [
+            'invoices.print' => 'Invoice Print',
+            'payment-receipts.print' => 'Payment Receipt Print',
+            'refunds.print' => 'Refund Print',
+            'reports.export' => 'Reports Export',
+            'database-backups.download' => 'Database Backup Download',
+            'customer-documents.download' => 'Customer Documents Download',
+            'google-drive.oauth.redirect' => 'Google Drive OAuth Redirect',
+            'google-drive.oauth.callback' => 'Google Drive OAuth Callback',
+        ];
+
+        $checks = [];
+
+        foreach ($routes as $routeName => $label) {
+            $checks[] = [
+                'name' => $label,
+                'status' => Route::has($routeName),
+                'message' => Route::has($routeName)
+                    ? $routeName . ' registered.'
+                    : $routeName . ' missing.',
+            ];
+        }
+
+        return $checks;
+    }
+
+    private function tableChecks(): array
+    {
+        $tables = [
+            'users' => 'Users',
+            'countries' => 'Countries',
+            'airports' => 'Airports',
+            'airlines' => 'Airlines',
+            'visa_types' => 'Visa Types',
+            'suppliers' => 'Suppliers',
+            'customers' => 'Customers',
+            'customer_documents' => 'Customer Documents',
+            'visa_applications' => 'Visa Applications',
+            'flight_bookings' => 'Flight Bookings',
+            'umrah_bookings' => 'Umrah Bookings',
+            'hotel_bookings' => 'Hotel Bookings',
+            'payments' => 'Visa Payments',
+            'flight_payments' => 'Flight Payments',
+            'umrah_payments' => 'Umrah Payments',
+            'hotel_payments' => 'Hotel Payments',
+            'invoices' => 'Invoices',
+            'expenses' => 'Expenses',
+            'expense_categories' => 'Expense Categories',
+            'refunds' => 'Refunds',
+            'activity_logs' => 'Activity Logs',
+            'database_backups' => 'Database Backups',
+            'company_settings' => 'Company Settings',
+        ];
+
+        $checks = [];
+
+        foreach ($tables as $table => $label) {
+            $checks[] = [
+                'name' => $label,
+                'status' => Schema::hasTable($table),
+                'message' => Schema::hasTable($table)
+                    ? $table . ' table exists.'
+                    : $table . ' table missing.',
+            ];
+        }
+
+        return $checks;
+    }
+}
+
+
+
+

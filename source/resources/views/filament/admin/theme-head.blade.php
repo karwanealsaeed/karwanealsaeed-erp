@@ -1,0 +1,1 @@
+<link rel="stylesheet" href="{{ asset('css/admin-theme.css') }}?v={{ file_exists(public_path('css/admin-theme.css')) ? filemtime(public_path('css/admin-theme.css')) : time() }}">

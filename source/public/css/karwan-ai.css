@@ -1,0 +1,186 @@
+.karwan-ai-widget {
+    position: fixed;
+    right: 22px;
+    bottom: 92px;
+    z-index: 9998;
+    font-family: Inter, Arial, sans-serif;
+}
+
+.karwan-ai-details > summary {
+    list-style: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    min-height: 52px;
+    padding: 10px 18px;
+    border-radius: 999px;
+    color: #062318;
+    background: linear-gradient(135deg, #d5a94f, #f1cf6a);
+    box-shadow: 0 18px 42px rgba(7, 59, 40, 0.25);
+    font-weight: 950;
+    cursor: pointer;
+}
+
+.karwan-ai-details > summary::-webkit-details-marker {
+    display: none;
+}
+
+.karwan-ai-panel {
+    position: absolute;
+    right: 0;
+    bottom: 64px;
+    width: min(390px, calc(100vw - 28px));
+    overflow: hidden;
+    border: 1px solid rgba(213, 169, 79, 0.45);
+    border-radius: 24px;
+    background: #ffffff;
+    box-shadow: 0 28px 80px rgba(7, 59, 40, 0.28);
+}
+
+.karwan-ai-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 16px;
+    color: #ffffff;
+    background: linear-gradient(135deg, #032d1f, #07583b);
+}
+
+.karwan-ai-head strong,
+.karwan-ai-head span {
+    display: block;
+}
+
+.karwan-ai-head strong {
+    font-size: 16px;
+    font-weight: 950;
+}
+
+.karwan-ai-head span {
+    margin-top: 4px;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 11px;
+    font-weight: 750;
+}
+
+.karwan-ai-head button {
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 999px;
+    padding: 7px 10px;
+    color: #fff8dc;
+    background: rgba(255, 255, 255, 0.10);
+    font-size: 11px;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.karwan-ai-messages {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: 340px;
+    overflow-y: auto;
+    padding: 14px;
+    background: #f7f4eb;
+}
+
+.karwan-ai-message {
+    max-width: 86%;
+    padding: 10px 12px;
+    border-radius: 16px;
+    white-space: pre-wrap;
+    font-size: 13px;
+    line-height: 1.55;
+    font-weight: 700;
+}
+
+.karwan-ai-message.assistant {
+    align-self: flex-start;
+    color: #08251a;
+    background: #ffffff;
+    border: 1px solid #eadfca;
+    border-bottom-left-radius: 5px;
+}
+
+.karwan-ai-message.user {
+    align-self: flex-end;
+    color: #ffffff;
+    background: #07583b;
+    border-bottom-right-radius: 5px;
+}
+
+.karwan-ai-form {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 9px;
+    padding: 12px;
+    background: #ffffff;
+    border-top: 1px solid #eadfca;
+}
+
+.karwan-ai-form textarea {
+    width: 100%;
+    min-height: 46px;
+    max-height: 110px;
+    box-sizing: border-box;
+    resize: vertical;
+    border: 1px solid #eadfca;
+    border-radius: 14px;
+    padding: 10px 12px;
+    color: #08251a;
+    background: #fffdf8;
+    outline: none;
+    font: inherit;
+}
+
+.karwan-ai-form textarea:focus {
+    border-color: #d5a94f;
+    box-shadow: 0 0 0 4px rgba(213, 169, 79, 0.15);
+}
+
+.karwan-ai-form button {
+    border: 0;
+    border-radius: 14px;
+    padding: 10px 15px;
+    color: #062318;
+    background: linear-gradient(135deg, #d5a94f, #f1cf6a);
+    font-weight: 950;
+    cursor: pointer;
+}
+
+.karwan-ai-form button:disabled {
+    opacity: 0.65;
+}
+
+.karwan-ai-footer {
+    padding: 0 12px 12px;
+    text-align: center;
+    background: #ffffff;
+}
+
+.karwan-ai-footer a {
+    color: #07583b;
+    font-size: 12px;
+    font-weight: 900;
+    text-decoration: none;
+}
+
+@media (max-width: 640px) {
+    .karwan-ai-widget {
+        right: 14px;
+        bottom: 76px;
+    }
+
+    .karwan-ai-panel {
+        position: fixed;
+        right: 14px;
+        bottom: 142px;
+        left: 14px;
+        width: auto;
+    }
+
+    .karwan-ai-messages {
+        height: 310px;
+    }
+}

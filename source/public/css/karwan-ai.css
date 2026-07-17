@@ -184,3 +184,71 @@
         height: 310px;
     }
 }
+/* KES AI DOCK V2 START */
+
+.kes-public-site .karwan-ai-widget {
+    right: 22px;
+    bottom: 92px;
+    z-index: 9998;
+}
+
+.kes-public-site .karwan-ai-details > summary {
+    width: 54px;
+    height: 54px;
+    min-height: 54px;
+    padding: 0;
+    justify-content: center;
+    overflow: hidden;
+    font-size: 0;
+}
+
+.kes-public-site .karwan-ai-details > summary span {
+    font-size: 20px;
+    line-height: 1;
+}
+
+@media (max-width: 640px) {
+    .kes-public-site .karwan-ai-widget {
+        right: 14px;
+        bottom: 82px;
+    }
+
+    .kes-public-site .karwan-ai-panel {
+        right: 14px;
+        bottom: 150px;
+        left: 14px;
+        width: auto;
+        max-height: calc(100vh - 170px);
+    }
+}
+
+/* KES AI DOCK V2 END */
+/* KES AI MOBILE DOCK FIX START */
+
+@media (max-width: 640px) {
+    .kes-public-site .karwan-ai-widget {
+        right: 68px;
+        bottom: 12px;
+    }
+
+    .kes-public-site .karwan-ai-details > summary {
+        width: 48px;
+        height: 48px;
+        min-height: 48px;
+    }
+
+    .kes-public-site .karwan-ai-details > summary span {
+        font-size: 18px;
+    }
+
+    .kes-public-site .karwan-ai-panel {
+        position: fixed;
+        right: 12px;
+        bottom: 72px;
+        left: 12px;
+        width: auto;
+        max-height: calc(100vh - 90px);
+    }
+}
+
+/* KES AI MOBILE DOCK FIX END */

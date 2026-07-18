@@ -4,6 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <meta name="theme-color" content="#0B1F3A">
+    <meta name="application-name" content="KES Travel">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="KES Travel">
+
+    <link rel="manifest" href="{{ asset('manifest.webmanifest') }}">
+    <link
+        rel="apple-touch-icon"
+        sizes="180x180"
+        href="{{ asset('images/pwa/apple-touch-icon.png') }}"
+    >
+    <link
+        rel="icon"
+        type="image/png"
+        sizes="32x32"
+        href="{{ asset('images/pwa/favicon-32x32.png') }}"
+    >
+    <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
+
     @php
         $seoTitle = $title ?? 'Karwan E Al Saeed Travel & Tours';
         $seoDescription = $description ?? 'Karwan E Al Saeed Travel & Tours';
@@ -488,5 +509,22 @@
 </div>
 
 @include('components.karwan-ai-widget')
+
+<script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker
+                .register('/service-worker.js', {
+                    scope: '/',
+                })
+                .catch((error) => {
+                    console.error(
+                        'Service worker registration failed:',
+                        error,
+                    );
+                });
+        });
+    }
+</script>
 </body>
 </html>

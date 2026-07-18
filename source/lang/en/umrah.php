@@ -143,4 +143,7 @@ return [
 
     'details_whatsapp_message' => 'Assalam o Alaikum, I need details about Umrah Package :number - :title.',
     'booking_whatsapp_message' => 'Assalam o Alaikum, I would like to book Umrah Package :number - :title.',
+    'seo_listing_title' => 'Umrah Packages | Karwan E Al Saeed',
+    'seo_listing_description' => 'View the latest Umrah packages, flights, hotels, transport and prices offered by Karwan E Al Saeed Travel & Tours.',
+    'seo_detail_fallback_description' => 'Complete Umrah package details by Karwan E Al Saeed Travel & Tours.',
 ];

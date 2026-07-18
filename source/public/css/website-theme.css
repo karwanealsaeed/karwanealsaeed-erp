@@ -4604,3 +4604,470 @@ img {
 }
 
 /* KES MOBILE FLOATING DOCK FIX END */
+/* KES MULTILINGUAL V1 START */
+
+/* Desktop language switcher */
+
+.kes-language-switcher {
+    padding: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    flex-shrink: 0;
+    background: #f5f1e8;
+    border: 1px solid #ded5c4;
+    border-radius: 999px;
+}
+
+.kes-language-switcher a {
+    min-width: 37px;
+    min-height: 32px;
+    padding: 6px 9px;
+    display: inline-flex;
+-switcher a {
+    min-width: 37px;
+    min-height: 32px;
+    padding:     align-items: center;
+    justify-content: center;
+    color: var(--kes-dark);
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 950;
+    line-height: 1;
+    transition: 0.2s ease;
+}
+
+.kes-language-switcher a:hover {
+    background: rgba(213, 169, 79, 0.18);
+}
+
+.kes-language-switcher a.is-active {
+    color: #031d14;
+    background: linear-gradient(135deg, var(--kes-gold-2), var(--kes-gold));
+    box-shadow: 0 7px 17px rgba(213, 169, 79, 0.24);
+}
+
+/* Mobile language switcher */
+
+.kes-mobile-language-switcher {
+    padding: 15px;
+    background: #f8f6f0;
+    border: 1px solid #e5ddcf;
+    border-radius: 14px;
+}
+
+.kes-mobile-language-switcher > span {
+    margin-bottom: 10px;
+    display: block;
+    color: #9a6d13;
+    font-size: 10px;
+    font-weight: 950;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+}
+
+.kes-mobile-language-switcher > div {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 7px;
+}
+
+.kes-mobile-language-switcher a {
+    min-height: 40px;
+    padding: 9px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--kes-dark);
+    background: white;
+    border: 1px solid #ded5c4;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 900;
+}
+
+.kes-mobile-language-switcher a.is-active {
+    color: #031d14;
+    background: linear-gradient(135deg, var(--kes-gold-2), var(--kes-gold));
+    border-color: var(--kes-gold);
+}
+
+/* Urdu RTL foundation */
+
+.kes-locale-ur {
+    font-family:
+        "Noto Nastaliq Urdu",
+        "Jameel Noori Nastaleeq",
+        "Noto Sans Arabic",
+        Arial,
+        sans-serif;
+}
+
+.kes-locale-ur .kes-topbar-inner,
+.kes-locale-ur .kes-navbar-inner,
+.kes-locale-ur .kes-footer-grid-v2,
+.kes-locale-ur .kes-footer-bottom > div {
+    direction: rtl;
+}
+
+.kes-locale-ur .kes-brand,
+.kes-locale-ur .kes-topbar-left,
+.kes-locale-ur .kes-topbar-right,
+.kes-locale-ur .kes-nav-links {
+    direction: rtl;
+}
+
+.kes-locale-ur .kes-brand-copy,
+.kes-locale-ur .kes-mobile-nav-panel,
+.kes-locale-ur .kes-footer,
+.kes-locale-ur .kes-page-v2-content,
+.kes-locale-ur .kes-page-v2-sidebar {
+    text-align: right;
+}
+
+.kes-locale-ur .kes-brand-subtitle,
+.kes-locale-ur .kes-topbar-label,
+.kes-locale-ur .kes-page-v2-label,
+.kes-locale-ur .kes-v2-section-label {
+    letter-spacing: 0;
+}
+
+.kes-locale-ur .kes-login-dropdown {
+    right: auto;
+    left: 0;
+    text-align: right;
+}
+
+.kes-locale-ur .kes-page-v2-breadcrumb {
+    direction: rtl;
+}
+
+.kes-locale-ur .kes-page-v2-urdu {
+    border-right: 0;
+    border-left: 4px solid var(--kes-gold);
+}
+
+.kes-locale-ur .kes-page-v2-side-card nav a:hover {
+    transform: translateX(-3px);
+}
+
+.kes-locale-ur .kes-page-v2-cta-box,
+.kes-locale-ur .kes-umrah-detail-section-heading,
+.kes-locale-ur .kes-umrah-filter-heading,
+.kes-locale-ur .kes-umrah-package-footer,
+.kes-locale-ur .kes-umrah-detail-transport {
+    direction: rtl;
+}
+
+.kes-locale-ur .kes-umrah-transport-row strong,
+.kes-locale-ur .kes-umrah-detail-transport strong {
+    text-align: left;
+}
+
+/* Keep codes, phone numbers and prices readable */
+
+.kes-locale-ur .kes-topbar-right a,
+.kes-locale-ur .kes-umrah-package-code,
+.kes-locale-ur .kes-umrah-detail-code,
+.kes-locale-ur .kes-umrah-route-summary,
+.kes-locale-ur .kes-umrah-flight-route,
+.kes-locale-ur .kes-umrah-detail-price-grid,
+.kes-locale-ur .kes-umrah-price-grid,
+.kes-locale-ur .kes-umrah-booking-availability {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+@media (max-width: 1180px) {
+    .kes-language-switcher {
+        display: none;
+    }
+}
+
+@media (max-width: 640px) {
+    .kes-locale-ur .kes-mobile-nav summary,
+    .kes-locale-ur .kes-mobile-nav-panel {
+        direction: rtl;
+    }
+
+    .kes-locale-ur .kes-mobile-nav-panel > a {
+        text-align: right;
+    }
+
+    .kes-locale-ur .kes-v2-hero-content,
+    .kes-locale-ur .kes-v2-hero-panel,
+    .kes-locale-ur .kes-page-v2-hero,
+    .kes-locale-ur .kes-umrah-list-hero,
+    .kes-locale-ur .kes-umrah-detail-hero {
+        text-align: right;
+    }
+}
+
+/* KES MULTILINGUAL V1 END */
+/* KES MOBILE OVERFLOW FIX START */
+
+html,
+body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: clip;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+img,
+svg,
+video,
+iframe {
+    max-width: 100%;
+}
+
+@media (max-width: 640px) {
+    .kes-topbar-inner,
+    .kes-navbar-inner,
+    .kes-v2-container,
+    .kes-v2-hero-inner,
+    .kes-page-v2-hero-inner,
+    .kes-umrah-list-hero-inner,
+    .kes-umrah-detail-hero-inner,
+    .kes-footer-grid-v2,
+    .kes-footer-bottom > div {
+        width: calc(100% - 28px) !important;
+        max-width: calc(100% - 28px) !important;
+        min-width: 0 !important;
+        margin-inline: auto !important;
+    }
+
+    .kes-site-header,
+    .kes-topbar,
+    .kes-navbar,
+    .kes-home-v2,
+    .kes-public-page-v2,
+    .kes-umrah-list-v2,
+    .kes-umrah-detail-v2,
+    .kes-footer {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: clip;
+    }
+
+    /* Top bar long address, phone and email */
+
+    .kes-topbar-inner,
+    .kes-topbar-left,
+    .kes-topbar-right {
+        min-width: 0 !important;
+    }
+
+    .kes-topbar-inner {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 6px !important;
+    }
+
+    .kes-topbar-left,
+    .kes-topbar-right {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    .kes-topbar-left,
+    .kes-topbar-right,
+    .kes-topbar-left span,
+    .kes-topbar-right a {
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+
+    /* Mobile header */
+
+    .kes-navbar-inner {
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 10px !important;
+    }
+
+    .kes-brand {
+        width: auto !important;
+        max-width: calc(100% - 118px) !important;
+        min-width: 0 !important;
+        flex: 1 1 auto !important;
+        gap: 8px !important;
+    }
+
+    .kes-brand-copy {
+        min-width: 0 !important;
+        max-width: 100% !important;
+    }
+
+    .kes-brand-title {
+        max-width: 100% !important;
+        white-space: normal !important;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+        font-size: 14px !important;
+        line-height: 1.25 !important;
+    }
+
+    .kes-brand-subtitle {
+        max-width: 100% !important;
+        white-space: normal !important;
+        overflow-wrap: anywhere;
+        font-size: 9px !important;
+        line-height: 1.35 !important;
+    }
+
+    .kes-logo-img {
+        width: 54px !important;
+        height: 54px !important;
+        flex: 0 0 54px !important;
+    }
+
+    .kes-mobile-nav {
+        min-width: 0 !important;
+        flex: 0 0 auto !important;
+    }
+
+    .kes-mobile-nav > summary {
+        min-width: 96px !important;
+    }
+
+    .kes-mobile-nav-panel {
+        left: 14px !important;
+        right: 14px !important;
+        width: auto !important;
+        max-width: none !important;
+    }
+
+    /* Hero and public page containers */
+
+    .kes-v2-hero-inner,
+    .kes-page-v2-hero-inner,
+    .kes-umrah-list-hero-inner,
+    .kes-umrah-detail-hero-inner {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        justify-content: flex-start !important;
+        gap: 32px !important;
+    }
+
+    .kes-v2-hero-content,
+    .kes-v2-hero-panel,
+    .kes-page-v2-hero-inner > div,
+    .kes-umrah-list-hero-inner > div,
+    .kes-umrah-detail-hero-content,
+    .kes-page-v2-content,
+    .kes-page-v2-sidebar,
+    .kes-umrah-detail-main,
+    .kes-umrah-detail-sidebar {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+    }
+
+    .kes-v2-hero-content h1 {
+        max-width: 100% !important;
+        font-size: clamp(39px, 12vw, 56px) !important;
+        line-height: 1.08 !important;
+        overflow-wrap: anywhere;
+        word-break: normal;
+    }
+
+    .kes-page-v2-hero h1,
+    .kes-umrah-list-hero h1,
+    .kes-umrah-detail-hero h1 {
+        max-width: 100% !important;
+        font-size: clamp(36px, 10vw, 50px) !important;
+        line-height: 1.15 !important;
+        overflow-wrap: anywhere;
+    }
+
+    .kes-v2-hero-text,
+    .kes-v2-hero-urdu,
+    .kes-page-v2-hero p,
+    .kes-umrah-list-hero p,
+    .kes-umrah-detail-hero p {
+        max-width: 100% !important;
+        overflow-wrap: anywhere;
+    }
+
+    .kes-v2-hero-actions,
+    .kes-v2-cta-actions,
+    .kes-umrah-filter-actions,
+    .kes-umrah-package-actions {
+        width: 100%;
+        max-width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .kes-v2-btn,
+    .kes-umrah-details-btn,
+    .kes-umrah-whatsapp-btn {
+        max-width: 100%;
+    }
+
+    /* Mobile grids */
+
+    .kes-v2-intro-grid,
+    .kes-v2-service-grid,
+    .kes-v2-why-grid,
+    .kes-v2-benefit-grid,
+    .kes-v2-process-grid,
+    .kes-page-v2-grid,
+    .kes-page-v2-services-grid,
+    .kes-page-v2-contact-grid,
+    .kes-umrah-filter-grid,
+    .kes-umrah-package-grid,
+    .kes-umrah-date-grid,
+    .kes-umrah-hotel-grid,
+    .kes-umrah-price-grid,
+    .kes-umrah-detail-layout,
+    .kes-umrah-detail-summary-grid,
+    .kes-umrah-detail-hotel-grid,
+    .kes-umrah-detail-price-grid,
+    .kes-umrah-detail-service-grid,
+    .kes-umrah-detail-gift-grid {
+        grid-template-columns: minmax(0, 1fr) !important;
+    }
+
+    .kes-umrah-filter-card,
+    .kes-umrah-package-card,
+    .kes-umrah-detail-section,
+    .kes-umrah-booking-card {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+    }
+
+    .kes-umrah-route-summary {
+        width: 100%;
+        max-width: 100%;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+
+    input,
+    select,
+    textarea,
+    button {
+        max-width: 100%;
+    }
+
+    /* Urdu mobile alignment */
+
+    .kes-locale-ur .kes-v2-hero-content,
+    .kes-locale-ur .kes-page-v2-hero-inner,
+    .kes-locale-ur .kes-umrah-list-hero-inner,
+    .kes-locale-ur .kes-umrah-detail-hero-content {
+        text-align: right;
+    }
+}
+
+/* KES MOBILE OVERFLOW FIX END */

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ app()->getLocale() }}" dir="{{ app()->isLocale('ur') ? 'rtl' : 'ltr' }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,25 +8,25 @@
     <link rel="stylesheet" href="{{ asset('css/website-theme.css') }}?v={{ file_exists(public_path('css/website-theme.css')) ? filemtime(public_path('css/website-theme.css')) : time() }}">
 <link rel="stylesheet" href="{{ asset('css/karwan-ai.css') }}?v={{ file_exists(public_path('css/karwan-ai.css')) ? filemtime(public_path('css/karwan-ai.css')) : time() }}">
 </head>
-<body class="kes-public-site">
+<body class="kes-public-site kes-locale-{{ app()->getLocale() }}">
     <header class="kes-site-header">
         <div class="kes-topbar">
             <div class="kes-topbar-inner">
                 <div class="kes-topbar-left">
-                    <span class="kes-topbar-label">Office:</span>
+                    <span class="kes-topbar-label">{{ __('website.office') }}:</span>
                     <span>{{ $company->address ?? 'Office # 90,91 College Road, Chichawatni.' }}</span>
                 </div>
 
                 <div class="kes-topbar-right">
                     <a href="tel:{{ preg_replace('/[^0-9+]/', '', $company->mobile ?? '+923012592342') }}">
-                        <span class="kes-topbar-label">Call:</span>
+                        <span class="kes-topbar-label">{{ __('website.call_us') }}:</span>
                         {{ $company->mobile ?? '+92 301 2592342' }}
                     </a>
 
                     <span class="kes-topbar-divider"></span>
 
                     <a href="mailto:{{ $company->email ?? 'karwanealsaeed@gmail.com' }}">
-                        <span class="kes-topbar-label">Email:</span>
+                        <span class="kes-topbar-label">{{ __('website.email_us') }}:</span>
                         {{ $company->email ?? 'karwanealsaeed@gmail.com' }}
                     </a>
                 </div>
@@ -48,7 +48,7 @@
                         </span>
 
                         <span class="kes-brand-subtitle">
-                            Umrah &bull; Visas &bull; Tickets &bull; Tours
+                            {{ __('website.brand_services') }}
                         </span>
                     </span>
                 </a>
@@ -56,79 +56,108 @@
                 <div class="kes-nav-links kes-desktop-nav">
                     <a href="{{ route('website.home') }}"
                        class="{{ request()->routeIs('website.home') ? 'is-active' : '' }}">
-                        Home
+                        {{ __('website.home') }}
                     </a>
 
                     <a href="{{ route('website.about') }}"
                        class="{{ request()->routeIs('website.about') ? 'is-active' : '' }}">
-                        About
+                        {{ __('website.about') }}
                     </a>
 
                     <a href="{{ route('website.services') }}"
                        class="{{ request()->routeIs('website.services') ? 'is-active' : '' }}">
-                        Services
+                        {{ __('website.services') }}
                     </a>
 
                     <a href="{{ route('website.umrah') }}"
                        class="{{ request()->routeIs('website.umrah*') ? 'is-active' : '' }}">
-                        Umrah
+                        {{ __('website.umrah') }}
                     </a>
 
                     <a href="{{ route('website.visas') }}"
                        class="{{ request()->routeIs('website.visas') ? 'is-active' : '' }}">
-                        Visas
+                        {{ __('website.visas') }}
                     </a>
 
                     <a href="{{ route('website.tickets') }}"
                        class="{{ request()->routeIs('website.tickets') ? 'is-active' : '' }}">
-                        Tickets
+                        {{ __('website.tickets') }}
                     </a>
 
                     <a href="{{ route('website.hotels') }}"
                        class="{{ request()->routeIs('website.hotels') ? 'is-active' : '' }}">
-                        Hotels
+                        {{ __('website.hotels') }}
                     </a>
 
                     <a href="{{ route('website.tours') }}"
                        class="{{ request()->routeIs('website.tours') ? 'is-active' : '' }}">
-                        Tours
+                        {{ __('website.tours') }}
                     </a>
 
                     <a href="{{ route('website.contact') }}"
                        class="{{ request()->routeIs('website.contact') ? 'is-active' : '' }}">
-                        Contact
+                        {{ __('website.contact_us') }}
                     </a>
 
+                                        <div class="kes-language-switcher"
+                         aria-label="{{ __('website.language') }}">
+                        <a href="{{ route('website.language', 'en') }}"
+                           class="{{ app()->isLocale('en') ? 'is-active' : '' }}">
+                            EN
+                        </a>
+
+                        <a href="{{ route('website.language', 'ur') }}"
+                           class="{{ app()->isLocale('ur') ? 'is-active' : '' }}">
+                            اردو
+                        </a>
+                    </div>
+
                     <details class="kes-login-menu">
-                        <summary>Login</summary>
+                        <summary>{{ __('website.login') }}</summary>
 
                         <div class="kes-login-dropdown">
-                            <a href="{{ route('customer.portal.login') }}">Customer Login</a>
-                            <a href="/admin">Admin Login</a>
+                            <a href="{{ route('customer.portal.login') }}">{{ __('website.customer_login') }}</a>
+                            <a href="/admin">{{ __('website.admin_login') }}</a>
                         </div>
                     </details>
                 </div>
 
                 <details class="kes-mobile-nav">
                     <summary>
-                        <span>Menu</span>
+                        <span>{{ __('website.menu') }}</span>
                         <span class="kes-menu-lines" aria-hidden="true"></span>
                     </summary>
 
                     <div class="kes-mobile-nav-panel">
-                        <a href="{{ route('website.home') }}">Home</a>
-                        <a href="{{ route('website.about') }}">About Us</a>
-                        <a href="{{ route('website.services') }}">Our Services</a>
-                        <a href="{{ route('website.umrah') }}">Umrah Packages</a>
-                        <a href="{{ route('website.visas') }}">Visit Visas</a>
-                        <a href="{{ route('website.tickets') }}">Air Ticketing</a>
-                        <a href="{{ route('website.hotels') }}">Hotel Booking</a>
-                        <a href="{{ route('website.tours') }}">Pakistan Tours</a>
-                        <a href="{{ route('website.contact') }}">Contact Us</a>
+                        <a href="{{ route('website.home') }}">{{ __('website.home') }}</a>
+                        <a href="{{ route('website.about') }}">{{ __('website.about_us') }}</a>
+                        <a href="{{ route('website.services') }}">{{ __('website.our_services') }}</a>
+                        <a href="{{ route('website.umrah') }}">{{ __('website.umrah_packages') }}</a>
+                        <a href="{{ route('website.visas') }}">{{ __('website.visit_visas') }}</a>
+                        <a href="{{ route('website.tickets') }}">{{ __('website.air_ticketing') }}</a>
+                        <a href="{{ route('website.hotels') }}">{{ __('website.hotel_booking') }}</a>
+                        <a href="{{ route('website.tours') }}">{{ __('website.pakistan_tours') }}</a>
+                        <a href="{{ route('website.contact') }}">{{ __('website.contact_us') }}</a>
+
+                                                <div class="kes-mobile-language-switcher">
+                            <span>{{ __('website.language') }}</span>
+
+                            <div>
+                                <a href="{{ route('website.language', 'en') }}"
+                                   class="{{ app()->isLocale('en') ? 'is-active' : '' }}">
+                                    English
+                                </a>
+
+                                <a href="{{ route('website.language', 'ur') }}"
+                                   class="{{ app()->isLocale('ur') ? 'is-active' : '' }}">
+                                    اردو
+                                </a>
+                            </div>
+                        </div>
 
                         <div class="kes-mobile-login-links">
-                            <a href="{{ route('customer.portal.login') }}">Customer Login</a>
-                            <a href="/admin">Admin Login</a>
+                            <a href="{{ route('customer.portal.login') }}">{{ __('website.customer_login') }}</a>
+                            <a href="/admin">{{ __('website.admin_login') }}</a>
                         </div>
                     </div>
                 </details>
@@ -151,62 +180,61 @@
                                 {{ $company->company_name ?? 'Karwan E Al Saeed Travel & Tours' }}
                             </strong>
 
-                            <small>Your Trusted Travel Partner</small>
+                            <small>{{ __('website.trusted_partner') }}</small>
                         </span>
                     </a>
 
                     <p>
-                        Professional services for Umrah packages, visit visas,
-                        air ticketing, hotel booking and Pakistan tours.
+                        {{ __('website.company_description') }}
                     </p>
 
                     <a class="kes-footer-whatsapp"
                        href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $company->whatsapp ?? '+923012592342') }}"
                        target="_blank"
                        rel="noopener">
-                        Chat With Us on WhatsApp
+                        {{ __('website.chat_whatsapp') }}
                     </a>
                 </div>
 
                 <div class="kes-footer-column">
-                    <h3>Quick Links</h3>
+                    <h3>{{ __('website.quick_links') }}</h3>
 
-                    <a href="{{ route('website.home') }}">Home</a>
-                    <a href="{{ route('website.about') }}">About Us</a>
-                    <a href="{{ route('website.services') }}">Our Services</a>
-                    <a href="{{ route('website.contact') }}">Contact Us</a>
-                    <a href="{{ route('customer.portal.login') }}">Customer Portal</a>
+                    <a href="{{ route('website.home') }}">{{ __('website.home') }}</a>
+                    <a href="{{ route('website.about') }}">{{ __('website.about_us') }}</a>
+                    <a href="{{ route('website.services') }}">{{ __('website.our_services') }}</a>
+                    <a href="{{ route('website.contact') }}">{{ __('website.contact_us') }}</a>
+                    <a href="{{ route('customer.portal.login') }}">{{ __('website.customer_portal') }}</a>
                 </div>
 
                 <div class="kes-footer-column">
-                    <h3>Our Services</h3>
+                    <h3>{{ __('website.our_services') }}</h3>
 
-                    <a href="{{ route('website.umrah') }}">Umrah Packages</a>
-                    <a href="{{ route('website.visas') }}">Visit Visas</a>
-                    <a href="{{ route('website.tickets') }}">Air Ticketing</a>
-                    <a href="{{ route('website.hotels') }}">Hotel Booking</a>
-                    <a href="{{ route('website.tours') }}">Pakistan Tours</a>
+                    <a href="{{ route('website.umrah') }}">{{ __('website.umrah_packages') }}</a>
+                    <a href="{{ route('website.visas') }}">{{ __('website.visit_visas') }}</a>
+                    <a href="{{ route('website.tickets') }}">{{ __('website.air_ticketing') }}</a>
+                    <a href="{{ route('website.hotels') }}">{{ __('website.hotel_booking') }}</a>
+                    <a href="{{ route('website.tours') }}">{{ __('website.pakistan_tours') }}</a>
                 </div>
 
                 <div class="kes-footer-column kes-footer-contact">
-                    <h3>Contact Information</h3>
+                    <h3>{{ __('website.contact_information') }}</h3>
 
                     <div>
-                        <span>Office</span>
+                        <span>{{ __('website.office') }}</span>
                         <p>
                             {{ $company->address ?? 'Office # 90,91 College Road, Chichawatni.' }}
                         </p>
                     </div>
 
                     <div>
-                        <span>Phone</span>
+                        <span>{{ __('website.phone') }}</span>
                         <a href="tel:{{ preg_replace('/[^0-9+]/', '', $company->mobile ?? '+923012592342') }}">
                             {{ $company->mobile ?? '+92 301 2592342' }}
                         </a>
                     </div>
 
                     <div>
-                        <span>Email</span>
+                        <span>{{ __('website.email') }}</span>
                         <a href="mailto:{{ $company->email ?? 'karwanealsaeed@gmail.com' }}">
                             {{ $company->email ?? 'karwanealsaeed@gmail.com' }}
                         </a>
@@ -221,11 +249,11 @@
                 <p>
                     &copy; {{ date('Y') }}
                     {{ $company->company_name ?? 'Karwan E Al Saeed Travel & Tours' }}.
-                    All rights reserved.
+                    {{ __('website.copyright') }}
                 </p>
 
                 <p>
-                    Umrah &bull; Visas &bull; Tickets &bull; Hotels &bull; Tours
+                    {{ __('website.brand_services') }}
                 </p>
             </div>
         </div>
@@ -240,12 +268,12 @@
     <details class="kes-support-box"
         @if(session('support_success') || session('support_error') || $errors->supportInquiry->any()) open @endif
     >
-        <summary>💬 Support</summary>
+        <summary>💬 {{ __('website.support_widget') }}</summary>
 
         <div class="kes-support-panel">
             <div class="kes-support-head">
-                <strong>How can we help?</strong>
-                <span>Karwan E Al Saeed Support</span>
+                <strong>{{ __('website.support_help_heading') }}</strong>
+                <span>{{ __('website.support_team_name') }}</span>
             </div>
 
             @if (session('support_success'))
@@ -277,35 +305,94 @@
             <form method="POST" action="{{ route('support-inquiries.store') }}">
                 @csrf
 
-                <input type="text" name="name" value="{{ old('name') }}" placeholder="Your Name" required>
-                <input type="text" name="mobile" value="{{ old('mobile') }}" placeholder="Mobile / WhatsApp" required>
-                <input type="email" name="email" value="{{ old('email') }}" placeholder="Email optional">
+                <input
+                    type="text"
+                    name="name"
+                    value="{{ old('name') }}"
+                    placeholder="{{ __('website.support_name_placeholder') }}"
+                    required
+                >
+
+                <input
+                    type="text"
+                    name="mobile"
+                    value="{{ old('mobile') }}"
+                    placeholder="{{ __('website.support_mobile_placeholder') }}"
+                    required
+                >
+
+                <input
+                    type="email"
+                    name="email"
+                    value="{{ old('email') }}"
+                    placeholder="{{ __('website.support_email_placeholder') }}"
+                >
 
                 <select name="service_type">
-                    <option value="">Select Service</option>
-                    <option value="Umrah Package" @selected(old('service_type') === 'Umrah Package')>Umrah Package</option>
-                    <option value="Visit Visa" @selected(old('service_type') === 'Visit Visa')>Visit Visa</option>
-                    <option value="Air Ticketing" @selected(old('service_type') === 'Air Ticketing')>Air Ticketing</option>
-                    <option value="Hotel Booking" @selected(old('service_type') === 'Hotel Booking')>Hotel Booking</option>
-                    <option value="Travel Insurance" @selected(old('service_type') === 'Travel Insurance')>Travel Insurance</option>
-                    <option value="Pakistan Tours" @selected(old('service_type') === 'Pakistan Tours')>Pakistan Tours</option>
+                    <option value="">
+                        {{ __('website.support_select_service') }}
+                    </option>
+
+                    <option value="Umrah Package"
+                        @selected(old('service_type') === 'Umrah Package')>
+                        {{ __('website.support_umrah_package') }}
+                    </option>
+
+                    <option value="Visit Visa"
+                        @selected(old('service_type') === 'Visit Visa')>
+                        {{ __('website.support_visit_visa') }}
+                    </option>
+
+                    <option value="Air Ticketing"
+                        @selected(old('service_type') === 'Air Ticketing')>
+                        {{ __('website.air_ticketing') }}
+                    </option>
+
+                    <option value="Hotel Booking"
+                        @selected(old('service_type') === 'Hotel Booking')>
+                        {{ __('website.hotel_booking') }}
+                    </option>
+
+                    <option value="Travel Insurance"
+                        @selected(old('service_type') === 'Travel Insurance')>
+                        {{ __('website.support_travel_insurance') }}
+                    </option>
+
+                    <option value="Pakistan Tours"
+                        @selected(old('service_type') === 'Pakistan Tours')>
+                        {{ __('website.pakistan_tours') }}
+                    </option>
                 </select>
 
-                <input type="text" name="subject" value="{{ old('subject') }}" placeholder="Subject optional">
+                <input
+                    type="text"
+                    name="subject"
+                    value="{{ old('subject') }}"
+                    placeholder="{{ __('website.support_subject_placeholder') }}"
+                >
 
-                <textarea name="message" rows="4" placeholder="Write your message..." required>{{ old('message') }}</textarea>
+                <textarea
+                    name="message"
+                    rows="4"
+                    placeholder="{{ __('website.support_message_placeholder') }}"
+                    required
+                >{{ old('message') }}</textarea>
 
-                <button type="submit">Submit Inquiry</button>
+                <button type="submit">
+                    {{ __('website.support_submit') }}
+                </button>
             </form>
 
             <a class="kes-support-whatsapp"
                href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $company->whatsapp ?? '+923012592342') }}"
-               target="_blank">
-                WhatsApp Now
+               target="_blank"
+               rel="noopener">
+                {{ __('website.support_whatsapp_now') }}
             </a>
         </div>
     </details>
 </div>
+
 @include('components.karwan-ai-widget')
 </body>
 </html>

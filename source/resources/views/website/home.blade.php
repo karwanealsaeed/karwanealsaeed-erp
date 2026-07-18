@@ -10,48 +10,46 @@
                 <div class="kes-v2-hero-content">
                     <div class="kes-v2-eyebrow">
                         <span></span>
-                        Premium Travel & Umrah Services
+                        {{ __('home.eyebrow') }}
                     </div>
 
                     <h1>
-                        Your Trusted Partner for
-                        <strong>Umrah, Visas, Tickets & Tours</strong>
+                        {{ __('home.hero_title_prefix') }}
+                        <strong>{{ __('home.hero_title_highlight') }}</strong>
                     </h1>
 
                     <p class="kes-v2-hero-text">
-                        Professional travel solutions with clear guidance, reliable service
-                        and personal support throughout your journey.
+                        {{ __('home.hero_text') }}
                     </p>
 
                     <p class="kes-v2-hero-urdu" lang="ur" dir="rtl">
-                        عمرہ، ویزہ، ائیر ٹکٹ، ہوٹل بکنگ اور پاکستان ٹورز کے لیے
-                        قابلِ اعتماد اور پیشہ ورانہ سفری خدمات۔
+                        {{ __('home.hero_secondary_text') }}
                     </p>
 
                     <div class="kes-v2-hero-actions">
                         <a href="{{ route('website.umrah') }}" class="kes-v2-btn kes-v2-btn-gold">
-                            Explore Umrah Packages
+                            {{ __('home.explore_packages') }}
                         </a>
 
                         <a href="{{ route('website.contact') }}" class="kes-v2-btn kes-v2-btn-light">
-                            Contact Our Team
+                            {{ __('home.contact_team') }}
                         </a>
                     </div>
 
                     <div class="kes-v2-trust-row">
                         <div>
-                            <strong>Professional</strong>
-                            <span>Travel Guidance</span>
+                            <strong>{{ __('home.professional') }}</strong>
+                            <span>{{ __('home.travel_guidance') }}</span>
                         </div>
 
                         <div>
-                            <strong>Reliable</strong>
-                            <span>Customer Support</span>
+                            <strong>{{ __('home.reliable') }}</strong>
+                            <span>{{ __('home.customer_support') }}</span>
                         </div>
 
                         <div>
-                            <strong>Complete</strong>
-                            <span>Travel Solutions</span>
+                            <strong>{{ __('home.complete') }}</strong>
+                            <span>{{ __('home.travel_solutions') }}</span>
                         </div>
                     </div>
                 </div>
@@ -62,46 +60,46 @@
                              alt="Karwan E Al Saeed Travel & Tours">
                     </div>
 
-                    <span class="kes-v2-panel-label">Our Core Services</span>
+                    <span class="kes-v2-panel-label">{{ __('home.core_services') }}</span>
 
-                    <h2>Plan Your Journey With Confidence</h2>
+                    <h2>{{ __('home.plan_confidence') }}</h2>
 
                     <div class="kes-v2-panel-services">
                         <a href="{{ route('website.umrah') }}">
                             <span>01</span>
                             <div>
-                                <strong>Umrah Packages</strong>
-                                <small>Hotels, transport and complete support</small>
+                                <strong>{{ __('home.umrah_packages') }}</strong>
+                                <small>{{ __('home.umrah_short') }}</small>
                             </div>
                         </a>
 
                         <a href="{{ route('website.visas') }}">
                             <span>02</span>
                             <div>
-                                <strong>Visit Visas</strong>
-                                <small>Application and documentation guidance</small>
+                                <strong>{{ __('home.visit_visas') }}</strong>
+                                <small>{{ __('home.visas_short') }}</small>
                             </div>
                         </a>
 
                         <a href="{{ route('website.tickets') }}">
                             <span>03</span>
                             <div>
-                                <strong>Air Ticketing</strong>
-                                <small>Domestic and international booking</small>
+                                <strong>{{ __('home.air_ticketing') }}</strong>
+                                <small>{{ __('home.tickets_short') }}</small>
                             </div>
                         </a>
 
                         <a href="{{ route('website.hotels') }}">
                             <span>04</span>
                             <div>
-                                <strong>Hotel Booking</strong>
-                                <small>Stay options for every journey</small>
+                                <strong>{{ __('home.hotel_booking') }}</strong>
+                                <small>{{ __('home.hotels_short') }}</small>
                             </div>
                         </a>
                     </div>
 
                     <a href="{{ route('website.services') }}" class="kes-v2-panel-link">
-                        View All Services
+                        {{ __('home.view_all_services') }}
                         <span>&rarr;</span>
                     </a>
                 </aside>
@@ -111,18 +109,17 @@
         <section class="kes-v2-intro">
             <div class="kes-v2-container kes-v2-intro-grid">
                 <div>
-                    <span class="kes-v2-section-label">Welcome to Karwan E Al Saeed</span>
-                    <h2>Travel Services Built Around Trust and Care</h2>
+                    <span class="kes-v2-section-label">{{ __('home.welcome') }}</span>
+                    <h2>{{ __('home.intro_title') }}</h2>
                 </div>
 
                 <div>
                     <p>
-                        We provide complete assistance for Umrah, visas, air tickets,
-                        hotel reservations, travel insurance and Pakistan tours.
+                        {{ __('home.intro_text') }}
                     </p>
 
                     <a href="{{ route('website.about') }}" class="kes-v2-text-link">
-                        Learn More About Us
+                        {{ __('home.learn_about') }}
                         <span>&rarr;</span>
                     </a>
                 </div>
@@ -133,12 +130,12 @@
             <div class="kes-v2-container">
                 <div class="kes-v2-section-heading">
                     <div>
-                        <span class="kes-v2-section-label">What We Offer</span>
-                        <h2>Complete Travel Solutions</h2>
+                        <span class="kes-v2-section-label">{{ __('home.what_we_offer') }}</span>
+                        <h2>{{ __('home.solutions_title') }}</h2>
                     </div>
 
                     <p>
-                        Everything you need for a smooth, secure and professionally managed journey.
+                        {{ __('home.solutions_text') }}
                     </p>
                 </div>
 
@@ -146,67 +143,61 @@
                     <a href="{{ route('website.umrah') }}" class="kes-v2-service-card featured">
                         <span class="kes-v2-service-number">01</span>
                         <div class="kes-v2-service-symbol">UM</div>
-                        <h3>Umrah Packages</h3>
+                        <h3>{{ __('home.umrah_packages') }}</h3>
                         <p>
-                            Reliable Umrah packages with suitable hotels, transportation
-                            and complete travel guidance.
+                            {{ __('home.umrah_description') }}
                         </p>
-                        <span class="kes-v2-card-link">Explore Packages &rarr;</span>
+                        <span class="kes-v2-card-link">{{ __('home.explore_umrah') }} &rarr;</span>
                     </a>
 
                     <a href="{{ route('website.visas') }}" class="kes-v2-service-card">
                         <span class="kes-v2-service-number">02</span>
                         <div class="kes-v2-service-symbol">VS</div>
-                        <h3>Visit Visas</h3>
+                        <h3>{{ __('home.visit_visas') }}</h3>
                         <p>
-                            Professional guidance for visa requirements, documents
-                            and application processing.
+                            {{ __('home.visa_description') }}
                         </p>
-                        <span class="kes-v2-card-link">Visa Services &rarr;</span>
+                        <span class="kes-v2-card-link">{{ __('home.visa_services') }} &rarr;</span>
                     </a>
 
                     <a href="{{ route('website.tickets') }}" class="kes-v2-service-card">
                         <span class="kes-v2-service-number">03</span>
                         <div class="kes-v2-service-symbol">AT</div>
-                        <h3>Air Ticketing</h3>
+                        <h3>{{ __('home.air_ticketing') }}</h3>
                         <p>
-                            Domestic and international flight reservations with
-                            suitable travel options.
+                            {{ __('home.ticket_description') }}
                         </p>
-                        <span class="kes-v2-card-link">Book Tickets &rarr;</span>
+                        <span class="kes-v2-card-link">{{ __('home.book_tickets') }} &rarr;</span>
                     </a>
 
                     <a href="{{ route('website.hotels') }}" class="kes-v2-service-card">
                         <span class="kes-v2-service-number">04</span>
                         <div class="kes-v2-service-symbol">HB</div>
-                        <h3>Hotel Booking</h3>
+                        <h3>{{ __('home.hotel_booking') }}</h3>
                         <p>
-                            Hotel arrangements for Umrah, family holidays,
-                            business travel and group tours.
+                            {{ __('home.hotel_description') }}
                         </p>
-                        <span class="kes-v2-card-link">Find Hotels &rarr;</span>
+                        <span class="kes-v2-card-link">{{ __('home.find_hotels') }} &rarr;</span>
                     </a>
 
                     <a href="{{ route('website.insurance') }}" class="kes-v2-service-card">
                         <span class="kes-v2-service-number">05</span>
                         <div class="kes-v2-service-symbol">TI</div>
-                        <h3>Travel Insurance</h3>
+                        <h3>{{ __('home.travel_insurance') }}</h3>
                         <p>
-                            Insurance guidance according to your destination,
-                            travel plan and requirements.
+                            {{ __('home.insurance_description') }}
                         </p>
-                        <span class="kes-v2-card-link">Get Guidance &rarr;</span>
+                        <span class="kes-v2-card-link">{{ __('home.get_guidance') }} &rarr;</span>
                     </a>
 
                     <a href="{{ route('website.tours') }}" class="kes-v2-service-card">
                         <span class="kes-v2-service-number">06</span>
                         <div class="kes-v2-service-symbol">PT</div>
-                        <h3>Pakistan Tours</h3>
+                        <h3>{{ __('home.pakistan_tours') }}</h3>
                         <p>
-                            Professionally planned family, group and corporate
-                            tours across beautiful Pakistan.
+                            {{ __('home.tours_description') }}
                         </p>
-                        <span class="kes-v2-card-link">Explore Pakistan &rarr;</span>
+                        <span class="kes-v2-card-link">{{ __('home.explore_pakistan') }} &rarr;</span>
                     </a>
                 </div>
             </div>
@@ -215,43 +206,42 @@
         <section class="kes-v2-why">
             <div class="kes-v2-container kes-v2-why-grid">
                 <div class="kes-v2-why-card">
-                    <span class="kes-v2-section-label light">Why Choose Us</span>
+                    <span class="kes-v2-section-label light">{{ __('home.why_choose_us') }}</span>
 
-                    <h2>A Trusted Name for Your Travel Needs</h2>
+                    <h2>{{ __('home.trusted_name') }}</h2>
 
                     <p>
-                        Our team focuses on professional service, transparent communication
-                        and dependable assistance from inquiry to completion.
+                        {{ __('home.trusted_text') }}
                     </p>
 
                     <a href="{{ route('website.contact') }}" class="kes-v2-btn kes-v2-btn-gold">
-                        Start Your Inquiry
+                        {{ __('home.start_inquiry') }}
                     </a>
                 </div>
 
                 <div class="kes-v2-benefit-grid">
                     <article>
                         <span>01</span>
-                        <h3>Clear Guidance</h3>
-                        <p>Easy-to-understand information throughout your booking process.</p>
+                        <h3>{{ __('home.clear_guidance') }}</h3>
+                        <p>{{ __('home.clear_guidance_text') }}</p>
                     </article>
 
                     <article>
                         <span>02</span>
-                        <h3>Customer Support</h3>
-                        <p>Professional assistance before, during and after your journey.</p>
+                        <h3>{{ __('home.customer_support') }}</h3>
+                        <p>{{ __('home.support_text') }}</p>
                     </article>
 
                     <article>
                         <span>03</span>
-                        <h3>Reliable Planning</h3>
-                        <p>Carefully managed travel arrangements according to your needs.</p>
+                        <h3>{{ __('home.reliable_planning') }}</h3>
+                        <p>{{ __('home.planning_text') }}</p>
                     </article>
 
                     <article>
                         <span>04</span>
-                        <h3>Multiple Services</h3>
-                        <p>Umrah, visas, tickets, hotels and tours under one trusted name.</p>
+                        <h3>{{ __('home.multiple_services') }}</h3>
+                        <p>{{ __('home.multiple_services_text') }}</p>
                     </article>
                 </div>
             </div>
@@ -261,28 +251,28 @@
             <div class="kes-v2-container">
                 <div class="kes-v2-section-heading centered">
                     <div>
-                        <span class="kes-v2-section-label">Simple Process</span>
-                        <h2>Start Your Journey in Three Steps</h2>
+                        <span class="kes-v2-section-label">{{ __('home.simple_process') }}</span>
+                        <h2>{{ __('home.process_title') }}</h2>
                     </div>
                 </div>
 
                 <div class="kes-v2-process-grid">
                     <article>
                         <span>01</span>
-                        <h3>Send Your Inquiry</h3>
-                        <p>Contact us through phone, WhatsApp or the website support form.</p>
+                        <h3>{{ __('home.send_inquiry') }}</h3>
+                        <p>{{ __('home.send_inquiry_text') }}</p>
                     </article>
 
                     <article>
                         <span>02</span>
-                        <h3>Get Professional Guidance</h3>
-                        <p>Our team will explain the available options and requirements.</p>
+                        <h3>{{ __('home.professional_guidance') }}</h3>
+                        <p>{{ __('home.professional_guidance_text') }}</p>
                     </article>
 
                     <article>
                         <span>03</span>
-                        <h3>Confirm Your Booking</h3>
-                        <p>Complete your documents and proceed with your selected service.</p>
+                        <h3>{{ __('home.confirm_booking') }}</h3>
+                        <p>{{ __('home.confirm_booking_text') }}</p>
                     </article>
                 </div>
             </div>
@@ -292,20 +282,20 @@
             <div class="kes-v2-container">
                 <div class="kes-v2-cta-inner">
                     <div>
-                        <span>Ready to plan your next journey?</span>
-                        <h2>Speak With Our Travel Team Today</h2>
+                        <span>{{ __('home.ready_text') }}</span>
+                        <h2>{{ __('home.speak_team') }}</h2>
                     </div>
 
                     <div class="kes-v2-cta-actions">
                         <a href="{{ route('website.contact') }}" class="kes-v2-btn kes-v2-btn-gold">
-                            Contact Us
+                            {{ __('home.contact_us') }}
                         </a>
 
                         <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $company->whatsapp ?? '+923012592342') }}"
                            target="_blank"
                            rel="noopener"
                            class="kes-v2-btn kes-v2-btn-outline-white">
-                            WhatsApp
+                            {{ __('home.whatsapp') }}
                         </a>
                     </div>
                 </div>

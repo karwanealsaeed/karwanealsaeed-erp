@@ -2,22 +2,24 @@
     <details class="karwan-ai-details">
         <summary>
             <span>🤖</span>
-            Karwan AI
+            {{ __('website.ai_name') }}
         </summary>
 
         <div class="karwan-ai-panel">
             <div class="karwan-ai-head">
                 <div>
-                    <strong>Karwan AI Assistant</strong>
-                    <span>Umrah, Visas, Tickets, Hotels & Tours</span>
+                    <strong>{{ __('website.ai_assistant') }}</strong>
+                    <span>{{ __('website.ai_services') }}</span>
                 </div>
 
-                <button type="button" id="karwanAiClear">Clear</button>
+                <button type="button" id="karwanAiClear">
+                    {{ __('website.ai_clear') }}
+                </button>
             </div>
 
             <div class="karwan-ai-messages" id="karwanAiMessages">
                 <div class="karwan-ai-message assistant">
-                    Assalam o Alaikum! Main Karwan E Al Saeed ki travel services ke bare me madad kar sakta hoon.
+                    {{ __('website.ai_welcome') }}
                 </div>
             </div>
 
@@ -26,16 +28,20 @@
                     id="karwanAiInput"
                     rows="2"
                     maxlength="2000"
-                    placeholder="Apna sawal likhein..."
+                    placeholder="{{ __('website.ai_input_placeholder') }}"
                     required
                 ></textarea>
 
-                <button type="submit">Send</button>
+                <button type="submit">
+                    {{ __('website.ai_send') }}
+                </button>
             </form>
 
             <div class="karwan-ai-footer">
-                <a href="https://wa.me/923012592342" target="_blank">
-                    WhatsApp Support
+                <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $company->whatsapp ?? '+923012592342') }}"
+                   target="_blank"
+                   rel="noopener">
+                    {{ __('website.ai_whatsapp_support') }}
                 </a>
             </div>
         </div>
@@ -58,10 +64,18 @@ document.addEventListener('DOMContentLoaded', function () {
     const clearUrl = @json(route('karwan-ai.clear'));
     const csrfToken = @json(csrf_token());
 
+    const welcomeMessage = @json(__('website.ai_welcome'));
+    const sendLabel = @json(__('website.ai_send'));
+    const sendingLabel = @json(__('website.ai_sending'));
+    const sendErrorMessage = @json(__('website.ai_send_error'));
+    const connectionErrorMessage = @json(__('website.ai_connection_error'));
+
     function addMessage(sender, message) {
         const element = document.createElement('div');
+
         element.className = 'karwan-ai-message ' + sender;
         element.textContent = message;
+
         messages.appendChild(element);
         messages.scrollTop = messages.scrollHeight;
     }
@@ -110,8 +124,9 @@ document.addEventListener('DOMContentLoaded', function () {
         input.value = '';
 
         const submitButton = form.querySelector('button[type="submit"]');
+
         submitButton.disabled = true;
-        submitButton.textContent = 'Sending...';
+        submitButton.textContent = sendingLabel;
 
         try {
             const response = await fetch(chatUrl, {
@@ -129,16 +144,16 @@ document.addEventListener('DOMContentLoaded', function () {
             const data = await response.json();
 
             if (!response.ok) {
-                addMessage('assistant', 'Message send nahi hua. Dobara try karein.');
+                addMessage('assistant', sendErrorMessage);
                 return;
             }
 
             addMessage('assistant', data.reply);
         } catch (error) {
-            addMessage('assistant', 'Connection error. WhatsApp support use karein.');
+            addMessage('assistant', connectionErrorMessage);
         } finally {
             submitButton.disabled = false;
-            submitButton.textContent = 'Send';
+            submitButton.textContent = sendLabel;
         }
     });
 
@@ -153,10 +168,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
 
             messages.innerHTML = '';
-            addMessage(
-                'assistant',
-                'Assalam o Alaikum! Main Karwan E Al Saeed ki travel services ke bare me madad kar sakta hoon.'
-            );
+            addMessage('assistant', welcomeMessage);
         } catch (error) {
             //
         }

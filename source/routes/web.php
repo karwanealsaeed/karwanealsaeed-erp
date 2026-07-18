@@ -10,6 +10,7 @@ use App\Http\Controllers\InvoicePrintController;
 use App\Http\Controllers\PaymentReceiptController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PublicUmrahPackageController;
+use App\Http\Controllers\SeoController;
 use App\Http\Controllers\RefundPrintController;
 use App\Http\Controllers\ReportExportController;
 use App\Http\Controllers\StaffPayrollPrintController;
@@ -26,6 +27,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [WebsiteController::class, 'home'])->name('website.home');
+Route::get('/sitemap.xml', [SeoController::class, 'sitemap'])->name('website.sitemap');
 Route::get('/language/{locale}', function (\Illuminate\Http\Request $request, string $locale) {
     abort_unless(in_array($locale, ['en', 'ur'], true), 404);
 

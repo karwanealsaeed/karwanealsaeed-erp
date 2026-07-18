@@ -9,11 +9,17 @@ use Symfony\Component\HttpFoundation\Response;
 
 class SetLocale
 {
-    /**
-     * Apply the visitor's selected website language.
-     */
     public function handle(Request $request, Closure $next): Response
     {
+        $requestedLocale = $request->query('lang');
+
+        if (
+            is_string($requestedLocale)
+            && in_array($requestedLocale, ['en', 'ur'], true)
+        ) {
+            session(['locale' => $requestedLocale]);
+        }
+
         $locale = session('locale', config('app.locale', 'en'));
 
         if (! in_array($locale, ['en', 'ur'], true)) {

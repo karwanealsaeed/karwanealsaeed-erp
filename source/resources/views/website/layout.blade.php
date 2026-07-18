@@ -3,8 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $title ?? 'Karwan E Al Saeed Travel & Tours' }}</title>
-    <meta name="description" content="{{ $description ?? 'Karwan E Al Saeed Travel & Tours' }}">
+
+    @php
+        $seoTitle = $title ?? 'Karwan E Al Saeed Travel & Tours';
+        $seoDescription = $description ?? 'Karwan E Al Saeed Travel & Tours';
+        $seoBaseCanonical = $canonical ?? url()->current();
+        $seoEnglishUrl = rtrim($seoBaseCanonical, '?&');
+        $seoUrduUrl = $seoEnglishUrl
+            .(str_contains($seoEnglishUrl, '?') ? '&' : '?')
+            .'lang=ur';
+        $seoCanonical = app()->isLocale('ur')
+            ? $seoUrduUrl
+            : $seoEnglishUrl;
+
+        $businessLogo = $company?->logo_url
+            ?: asset('images/logo.png');
+
+        $seoImage = $seoImage ?? $businessLogo;
+        $seoType = $seoType ?? 'website';
+        $seoRobots = $seoRobots
+            ?? 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
+
+        $businessSchema = [
+            '@context' => 'https://schema.org',
+            '@type' => 'TravelAgency',
+            '@id' => url('/').'#travel-agency',
+            'name' => $company?->company_name
+                ?: 'Karwan E Al Saeed Travel & Tours',
+            'alternateName' => $company?->short_name ?: 'KES Travel',
+            'url' => url('/'),
+            'logo' => $businessLogo,
+            'image' => $businessLogo,
+            'telephone' => $company?->phone ?: $company?->mobile,
+            'email' => $company?->email,
+            'address' => [
+                '@type' => 'PostalAddress',
+                'streetAddress' => $company?->address,
+                'addressLocality' => $company?->city,
+                'addressCountry' => $company?->country ?: 'Pakistan',
+            ],
+        ];
+
+        $businessSchema = array_filter(
+            $businessSchema,
+            static fn ($value): bool => filled($value),
+        );
+
+        $businessSchema['address'] = array_filter(
+            $businessSchema['address'],
+            static fn ($value): bool => filled($value),
+        );
+    @endphp
+
+    <title>{{ $seoTitle }}</title>
+    <meta name="description" content="{{ $seoDescription }}">
+    <meta name="robots" content="{{ $seoRobots }}">
+    <link rel="canonical" href="{{ $seoCanonical }}">
+    <link rel="alternate" hreflang="en-PK" href="{{ $seoEnglishUrl }}">
+    <link rel="alternate" hreflang="ur-PK" href="{{ $seoUrduUrl }}">
+    <link rel="alternate" hreflang="x-default" href="{{ $seoEnglishUrl }}">
+
+    <meta property="og:locale" content="{{ app()->isLocale('ur') ? 'ur_PK' : 'en_PK' }}">
+    <meta property="og:locale:alternate" content="{{ app()->isLocale('ur') ? 'en_PK' : 'ur_PK' }}">
+    <meta property="og:type" content="{{ $seoType }}">
+    <meta property="og:site_name" content="{{ $company?->company_name ?: 'Karwan E Al Saeed Travel & Tours' }}">
+    <meta property="og:title" content="{{ $seoTitle }}">
+    <meta property="og:description" content="{{ $seoDescription }}">
+    <meta property="og:url" content="{{ $seoCanonical }}">
+    <meta property="og:image" content="{{ $seoImage }}">
+    <meta property="og:image:alt" content="{{ $seoTitle }}">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $seoTitle }}">
+    <meta name="twitter:description" content="{{ $seoDescription }}">
+    <meta name="twitter:image" content="{{ $seoImage }}">
+
+    <script type="application/ld+json">
+        {!! json_encode(
+            $businessSchema,
+            JSON_UNESCAPED_SLASHES
+            | JSON_UNESCAPED_UNICODE
+            | JSON_PRETTY_PRINT
+        ) !!}
+    </script>
+
+    @if (! empty($seoSchema ?? null))
+        <script type="application/ld+json">
+            {!! json_encode(
+                $seoSchema,
+                JSON_UNESCAPED_SLASHES
+                | JSON_UNESCAPED_UNICODE
+                | JSON_PRETTY_PRINT
+            ) !!}
+        </script>
+    @endif
+
+    @stack('seo')
     <link rel="stylesheet" href="{{ asset('css/website-theme.css') }}?v={{ file_exists(public_path('css/website-theme.css')) ? filemtime(public_path('css/website-theme.css')) : time() }}">
 <link rel="stylesheet" href="{{ asset('css/karwan-ai.css') }}?v={{ file_exists(public_path('css/karwan-ai.css')) ? filemtime(public_path('css/karwan-ai.css')) : time() }}">
 </head>

@@ -14,15 +14,21 @@
             ? $segments[array_key_last($segments)]
             : [];
 
-        $routeText = $package->flight_route ?: ($group?->route ?: '-');
+        $routeText = $package->flight_route
+            ?: ($group?->route ?: '-');
 
         $routeParts = collect(
             explode('-', str_replace(' ', '', $routeText))
         )->filter()->values();
 
-        $fromCode = $routeParts[0] ?? ($firstSegment['from'] ?? 'MUX');
-        $toCode = $routeParts[1] ?? ($firstSegment['to'] ?? 'JED');
-        $backCode = $routeParts[2] ?? ($lastSegment['to'] ?? $fromCode);
+        $fromCode = $routeParts[0]
+            ?? ($firstSegment['from'] ?? 'MUX');
+
+        $toCode = $routeParts[1]
+            ?? ($firstSegment['to'] ?? 'JED');
+
+        $backCode = $routeParts[2]
+            ?? ($lastSegment['to'] ?? $fromCode);
 
         $services = is_array($package->included_services)
             ? $package->included_services
@@ -38,10 +44,10 @@
 
         $prices = $package->prices_list ?? [];
 
-        $whatsappText = 'Assalam o Alaikum, mujhe Umrah Package '
-            . $package->package_no . ' - '
-            . $package->title
-            . ' book karna hai.';
+        $whatsappText = __('umrah.booking_whatsapp_message', [
+            'number' => $package->package_no,
+            'title' => $package->title,
+        ]);
     @endphp
 
     <main class="kes-umrah-detail-v2">
@@ -52,9 +58,16 @@
             <div class="kes-v2-container kes-umrah-detail-hero-inner">
                 <div class="kes-umrah-detail-hero-content">
                     <nav class="kes-page-v2-breadcrumb" aria-label="Breadcrumb">
-                        <a href="{{ route('website.home') }}">Home</a>
+                        <a href="{{ route('website.home') }}">
+                            {{ __('umrah.home') }}
+                        </a>
+
                         <span>/</span>
-                        <a href="{{ route('website.umrah') }}">Umrah Packages</a>
+
+                        <a href="{{ route('website.umrah') }}">
+                            {{ __('umrah.umrah_packages') }}
+                        </a>
+
                         <span>/</span>
                         <span>{{ $package->package_no }}</span>
                     </nav>
@@ -66,28 +79,41 @@
                     <h1>{{ $package->title }}</h1>
 
                     <p>
-                        {{ $package->subtitle ?: 'Complete Umrah package details with flight, hotel, transport and accommodation information.' }}
+                        {{ $package->subtitle
+                            ?: __('umrah.default_package_description') }}
                     </p>
 
                     <div class="kes-umrah-detail-meta">
                         <div>
-                            <span>Airline</span>
-                            <strong>{{ $package->airline ?: 'To Be Confirmed' }}</strong>
+                            <span>{{ __('umrah.airline') }}</span>
+
+                            <strong>
+                                {{ $package->airline
+                                    ?: __('umrah.to_be_confirmed') }}
+                            </strong>
                         </div>
 
                         <div>
-                            <span>Route</span>
+                            <span>{{ __('umrah.route') }}</span>
                             <strong>{{ $routeText }}</strong>
                         </div>
 
                         <div>
-                            <span>Duration</span>
-                            <strong>{{ $package->duration_nights ?: '-' }} Nights</strong>
+                            <span>{{ __('umrah.duration') }}</span>
+
+                            <strong>
+                                {{ $package->duration_nights ?: '-' }}
+                                {{ __('umrah.nights') }}
+                            </strong>
                         </div>
 
                         <div>
-                            <span>Group</span>
-                            <strong>{{ $package->group_code ?: 'Open Group' }}</strong>
+                            <span>{{ __('umrah.group') }}</span>
+
+                            <strong>
+                                {{ $package->group_code
+                                    ?: __('umrah.open_group') }}
+                            </strong>
                         </div>
                     </div>
                 </div>
@@ -95,7 +121,7 @@
                 <div class="kes-umrah-detail-hero-logo">
                     @if ($package->package_image)
                         <img
-                            src="{{ asset('storage/' . $package->package_image) }}"
+                            src="{{ asset('storage/'.$package->package_image) }}"
                             alt="{{ $package->title }}"
                         >
                     @else
@@ -115,8 +141,12 @@
 
                     @if ($package->description)
                         <section class="kes-umrah-detail-section">
-                            <span class="kes-v2-section-label">Package Overview</span>
-                            <h2>About This Umrah Package</h2>
+                            <span class="kes-v2-section-label">
+                                {{ __('umrah.package_overview') }}
+                            </span>
+
+                            <h2>{{ __('umrah.about_package') }}</h2>
+
                             <p class="kes-umrah-detail-description">
                                 {{ $package->description }}
                             </p>
@@ -126,40 +156,51 @@
                     <section class="kes-umrah-detail-section">
                         <div class="kes-umrah-detail-section-heading">
                             <div>
-                                <span class="kes-v2-section-label">Journey Schedule</span>
-                                <h2>Travel Information</h2>
+                                <span class="kes-v2-section-label">
+                                    {{ __('umrah.journey_schedule') }}
+                                </span>
+
+                                <h2>{{ __('umrah.travel_information') }}</h2>
                             </div>
                         </div>
 
                         <div class="kes-umrah-detail-summary-grid">
                             <article>
-                                <span>Departure</span>
+                                <span>{{ __('umrah.departure') }}</span>
+
                                 <strong>
                                     {{ $group?->departure_date
                                         ? $group->departure_date->format('d M Y')
-                                        : 'To Be Announced' }}
+                                        : __('umrah.to_be_announced') }}
                                 </strong>
                             </article>
 
                             <article>
-                                <span>Return</span>
+                                <span>{{ __('umrah.return') }}</span>
+
                                 <strong>
                                     {{ $group?->return_date
                                         ? $group->return_date->format('d M Y')
-                                        : 'To Be Announced' }}
+                                        : __('umrah.to_be_announced') }}
                                 </strong>
                             </article>
 
                             <article>
-                                <span>Duration</span>
-                                <strong>{{ $package->duration_nights ?: '-' }} Nights</strong>
+                                <span>{{ __('umrah.duration') }}</span>
+
+                                <strong>
+                                    {{ $package->duration_nights ?: '-' }}
+                                    {{ __('umrah.nights') }}
+                                </strong>
                             </article>
 
                             <article>
-                                <span>Availability</span>
+                                <span>{{ __('umrah.availability') }}</span>
+
                                 <strong>
                                     {{ $package->seats_left }} /
-                                    {{ $package->seats_available }} Seats
+                                    {{ $package->seats_available }}
+                                    {{ __('umrah.seats') }}
                                 </strong>
                             </article>
                         </div>
@@ -168,12 +209,19 @@
                     <section class="kes-umrah-detail-section">
                         <div class="kes-umrah-detail-section-heading">
                             <div>
-                                <span class="kes-v2-section-label">Flight Schedule</span>
-                                <h2>Flight Details</h2>
+                                <span class="kes-v2-section-label">
+                                    {{ __('umrah.flight_schedule') }}
+                                </span>
+
+                                <h2>{{ __('umrah.flight_details') }}</h2>
                             </div>
 
                             <span class="kes-umrah-detail-route">
-                                {{ $fromCode }} &rarr; {{ $toCode }} &rarr; {{ $backCode }}
+                                {{ $fromCode }}
+                                {{ app()->isLocale('ur') ? '←' : '→' }}
+                                {{ $toCode }}
+                                {{ app()->isLocale('ur') ? '←' : '→' }}
+                                {{ $backCode }}
                             </span>
                         </div>
 
@@ -181,29 +229,44 @@
                             @forelse ($segments as $index => $segment)
                                 <article class="kes-umrah-flight-card">
                                     <div class="kes-umrah-flight-number">
-                                        <span>Flight {{ $index + 1 }}</span>
-                                        <strong>{{ $segment['flight_no'] ?? 'Flight Details' }}</strong>
+                                        <span>
+                                            {{ __('umrah.flight', [
+                                                'number' => $index + 1,
+                                            ]) }}
+                                        </span>
+
+                                        <strong>
+                                            {{ $segment['flight_no']
+                                                ?? __('umrah.flight_details') }}
+                                        </strong>
                                     </div>
 
                                     <div class="kes-umrah-flight-route">
                                         <div>
-                                            <span>From</span>
-                                            <strong>{{ $segment['from'] ?? '-' }}</strong>
+                                            <span>{{ __('umrah.from') }}</span>
+
+                                            <strong>
+                                                {{ $segment['from'] ?? '-' }}
+                                            </strong>
                                         </div>
 
                                         <div class="kes-umrah-flight-line">
-                                            <span>Flight Route</span>
+                                            <span>{{ __('umrah.flight_route') }}</span>
                                         </div>
 
                                         <div>
-                                            <span>To</span>
-                                            <strong>{{ $segment['to'] ?? '-' }}</strong>
+                                            <span>{{ __('umrah.to') }}</span>
+
+                                            <strong>
+                                                {{ $segment['to'] ?? '-' }}
+                                            </strong>
                                         </div>
                                     </div>
 
                                     <div class="kes-umrah-flight-time">
                                         <div>
-                                            <span>Date</span>
+                                            <span>{{ __('umrah.date') }}</span>
+
                                             <strong>
                                                 {{ filled($segment['departure_date'] ?? null)
                                                     ? \Carbon\Carbon::parse($segment['departure_date'])->format('d M Y')
@@ -212,35 +275,41 @@
                                         </div>
 
                                         <div>
-                                            <span>Departure Time</span>
-                                            <strong>{{ $segment['departure_time'] ?? '-' }}</strong>
+                                            <span>{{ __('umrah.departure_time') }}</span>
+
+                                            <strong>
+                                                {{ $segment['departure_time'] ?? '-' }}
+                                            </strong>
                                         </div>
 
                                         <div>
-                                            <span>Arrival Time</span>
-                                            <strong>{{ $segment['arrival_time'] ?? '-' }}</strong>
+                                            <span>{{ __('umrah.arrival_time') }}</span>
+
+                                            <strong>
+                                                {{ $segment['arrival_time'] ?? '-' }}
+                                            </strong>
                                         </div>
                                     </div>
                                 </article>
                             @empty
                                 <article class="kes-umrah-flight-card">
                                     <div class="kes-umrah-flight-number">
-                                        <span>Flight Route</span>
+                                        <span>{{ __('umrah.flight_route') }}</span>
                                         <strong>{{ $routeText }}</strong>
                                     </div>
 
                                     <div class="kes-umrah-flight-route">
                                         <div>
-                                            <span>From</span>
+                                            <span>{{ __('umrah.from') }}</span>
                                             <strong>{{ $fromCode }}</strong>
                                         </div>
 
                                         <div class="kes-umrah-flight-line">
-                                            <span>Route</span>
+                                            <span>{{ __('umrah.route') }}</span>
                                         </div>
 
                                         <div>
-                                            <span>Destination</span>
+                                            <span>{{ __('umrah.destination') }}</span>
                                             <strong>{{ $toCode }}</strong>
                                         </div>
                                     </div>
@@ -252,51 +321,62 @@
                     <section class="kes-umrah-detail-section">
                         <div class="kes-umrah-detail-section-heading">
                             <div>
-                                <span class="kes-v2-section-label">Accommodation</span>
-                                <h2>Hotel Details</h2>
+                                <span class="kes-v2-section-label">
+                                    {{ __('umrah.accommodation') }}
+                                </span>
+
+                                <h2>{{ __('umrah.hotel_details') }}</h2>
                             </div>
                         </div>
 
                         <div class="kes-umrah-detail-hotel-grid">
                             <article>
-                                <span>Makkah Accommodation</span>
-                                <h3>{{ $package->makkah_hotel ?: 'Hotel Details Available Soon' }}</h3>
+                                <span>{{ __('umrah.makkah_accommodation') }}</span>
+
+                                <h3>
+                                    {{ $package->makkah_hotel
+                                        ?: __('umrah.hotel_details_soon') }}
+                                </h3>
 
                                 <div>
                                     <p>
-                                        <small>Nights</small>
+                                        <small>{{ __('umrah.nights') }}</small>
                                         <strong>{{ $package->makkah_nights ?: '-' }}</strong>
                                     </p>
 
                                     <p>
-                                        <small>Distance</small>
+                                        <small>{{ __('umrah.distance') }}</small>
                                         <strong>{{ $package->makkah_distance ?: '-' }}</strong>
                                     </p>
 
                                     <p>
-                                        <small>Location</small>
+                                        <small>{{ __('umrah.location') }}</small>
                                         <strong>{{ $package->makkah_location ?: '-' }}</strong>
                                     </p>
                                 </div>
                             </article>
 
                             <article>
-                                <span>Madinah Accommodation</span>
-                                <h3>{{ $package->madina_hotel ?: 'Hotel Details Available Soon' }}</h3>
+                                <span>{{ __('umrah.madinah_accommodation') }}</span>
+
+                                <h3>
+                                    {{ $package->madina_hotel
+                                        ?: __('umrah.hotel_details_soon') }}
+                                </h3>
 
                                 <div>
                                     <p>
-                                        <small>Nights</small>
+                                        <small>{{ __('umrah.nights') }}</small>
                                         <strong>{{ $package->madina_nights ?: '-' }}</strong>
                                     </p>
 
                                     <p>
-                                        <small>Distance</small>
+                                        <small>{{ __('umrah.distance') }}</small>
                                         <strong>{{ $package->madina_distance ?: '-' }}</strong>
                                     </p>
 
                                     <p>
-                                        <small>Location</small>
+                                        <small>{{ __('umrah.location') }}</small>
                                         <strong>{{ $package->madina_location ?: '-' }}</strong>
                                     </p>
                                 </div>
@@ -307,13 +387,16 @@
                     <section class="kes-umrah-detail-section">
                         <div class="kes-umrah-detail-section-heading">
                             <div>
-                                <span class="kes-v2-section-label">Ground Services</span>
-                                <h2>Transport Information</h2>
+                                <span class="kes-v2-section-label">
+                                    {{ __('umrah.ground_services') }}
+                                </span>
+
+                                <h2>{{ __('umrah.transport_information') }}</h2>
                             </div>
                         </div>
 
                         <div class="kes-umrah-detail-transport">
-                            <span>Package Transport</span>
+                            <span>{{ __('umrah.package_transport') }}</span>
                             <strong>{{ $package->transport ?: $routeText }}</strong>
                         </div>
                     </section>
@@ -322,8 +405,11 @@
                         <section class="kes-umrah-detail-section">
                             <div class="kes-umrah-detail-section-heading">
                                 <div>
-                                    <span class="kes-v2-section-label">Package Benefits</span>
-                                    <h2>Included Services</h2>
+                                    <span class="kes-v2-section-label">
+                                        {{ __('umrah.package_benefits') }}
+                                    </span>
+
+                                    <h2>{{ __('umrah.included_services') }}</h2>
                                 </div>
                             </div>
 
@@ -342,15 +428,18 @@
                         <section class="kes-umrah-detail-section">
                             <div class="kes-umrah-detail-section-heading">
                                 <div>
-                                    <span class="kes-v2-section-label">Complimentary Benefits</span>
-                                    <h2>Gifted Services</h2>
+                                    <span class="kes-v2-section-label">
+                                        {{ __('umrah.complimentary_benefits') }}
+                                    </span>
+
+                                    <h2>{{ __('umrah.gifted_services') }}</h2>
                                 </div>
                             </div>
 
                             <div class="kes-umrah-detail-gift-grid">
                                 @foreach ($giftedServices as $service)
                                     <div>
-                                        <span>Gift</span>
+                                        <span>{{ __('umrah.gift') }}</span>
                                         <strong>{{ $service }}</strong>
                                     </div>
                                 @endforeach
@@ -361,8 +450,11 @@
                     <section class="kes-umrah-detail-section">
                         <div class="kes-umrah-detail-section-heading">
                             <div>
-                                <span class="kes-v2-section-label">Accommodation Prices</span>
-                                <h2>Price Per Person</h2>
+                                <span class="kes-v2-section-label">
+                                    {{ __('umrah.accommodation_prices') }}
+                                </span>
+
+                                <h2>{{ __('umrah.price_per_person') }}</h2>
                             </div>
                         </div>
 
@@ -373,17 +465,17 @@
 
                                     <strong>
                                         {{ $amount
-                                            ? 'PKR ' . number_format((float) $amount, 0)
-                                            : 'On Request' }}
+                                            ? 'PKR '.number_format((float) $amount, 0)
+                                            : __('umrah.on_request') }}
                                     </strong>
 
-                                    <small>Per person</small>
+                                    <small>{{ __('umrah.per_person') }}</small>
                                 </article>
                             @empty
                                 <article>
-                                    <span>Package Price</span>
-                                    <strong>Contact for Price</strong>
-                                    <small>Latest rate available on request</small>
+                                    <span>{{ __('umrah.package_price') }}</span>
+                                    <strong>{{ __('umrah.contact_for_price') }}</strong>
+                                    <small>{{ __('umrah.latest_rate_request') }}</small>
                                 </article>
                             @endforelse
                         </div>
@@ -393,22 +485,22 @@
 
                 <aside class="kes-umrah-detail-sidebar">
                     <div class="kes-umrah-booking-card">
-                        <span class="kes-v2-section-label">Package Booking</span>
-                        <h2>Reserve Your Umrah Package</h2>
+                        <span class="kes-v2-section-label">
+                            {{ __('umrah.package_booking') }}
+                        </span>
 
-                        <p>
-                            Contact our team for seat confirmation, required documents,
-                            payment details and complete booking guidance.
-                        </p>
+                        <h2>{{ __('umrah.reserve_package') }}</h2>
+
+                        <p>{{ __('umrah.booking_guidance') }}</p>
 
                         <div class="kes-umrah-booking-availability">
                             <div>
-                                <span>Seats Available</span>
+                                <span>{{ __('umrah.seats_available') }}</span>
                                 <strong>{{ $package->seats_left }}</strong>
                             </div>
 
                             <div>
-                                <span>Total Seats</span>
+                                <span>{{ __('umrah.total_seats') }}</span>
                                 <strong>{{ $package->seats_available }}</strong>
                             </div>
                         </div>
@@ -419,12 +511,12 @@
                             rel="noopener"
                             class="kes-umrah-booking-whatsapp"
                         >
-                            Book on WhatsApp
+                            {{ __('umrah.book_whatsapp') }}
                         </a>
 
                         <a href="{{ route('website.contact') }}"
                            class="kes-umrah-booking-contact">
-                            Send Website Inquiry
+                            {{ __('umrah.send_website_inquiry') }}
                         </a>
                     </div>
 
@@ -432,15 +524,12 @@
                         <img src="{{ asset('images/logo.png') }}"
                              alt="Karwan E Al Saeed">
 
-                        <h3>Need More Information?</h3>
+                        <h3>{{ __('umrah.need_more_information') }}</h3>
 
-                        <p>
-                            Our travel team will guide you regarding flights,
-                            hotels, documents and package availability.
-                        </p>
+                        <p>{{ __('umrah.more_information_text') }}</p>
 
                         <a href="{{ route('website.umrah') }}">
-                            View All Packages
+                            {{ __('umrah.view_all_packages') }}
                         </a>
                     </div>
                 </aside>

@@ -26,6 +26,21 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [WebsiteController::class, 'home'])->name('website.home');
+Route::get('/language/{locale}', function (\Illuminate\Http\Request $request, string $locale) {
+    abort_unless(in_array($locale, ['en', 'ur'], true), 404);
+
+    session(['locale' => $locale]);
+
+    $previousUrl = url()->previous();
+    $previousHost = parse_url($previousUrl, PHP_URL_HOST);
+
+    if ($previousHost !== $request->getHost()) {
+        return redirect()->route('website.home');
+    }
+
+    return redirect()->to($previousUrl);
+})->name('website.language');
+
 
 Route::get('/about-us', [WebsiteController::class, 'page'])->defaults('slug', 'about-us')->name('website.about');
 Route::get('/our-services', [WebsiteController::class, 'page'])->defaults('slug', 'our-services')->name('website.services');

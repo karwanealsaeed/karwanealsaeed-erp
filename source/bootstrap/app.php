@@ -13,7 +13,11 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         //
-$middleware->alias([
+        $middleware->web(append: [
+            \App\Http\Middleware\SetLocale::class,
+        ]);
+
+        $middleware->alias([
     'customer.portal' => \App\Http\Middleware\CustomerPortalAuth::class,
 ]);
     })

@@ -92,6 +92,12 @@ class UserForm
                     ])
                     ->collapsible(),
 
+                Section::make('Website Content Rights')
+                    ->schema([
+                        self::makePermissionCheckbox('permissions_website_content'),
+                    ])
+                    ->collapsible(),
+
                 Section::make('Customer Rights')
                     ->schema([
                         self::makePermissionCheckbox('permissions_customers'),
@@ -184,6 +190,15 @@ class UserForm
                     'suppliers_create' => 'Suppliers - Create',
                     'suppliers_edit' => 'Suppliers - Edit',
                     'suppliers_delete' => 'Suppliers - Delete',
+                ],
+            ],
+
+            'permissions_website_content' => [
+                'options' => [
+                    'pakistan_tours_view' => 'Pakistan Tours - View',
+                    'pakistan_tours_create' => 'Pakistan Tours - Create',
+                    'pakistan_tours_edit' => 'Pakistan Tours - Edit',
+                    'pakistan_tours_delete' => 'Pakistan Tours - Delete',
                 ],
             ],
 
@@ -318,6 +333,10 @@ class UserForm
                 'airlines_view',
                 'visa_types_view',
                 'suppliers_view',
+
+                'pakistan_tours_view',
+                'pakistan_tours_create',
+                'pakistan_tours_edit',
 
                 'customers_view',
                 'customers_create',

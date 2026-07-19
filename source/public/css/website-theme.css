@@ -5071,3 +5071,997 @@ iframe {
 }
 
 /* KES MOBILE OVERFLOW FIX END */
+}
+/* =========================================================
+   Pakistan Tours — Listing & Detail Pages
+   ========================================================= */
+
+.kes-tours-page,
+.kes-tour-detail-page {
+    background: #f4f7fb;
+    color: #172033;
+}
+
+.kes-tours-hero {
+    position: relative;
+    overflow: hidden;
+    padding: 78px 0 72px;
+    color: #ffffff;
+    background:
+        radial-gradient(
+            circle at 85% 15%,
+            rgba(211, 174, 94, 0.24),
+            transparent 30%
+        ),
+        linear-gradient(135deg, #07172d, #0b2b4d 58%, #123a61);
+}
+
+.kes-tours-hero-inner {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 48px;
+}
+
+.kes-tours-hero h1 {
+    max-width: 760px;
+    margin: 14px 0 18px;
+    color: #ffffff;
+    font-size: clamp(2.3rem, 5vw, 4.7rem);
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+}
+
+.kes-tours-hero p {
+    max-width: 760px;
+    margin: 0;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1.08rem;
+    line-height: 1.8;
+}
+
+.kes-tours-hero .kes-page-v2-breadcrumb,
+.kes-tour-detail-hero .kes-page-v2-breadcrumb {
+    color: rgba(255, 255, 255, 0.68);
+}
+
+.kes-tours-hero .kes-page-v2-breadcrumb a,
+.kes-tour-detail-hero .kes-page-v2-breadcrumb a {
+    color: #ffffff;
+}
+
+.kes-tours-hero .kes-v2-section-label,
+.kes-tour-detail-hero .kes-v2-section-label {
+    color: #e0bb6d;
+}
+
+.kes-tours-hero-logo {
+    display: grid;
+    width: 190px;
+    height: 190px;
+    place-items: center;
+    padding: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 36px;
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.22);
+    backdrop-filter: blur(18px);
+}
+
+.kes-tours-hero-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.kes-tours-content {
+    padding: 56px 0 90px;
+}
+
+.kes-tours-filters {
+    display: grid;
+    grid-template-columns:
+        minmax(220px, 1.5fr)
+        repeat(3, minmax(150px, 1fr))
+        auto;
+    align-items: end;
+    gap: 16px;
+    margin-top: -92px;
+    margin-bottom: 54px;
+    padding: 24px;
+    border: 1px solid rgba(9, 35, 65, 0.08);
+    border-radius: 24px;
+    background: #ffffff;
+    box-shadow: 0 24px 65px rgba(7, 23, 45, 0.14);
+}
+
+.kes-tours-filter-field {
+    min-width: 0;
+}
+
+.kes-tours-filter-field label {
+    display: block;
+    margin-bottom: 8px;
+    color: #536176;
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.kes-tours-filter-field input,
+.kes-tours-filter-field select {
+    width: 100%;
+    min-height: 50px;
+    padding: 0 15px;
+    color: #152238;
+    border: 1px solid #dbe3ec;
+    border-radius: 13px;
+    outline: none;
+    background: #f8fafc;
+    font: inherit;
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+}
+
+.kes-tours-filter-field input:focus,
+.kes-tours-filter-field select:focus {
+    border-color: #c89b44;
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(200, 155, 68, 0.14);
+}
+
+.kes-tours-filter-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.kes-tours-filter-actions .kes-v2-btn {
+    min-height: 50px;
+    white-space: nowrap;
+}
+
+.kes-tours-clear {
+    color: #657388;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+}
+
+.kes-tours-clear:hover {
+    color: #a8792f;
+}
+
+.kes-tours-results-heading {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 30px;
+}
+
+.kes-tours-results-heading h2 {
+    margin: 8px 0 0;
+    color: #0b223f;
+    font-size: clamp(1.8rem, 3vw, 2.7rem);
+}
+
+.kes-tours-results-heading > strong {
+    display: grid;
+    min-width: 58px;
+    height: 58px;
+    place-items: center;
+    color: #ffffff;
+    border-radius: 18px;
+    background: #0b2b4d;
+    font-size: 1.2rem;
+}
+
+.kes-tours-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 26px;
+}
+
+.kes-tour-card {
+    overflow: hidden;
+    border: 1px solid rgba(9, 35, 65, 0.09);
+    border-radius: 24px;
+    background: #ffffff;
+    box-shadow: 0 16px 45px rgba(7, 23, 45, 0.08);
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+.kes-tour-card:hover {
+    transform: translateY(-7px);
+    box-shadow: 0 24px 60px rgba(7, 23, 45, 0.14);
+}
+
+.kes-tour-card-image {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    aspect-ratio: 16 / 10;
+    background: #e8eef5;
+}
+
+.kes-tour-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.45s ease;
+}
+
+.kes-tour-card:hover .kes-tour-card-image img {
+    transform: scale(1.055);
+}
+
+.kes-tour-featured-badge {
+    display: inline-flex;
+    align-items: center;
+    min-height: 30px;
+    padding: 5px 12px;
+    color: #10233d;
+    border-radius: 999px;
+    background: #e8c77e;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.kes-tour-card-image .kes-tour-featured-badge {
+    position: absolute;
+    top: 16px;
+    inset-inline-start: 16px;
+}
+
+.kes-tour-card-body {
+    padding: 23px;
+}
+
+.kes-tour-card-location {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    color: #b07f31;
+    font-size: 0.78rem;
+    font-weight: 850;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.kes-tour-card-location small {
+    color: #7d899b;
+    font-size: 0.72rem;
+}
+
+.kes-tour-card h2 {
+    margin: 12px 0 9px;
+    font-size: 1.42rem;
+    line-height: 1.28;
+}
+
+.kes-tour-card h2 a {
+    color: #0b223f;
+    text-decoration: none;
+}
+
+.kes-tour-card h2 a:hover {
+    color: #a8792f;
+}
+
+.kes-tour-card-subtitle {
+    margin: 0 0 8px;
+    color: #45546a;
+    font-weight: 700;
+}
+
+.kes-tour-card-description {
+    min-height: 66px;
+    margin: 0;
+    color: #6c788a;
+    font-size: 0.92rem;
+    line-height: 1.65;
+}
+
+.kes-tour-card-meta {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    margin: 21px 0;
+    padding: 17px 0;
+    border-top: 1px solid #ebeff4;
+    border-bottom: 1px solid #ebeff4;
+}
+
+.kes-tour-card-meta div {
+    min-width: 0;
+}
+
+.kes-tour-card-meta span {
+    display: block;
+    margin-bottom: 5px;
+    color: #8893a3;
+    font-size: 0.67rem;
+    font-weight: 750;
+    text-transform: uppercase;
+}
+
+.kes-tour-card-meta strong {
+    display: block;
+    overflow: hidden;
+    color: #203049;
+    font-size: 0.78rem;
+    text-overflow: ellipsis;
+}
+
+.kes-tour-card-footer {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 18px;
+}
+
+.kes-tour-price span,
+.kes-tour-price small {
+    display: block;
+    color: #7c8899;
+    font-size: 0.7rem;
+}
+
+.kes-tour-price strong {
+    display: block;
+    margin: 3px 0;
+    color: #0b2b4d;
+    font-size: 1.28rem;
+}
+
+.kes-tour-card-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #a8792f;
+    font-size: 0.82rem;
+    font-weight: 850;
+    text-decoration: none;
+}
+
+.kes-tour-card-link:hover {
+    color: #0b2b4d;
+}
+
+.kes-tours-empty {
+    grid-column: 1 / -1;
+    padding: 62px 24px;
+    text-align: center;
+    border: 1px dashed #cfd8e3;
+    border-radius: 26px;
+    background: #ffffff;
+}
+
+.kes-tours-empty img {
+    width: 110px;
+    height: 110px;
+    object-fit: contain;
+    margin-bottom: 18px;
+}
+
+.kes-tours-empty h2 {
+    margin: 0 0 10px;
+    color: #0b223f;
+}
+
+.kes-tours-empty p {
+    max-width: 580px;
+    margin: 0 auto 24px;
+    color: #6c788a;
+    line-height: 1.7;
+}
+
+.kes-tours-pagination {
+    margin-top: 40px;
+}
+
+.kes-tours-pagination nav {
+    display: flex;
+    justify-content: center;
+}
+
+/* =========================================================
+   Pakistan Tour Detail
+   ========================================================= */
+
+.kes-tour-detail-hero {
+    position: relative;
+    min-height: 590px;
+    overflow: hidden;
+    color: #ffffff;
+    background: #07172d;
+}
+
+.kes-tour-detail-hero-image,
+.kes-tour-detail-overlay {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.kes-tour-detail-hero-image {
+    object-fit: cover;
+}
+
+.kes-tour-detail-overlay {
+    background:
+        linear-gradient(
+            90deg,
+            rgba(5, 20, 40, 0.96) 0%,
+            rgba(5, 20, 40, 0.79) 48%,
+            rgba(5, 20, 40, 0.38) 100%
+        ),
+        linear-gradient(
+            0deg,
+            rgba(5, 20, 40, 0.75),
+            transparent 48%
+        );
+}
+
+.kes-tour-detail-hero-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    min-height: 590px;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 60px;
+    padding-bottom: 65px;
+}
+
+.kes-tour-detail-heading {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    gap: 48px;
+    margin-top: 40px;
+}
+
+.kes-tour-detail-heading h1 {
+    max-width: 850px;
+    margin: 13px 0 16px;
+    color: #ffffff;
+    font-size: clamp(2.4rem, 5vw, 5rem);
+    line-height: 1.04;
+    letter-spacing: -0.045em;
+}
+
+.kes-tour-detail-heading p {
+    max-width: 760px;
+    margin: 0 0 18px;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1.08rem;
+    line-height: 1.7;
+}
+
+.kes-tour-detail-location {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    color: rgba(255, 255, 255, 0.84);
+}
+
+.kes-tour-detail-price {
+    min-width: 245px;
+    padding: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 24px;
+    background: rgba(4, 19, 37, 0.55);
+    box-shadow: 0 24px 55px rgba(0, 0, 0, 0.22);
+    backdrop-filter: blur(16px);
+}
+
+.kes-tour-detail-price span,
+.kes-tour-detail-price small {
+    display: block;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.76rem;
+}
+
+.kes-tour-detail-price strong {
+    display: block;
+    margin: 6px 0;
+    color: #e5c579;
+    font-size: 2rem;
+}
+
+.kes-tour-detail-content {
+    padding: 70px 0 95px;
+}
+
+.kes-tour-detail-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 360px;
+    align-items: start;
+    gap: 34px;
+}
+
+.kes-tour-detail-main {
+    display: grid;
+    gap: 28px;
+}
+
+.kes-tour-detail-summary,
+.kes-tour-detail-section,
+.kes-tour-detail-inclusions {
+    padding: 30px;
+    border: 1px solid rgba(9, 35, 65, 0.08);
+    border-radius: 25px;
+    background: #ffffff;
+    box-shadow: 0 14px 42px rgba(7, 23, 45, 0.07);
+}
+
+.kes-tour-detail-summary h2,
+.kes-tour-detail-section h2,
+.kes-tour-detail-inclusions h2 {
+    margin: 0 0 22px;
+    color: #0b223f;
+    font-size: 1.65rem;
+}
+
+.kes-tour-detail-section .kes-v2-section-label {
+    display: block;
+    margin-bottom: 8px;
+}
+
+.kes-tour-detail-facts {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.kes-tour-detail-facts > div {
+    min-width: 0;
+    padding: 17px;
+    border: 1px solid #e7edf3;
+    border-radius: 15px;
+    background: #f8fafc;
+}
+
+.kes-tour-detail-facts span {
+    display: block;
+    margin-bottom: 6px;
+    color: #7b8799;
+    font-size: 0.7rem;
+    font-weight: 750;
+    text-transform: uppercase;
+}
+
+.kes-tour-detail-facts strong {
+    display: block;
+    overflow-wrap: anywhere;
+    color: #1d2c43;
+}
+
+.kes-tour-detail-intro {
+    margin: 0 0 18px;
+    color: #34445b;
+    font-size: 1.07rem;
+    font-weight: 700;
+    line-height: 1.75;
+}
+
+.kes-tour-detail-description {
+    color: #657286;
+    line-height: 1.9;
+}
+
+.kes-tour-detail-list,
+.kes-tour-detail-inclusions ul {
+    display: grid;
+    gap: 11px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.kes-tour-detail-list li,
+.kes-tour-detail-inclusions li {
+    position: relative;
+    padding-inline-start: 29px;
+    color: #4f5f74;
+    line-height: 1.65;
+}
+
+.kes-tour-detail-list li::before,
+.kes-tour-detail-included li::before {
+    position: absolute;
+    top: 0.14em;
+    inset-inline-start: 0;
+    display: grid;
+    width: 20px;
+    height: 20px;
+    place-items: center;
+    color: #ffffff;
+    border-radius: 50%;
+    background: #1a7650;
+    content: "✓";
+    font-size: 0.68rem;
+    font-weight: 900;
+}
+
+.kes-tour-detail-excluded li::before {
+    position: absolute;
+    top: 0.14em;
+    inset-inline-start: 0;
+    display: grid;
+    width: 20px;
+    height: 20px;
+    place-items: center;
+    color: #ffffff;
+    border-radius: 50%;
+    background: #b44848;
+    content: "×";
+    font-size: 0.82rem;
+    font-weight: 900;
+}
+
+.kes-tour-detail-inclusions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 26px;
+}
+
+.kes-tour-detail-included,
+.kes-tour-detail-excluded {
+    padding: 24px;
+    border-radius: 18px;
+}
+
+.kes-tour-detail-included {
+    border: 1px solid rgba(26, 118, 80, 0.16);
+    background: rgba(26, 118, 80, 0.055);
+}
+
+.kes-tour-detail-excluded {
+    border: 1px solid rgba(180, 72, 72, 0.16);
+    background: rgba(180, 72, 72, 0.05);
+}
+
+.kes-tour-detail-gallery {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.kes-tour-detail-gallery a {
+    display: block;
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+    border-radius: 16px;
+    background: #e8eef5;
+}
+
+.kes-tour-detail-gallery img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.kes-tour-detail-gallery a:hover img {
+    transform: scale(1.06);
+}
+
+.kes-tour-detail-sidebar {
+    position: sticky;
+    top: 115px;
+    display: grid;
+    gap: 22px;
+}
+
+.kes-tour-booking-card,
+.kes-tour-help-card {
+    padding: 28px;
+    border-radius: 24px;
+    box-shadow: 0 18px 50px rgba(7, 23, 45, 0.1);
+}
+
+.kes-tour-booking-card {
+    color: #ffffff;
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(222, 186, 109, 0.24),
+            transparent 34%
+        ),
+        linear-gradient(145deg, #081a32, #0b3156);
+}
+
+.kes-tour-booking-card h2 {
+    margin: 10px 0 20px;
+    color: #ffffff;
+    font-size: 1.5rem;
+    line-height: 1.3;
+}
+
+.kes-tour-booking-card p {
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.7;
+}
+
+.kes-tour-booking-price {
+    margin: 0 0 20px;
+    padding: 18px;
+    border-radius: 17px;
+    background: rgba(255, 255, 255, 0.09);
+}
+
+.kes-tour-booking-price span,
+.kes-tour-booking-price small {
+    display: block;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.74rem;
+}
+
+.kes-tour-booking-price strong {
+    display: block;
+    margin: 4px 0;
+    color: #e5c579;
+    font-size: 1.8rem;
+}
+
+.kes-tour-booking-card .kes-v2-btn {
+    width: 100%;
+    margin-top: 11px;
+    text-align: center;
+}
+
+.kes-tour-contact-button {
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.26);
+    background: transparent;
+}
+
+.kes-tour-contact-button:hover {
+    color: #0b223f;
+    background: #ffffff;
+}
+
+.kes-tour-help-card {
+    border: 1px solid rgba(9, 35, 65, 0.08);
+    background: #ffffff;
+}
+
+.kes-tour-help-card h3 {
+    margin: 0 0 10px;
+    color: #0b223f;
+    font-size: 1.3rem;
+}
+
+.kes-tour-help-card p {
+    margin: 0 0 18px;
+    color: #6c788a;
+    line-height: 1.7;
+}
+
+.kes-tour-help-card a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #a8792f;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+/* =========================================================
+   Pakistan Tours — RTL
+   ========================================================= */
+
+html[dir="rtl"] .kes-tours-filter-field input,
+html[dir="rtl"] .kes-tours-filter-field select {
+    text-align: right;
+}
+
+html[dir="rtl"] .kes-tour-card,
+html[dir="rtl"] .kes-tour-detail-page {
+    text-align: right;
+}
+
+html[dir="rtl"] .kes-tour-detail-overlay {
+    background:
+        linear-gradient(
+            270deg,
+            rgba(5, 20, 40, 0.96) 0%,
+            rgba(5, 20, 40, 0.79) 48%,
+            rgba(5, 20, 40, 0.38) 100%
+        ),
+        linear-gradient(
+            0deg,
+            rgba(5, 20, 40, 0.75),
+            transparent 48%
+        );
+}
+
+/* =========================================================
+   Pakistan Tours — Responsive
+   ========================================================= */
+
+@media (max-width: 1180px) {
+    .kes-tours-filters {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .kes-tours-filter-search {
+        grid-column: span 2;
+    }
+
+    .kes-tours-filter-actions {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .kes-tours-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .kes-tour-detail-grid {
+        grid-template-columns: minmax(0, 1fr) 320px;
+    }
+
+    .kes-tour-detail-facts {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 900px) {
+    .kes-tours-hero-inner {
+        grid-template-columns: 1fr;
+    }
+
+    .kes-tours-hero-logo {
+        display: none;
+    }
+
+    .kes-tour-detail-heading {
+        grid-template-columns: 1fr;
+        align-items: start;
+    }
+
+    .kes-tour-detail-price {
+        min-width: 0;
+        width: min(100%, 330px);
+    }
+
+    .kes-tour-detail-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .kes-tour-detail-sidebar {
+        position: static;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .kes-tour-detail-facts {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 680px) {
+    .kes-tours-hero {
+        padding: 60px 0 76px;
+    }
+
+    .kes-tours-content {
+        padding-top: 38px;
+    }
+
+    .kes-tours-filters {
+        grid-template-columns: 1fr;
+        margin-top: -76px;
+        padding: 18px;
+        border-radius: 20px;
+    }
+
+    .kes-tours-filter-search {
+        grid-column: auto;
+    }
+
+    .kes-tours-filter-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .kes-tours-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .kes-tours-results-heading {
+        align-items: center;
+    }
+
+    .kes-tour-card-meta {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .kes-tour-card-footer {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .kes-tour-detail-hero,
+    .kes-tour-detail-hero-content {
+        min-height: 610px;
+    }
+
+    .kes-tour-detail-heading h1 {
+        font-size: clamp(2.15rem, 11vw, 3.4rem);
+    }
+
+    .kes-tour-detail-content {
+        padding: 42px 0 75px;
+    }
+
+    .kes-tour-detail-summary,
+    .kes-tour-detail-section,
+    .kes-tour-detail-inclusions {
+        padding: 21px;
+        border-radius: 20px;
+    }
+
+    .kes-tour-detail-facts,
+    .kes-tour-detail-inclusions,
+    .kes-tour-detail-gallery,
+    .kes-tour-detail-sidebar {
+        grid-template-columns: 1fr;
+    }
+
+    .kes-tour-detail-gallery {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 420px) {
+    .kes-tour-detail-facts,
+    .kes-tour-detail-gallery {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* =========================================================
+   Pakistan Tours — Final Filter Alignment
+   ========================================================= */
+
+.kes-tours-content {
+    position: relative;
+    z-index: 5;
+    padding-top: 32px;
+}
+
+.kes-tours-filters {
+    position: relative;
+    z-index: 10;
+    margin-top: 0 !important;
+    padding-top: 24px;
+}
+
+@media (max-width: 680px) {
+    .kes-tours-content {
+        padding-top: 24px;
+    }
+
+    .kes-tours-filters {
+        margin-top: 0 !important;
+        padding-top: 20px;
+    }
+}

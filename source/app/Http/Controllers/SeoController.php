@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PakistanTour;
 use App\Models\UmrahPackage;
 use Illuminate\Http\Response;
 
@@ -28,7 +29,10 @@ class SeoController extends Controller
         ];
 
         $staticUrls = collect($staticRoutes)
-            ->filter(fn (array $item): bool => app('router')->has($item['name']))
+            ->filter(
+                fn (array $item): bool => app('router')
+                    ->has($item['name'])
+            )
             ->map(fn (array $item): array => [
                 'loc' => route($item['name']),
                 'lastmod' => null,
@@ -50,9 +54,27 @@ class SeoController extends Controller
                 'priority' => '0.8',
             ]);
 
+        $tourUrls = PakistanTour::query()
+            ->where('status', 'Published')
+            ->whereNotNull('slug')
+            ->orderByDesc('updated_at')
+            ->get(['slug', 'updated_at'])
+            ->map(fn (PakistanTour $tour): array => [
+                'loc' => route('website.tours.show', [
+                    'pakistanTour' => $tour->slug,
+                ]),
+                'lastmod' => $tour->updated_at?->toDateString(),
+                'changefreq' => 'weekly',
+                'priority' => '0.8',
+            ]);
+
+        $urls = $staticUrls
+            ->concat($packageUrls)
+            ->concat($tourUrls);
+
         return response()->view(
             'website.sitemap',
-            ['urls' => $staticUrls->concat($packageUrls)],
+            ['urls' => $urls],
             200,
             ['Content-Type' => 'application/xml; charset=UTF-8'],
         );

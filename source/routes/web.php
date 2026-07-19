@@ -1,4 +1,5 @@
 <?php
+use App\Http\Controllers\PublicPakistanTourController;
 use App\Http\Controllers\SupplierStatementPdfController;
 use App\Http\Controllers\CustomerStatementPdfController;
 use App\Http\Controllers\KarwanAiController;
@@ -53,8 +54,15 @@ Route::get('/hotel-booking', [WebsiteController::class, 'page'])->defaults('slug
 Route::get('/visit-visas', [WebsiteController::class, 'page'])->defaults('slug', 'visit-visas')->name('website.visas');
 Route::get('/visa-consultancy', [WebsiteController::class, 'page'])->defaults('slug', 'visa-consultancy')->name('website.consultancy');
 Route::get('/travel-insurance', [WebsiteController::class, 'page'])->defaults('slug', 'travel-insurance')->name('website.insurance');
-Route::get('/pakistan-tours', [WebsiteController::class, 'page'])->defaults('slug', 'pakistan-tours')->name('website.tours');
-Route::get('/gallery', [WebsiteController::class, 'page'])->defaults('slug', 'gallery')->name('website.gallery');
+Route::get(
+    '/pakistan-tours',
+    [PublicPakistanTourController::class, 'index'],
+)->name('website.tours');
+
+Route::get(
+    '/pakistan-tours/{pakistanTour}',
+    [PublicPakistanTourController::class, 'show'],
+)->name('website.tours.show');Route::get('/gallery', [WebsiteController::class, 'page'])->defaults('slug', 'gallery')->name('website.gallery');
 Route::get('/testimonials', [WebsiteController::class, 'page'])->defaults('slug', 'testimonials')->name('website.testimonials');
 Route::get('/faq', [WebsiteController::class, 'page'])->defaults('slug', 'faq')->name('website.faq');
 Route::get('/blog-news', [WebsiteController::class, 'page'])->defaults('slug', 'blog-news')->name('website.blog');

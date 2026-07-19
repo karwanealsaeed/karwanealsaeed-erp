@@ -205,9 +205,10 @@
                     </a>
 
                     <a href="{{ route('website.tours') }}"
-                       class="{{ request()->routeIs('website.tours') ? 'is-active' : '' }}">
+                       class="{{ request()->routeIs('website.tours*') ? 'is-active' : '' }}">
                         {{ __('website.tours') }}
                     </a>
+
 
                     <a href="{{ route('website.contact') }}"
                        class="{{ request()->routeIs('website.contact') ? 'is-active' : '' }}">
@@ -252,6 +253,7 @@
                         <a href="{{ route('website.tickets') }}">{{ __('website.air_ticketing') }}</a>
                         <a href="{{ route('website.hotels') }}">{{ __('website.hotel_booking') }}</a>
                         <a href="{{ route('website.tours') }}">{{ __('website.pakistan_tours') }}</a>
+                        <a href="{{ route('website.gallery') }}">{{ __('gallery.title') }}</a>
                         <a href="{{ route('website.contact') }}">{{ __('website.contact_us') }}</a>
 
                                                 <div class="kes-mobile-language-switcher">
@@ -317,6 +319,7 @@
                     <a href="{{ route('website.home') }}">{{ __('website.home') }}</a>
                     <a href="{{ route('website.about') }}">{{ __('website.about_us') }}</a>
                     <a href="{{ route('website.services') }}">{{ __('website.our_services') }}</a>
+                    <a href="{{ route('website.gallery') }}">{{ __('gallery.title') }}</a>
                     <a href="{{ route('website.contact') }}">{{ __('website.contact_us') }}</a>
                     <a href="{{ route('customer.portal.login') }}">{{ __('website.customer_portal') }}</a>
                 </div>

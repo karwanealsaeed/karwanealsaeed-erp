@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\GalleryItem;
 use App\Models\PakistanTour;
 use App\Models\UmrahPackage;
 use Illuminate\Http\Response;
@@ -31,7 +32,7 @@ class SeoController extends Controller
         $staticUrls = collect($staticRoutes)
             ->filter(
                 fn (array $item): bool => app('router')
-                    ->has($item['name'])
+                    ->has($item['name']),
             )
             ->map(fn (array $item): array => [
                 'loc' => route($item['name']),
@@ -68,9 +69,26 @@ class SeoController extends Controller
                 'priority' => '0.8',
             ]);
 
+        $galleryUrls = GalleryItem::query()
+            ->published()
+            ->whereNotNull('slug')
+            ->orderByDesc('updated_at')
+            ->get(['slug', 'updated_at'])
+            ->map(fn (GalleryItem $galleryItem): array => [
+                'loc' => route('website.gallery.show', [
+                    'galleryItem' => $galleryItem->slug,
+                ]),
+                'lastmod' => $galleryItem
+                    ->updated_at
+                    ?->toDateString(),
+                'changefreq' => 'monthly',
+                'priority' => '0.6',
+            ]);
+
         $urls = $staticUrls
             ->concat($packageUrls)
-            ->concat($tourUrls);
+            ->concat($tourUrls)
+            ->concat($galleryUrls);
 
         return response()->view(
             'website.sitemap',

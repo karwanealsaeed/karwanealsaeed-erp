@@ -194,13 +194,18 @@ class UserForm
             ],
 
             'permissions_website_content' => [
-                'options' => [
-                    'pakistan_tours_view' => 'Pakistan Tours - View',
-                    'pakistan_tours_create' => 'Pakistan Tours - Create',
-                    'pakistan_tours_edit' => 'Pakistan Tours - Edit',
-                    'pakistan_tours_delete' => 'Pakistan Tours - Delete',
-                ],
-            ],
+    'options' => [
+        'pakistan_tours_view' => 'Pakistan Tours - View',
+        'pakistan_tours_create' => 'Pakistan Tours - Create',
+        'pakistan_tours_edit' => 'Pakistan Tours - Edit',
+        'pakistan_tours_delete' => 'Pakistan Tours - Delete',
+
+        'gallery_view' => 'Gallery - View',
+        'gallery_create' => 'Gallery - Create',
+        'gallery_edit' => 'Gallery - Edit',
+        'gallery_delete' => 'Gallery - Delete',
+    ],
+],
 
             'permissions_customers' => [
                 'options' => [
@@ -337,7 +342,9 @@ class UserForm
                 'pakistan_tours_view',
                 'pakistan_tours_create',
                 'pakistan_tours_edit',
-
+                'gallery_view',
+                'gallery_create',
+                'gallery_edit',
                 'customers_view',
                 'customers_create',
                 'customers_edit',

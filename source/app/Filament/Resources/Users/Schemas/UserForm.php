@@ -219,6 +219,11 @@ class UserForm
                     'blog_posts_create' => 'Blog / News - Create',
                     'blog_posts_edit' => 'Blog / News - Edit',
                     'blog_posts_delete' => 'Blog / News - Delete',
+
+                    'promotions_view' => 'Promotions - View',
+                    'promotions_create' => 'Promotions - Create',
+                    'promotions_edit' => 'Promotions - Edit',
+                    'promotions_delete' => 'Promotions - Delete',
                 ],
             ],
 
@@ -372,6 +377,11 @@ class UserForm
                 'blog_posts_view',
                 'blog_posts_create',
                 'blog_posts_edit',
+
+                'promotions_view',
+                'promotions_create',
+                'promotions_edit',
+                'promotions_delete',
 
                 'customers_view',
                 'customers_create',

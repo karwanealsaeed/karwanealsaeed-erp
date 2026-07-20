@@ -85,4 +85,6 @@
             <a href="{{ route('customer.portal.support') }}">Open Support</a>
         </div>
     </div>
+
+    <x-customer-latest-offers />
 @endsection

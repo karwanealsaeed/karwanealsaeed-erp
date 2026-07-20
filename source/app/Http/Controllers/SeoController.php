@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\BlogPost;
 use App\Models\GalleryItem;
 use App\Models\PakistanTour;
+use App\Models\Promotion;
 use App\Models\UmrahPackage;
 use Illuminate\Http\Response;
 
@@ -25,6 +26,7 @@ class SeoController extends Controller
             ['name' => 'website.tours', 'changefreq' => 'weekly', 'priority' => '0.8'],
             ['name' => 'website.gallery', 'changefreq' => 'weekly', 'priority' => '0.6'],
             ['name' => 'website.testimonials', 'changefreq' => 'weekly', 'priority' => '0.6'],
+            ['name' => 'website.promotions', 'changefreq' => 'daily', 'priority' => '0.8'],
             ['name' => 'website.faq', 'changefreq' => 'monthly', 'priority' => '0.7'],
             ['name' => 'website.blog', 'changefreq' => 'weekly', 'priority' => '0.7'],
             ['name' => 'website.contact', 'changefreq' => 'monthly', 'priority' => '0.8'],
@@ -102,11 +104,28 @@ class SeoController extends Controller
                 'priority' => '0.7',
             ]);
 
+        $promotionUrls = Promotion::query()
+            ->active()
+            ->whereNotNull('slug')
+            ->orderByDesc('updated_at')
+            ->get(['slug', 'updated_at'])
+            ->map(fn (Promotion $promotion): array => [
+                'loc' => route(
+                    'website.promotions.show',
+                    ['promotion' => $promotion->slug],
+                ),
+                'lastmod' => $promotion
+                    ->updated_at
+                    ?->toDateString(),
+                'changefreq' => 'daily',
+                'priority' => '0.8',
+            ]);
         $urls = $staticUrls
             ->concat($packageUrls)
             ->concat($tourUrls)
             ->concat($galleryUrls)
-            ->concat($blogUrls);
+            ->concat($blogUrls)
+            ->concat($promotionUrls);
 
         return response()->view(
             'website.sitemap',

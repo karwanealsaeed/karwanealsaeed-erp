@@ -79,6 +79,7 @@
                     <span>👨‍👩‍👧</span> Family Members
                 </a>
 
+                <a href="{{ route('customer.portal.promotions') }}" class="{{ request()->routeIs('customer.portal.promotions') ? 'active' : '' }}">Latest Offers</a>
                 <a href="{{ route('customer.portal.notifications') }}" class="{{ request()->routeIs('customer.portal.notifications') ? 'active' : '' }}">
                     <span>🔔</span> Notifications & Offers
                 </a>

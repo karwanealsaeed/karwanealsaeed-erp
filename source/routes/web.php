@@ -3,12 +3,14 @@ use App\Http\Controllers\PublicBlogPostController;
 use App\Http\Controllers\PublicFaqController;
 use App\Http\Controllers\PublicGalleryController;
 use App\Http\Controllers\PublicPakistanTourController;
+use App\Http\Controllers\PublicPromotionController;
 use App\Http\Controllers\PublicTestimonialController;
 use App\Http\Controllers\SupplierStatementPdfController;
 use App\Http\Controllers\CustomerStatementPdfController;
 use App\Http\Controllers\KarwanAiController;
 use App\Http\Controllers\CustomerDocumentDownloadController;
 use App\Http\Controllers\CustomerPortalController;
+use App\Http\Controllers\CustomerPromotionController;
 use App\Http\Controllers\DatabaseBackupDownloadController;
 use App\Http\Controllers\GoogleDriveOAuthController;
 use App\Http\Controllers\InvoicePrintController;
@@ -94,6 +96,16 @@ Route::get(
     '/blog-news/{blogPost}',
     [PublicBlogPostController::class, 'show'],
 )->name('website.blog.show');
+Route::get(
+    '/promotions',
+    [PublicPromotionController::class, 'index'],
+)->name('website.promotions');
+
+Route::get(
+    '/promotions/{promotion}',
+    [PublicPromotionController::class, 'show'],
+)->name('website.promotions.show');
+
 Route::get('/contact', [WebsiteController::class, 'page'])->defaults('slug', 'contact')->name('website.contact');
 
 Route::post('/support-inquiries', [SupportInquiryController::class, 'store'])
@@ -133,6 +145,10 @@ Route::post('/customer/register', [CustomerPortalController::class, 'storeRegist
 Route::middleware('customer.portal')->group(function (): void {
     Route::get('/customer/dashboard', [CustomerPortalController::class, 'dashboard'])
         ->name('customer.portal.dashboard');
+    Route::get(
+        '/customer/promotions',
+        CustomerPromotionController::class,
+    )->name('customer.portal.promotions');
 
     Route::get('/customer/profile', [CustomerPortalController::class, 'profile'])
         ->name('customer.portal.profile');

@@ -15,6 +15,11 @@ class DatabaseBackup extends Model
         'file_name',
         'file_path',
         'file_size',
+        'backup_type',
+        'checksum_sha256',
+        'verification_status',
+        'verified_at',
+        'verification_error',
         'drive_file_id',
         'drive_file_name',
         'drive_web_view_link',
@@ -26,39 +31,82 @@ class DatabaseBackup extends Model
     ];
 
     protected $casts = [
-        'drive_uploaded_at' => 'datetime',
+        'file_size' =>
+            'integer',
+
+        'verified_at' =>
+            'datetime',
+
+        'drive_uploaded_at' =>
+            'datetime',
     ];
 
     protected static function booted(): void
     {
-        static::deleting(function (DatabaseBackup $databaseBackup): void {
-            if ($databaseBackup->file_path && Storage::disk('local')->exists($databaseBackup->file_path)) {
-                Storage::disk('local')->delete($databaseBackup->file_path);
-            }
-        });
+        static::deleting(
+            function (
+                DatabaseBackup $databaseBackup,
+            ): void {
+                if (
+                    $databaseBackup->file_path
+                    && Storage::disk('local')
+                        ->exists(
+                            $databaseBackup
+                                ->file_path,
+                        )
+                ) {
+                    Storage::disk('local')
+                        ->delete(
+                            $databaseBackup
+                                ->file_path,
+                        );
+                }
+            },
+        );
     }
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(
+            User::class,
+        );
+    }
+
+    public function getIsVerifiedAttribute(): bool
+    {
+        return $this->verification_status
+            === 'Verified';
     }
 
     public function getFormattedFileSizeAttribute(): string
     {
-        $bytes = (int) $this->file_size;
+        $bytes =
+            (int) $this->file_size;
 
         if ($bytes >= 1073741824) {
-            return number_format($bytes / 1073741824, 2) . ' GB';
+            return number_format(
+                $bytes / 1073741824,
+                2,
+            )
+            .' GB';
         }
 
         if ($bytes >= 1048576) {
-            return number_format($bytes / 1048576, 2) . ' MB';
+            return number_format(
+                $bytes / 1048576,
+                2,
+            )
+            .' MB';
         }
 
         if ($bytes >= 1024) {
-            return number_format($bytes / 1024, 2) . ' KB';
+            return number_format(
+                $bytes / 1024,
+                2,
+            )
+            .' KB';
         }
 
-        return $bytes . ' Bytes';
+        return $bytes.' Bytes';
     }
 }

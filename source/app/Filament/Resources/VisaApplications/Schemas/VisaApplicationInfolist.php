@@ -27,6 +27,60 @@ class VisaApplicationInfolist
                 TextEntry::make('passport_no')
                     ->label('Passport No'),
 
+TextEntry::make(
+    'passport_expiry_date',
+)
+    ->label('Passport Expiry Date')
+    ->date('d M Y')
+    ->placeholder('-'),
+
+TextEntry::make(
+    'required_passport_validity_months',
+)
+    ->label('Required Validity')
+    ->suffix(' months')
+    ->placeholder('6'),
+
+TextEntry::make(
+    'passport_required_until',
+)
+    ->label('Passport Required Until')
+    ->date('d M Y')
+    ->placeholder('-'),
+
+TextEntry::make(
+    'passport_validity_status',
+)
+    ->label('Passport Validity')
+    ->badge()
+    ->color(
+        fn (?string $state): string =>
+            match ($state) {
+                'Valid' =>
+                    'success',
+
+                'Renewal Required',
+                'Missing Travel Date' =>
+                    'warning',
+
+                'Expired',
+                'Not Valid for Journey',
+                'Missing Passport Expiry' =>
+                    'danger',
+
+                default =>
+                    'gray',
+            },
+    )
+    ->placeholder('Not Checked'),
+
+TextEntry::make(
+    'passport_validity_checked_at',
+)
+    ->label('Validity Checked At')
+    ->dateTime('d M Y h:i A')
+    ->placeholder('-'),
+
                 TextEntry::make('passport_status')
                     ->label('Passport Status')
                     ->badge(),

@@ -12,6 +12,13 @@ class VisaApplication extends Model
     'country_id',
     'visa_type_id',
     'passport_no',
+        'passport_expiry_date',
+        'required_passport_validity_months',
+        'passport_required_until',
+        'passport_validity_status',
+        'passport_validity_checked_at',
+        'passport_alert_fingerprint',
+        'passport_alert_sent_at',
     'passport_received_date',
     'passport_return_date',
     'passport_status',
@@ -25,6 +32,19 @@ class VisaApplication extends Model
     'status',
     'notes',
 ];
+
+    protected function casts(): array
+    {
+        return [
+            'passport_expiry_date' => 'date',
+            'required_passport_validity_months' => 'integer',
+            'passport_required_until' => 'date',
+            'passport_validity_checked_at' => 'datetime',
+            'passport_alert_sent_at' => 'datetime',
+            'travel_date' => 'date',
+            'return_date' => 'date',
+        ];
+    }
 
     public function customer()
 {

@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\VisaApplications\Tables;
 
+use Filament\Tables\Filters\SelectFilter;
+
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -39,6 +41,54 @@ class VisaApplicationsTable
                 TextColumn::make('passport_no')
                     ->label('Passport No')
                     ->searchable(),
+
+TextColumn::make(
+    'passport_expiry_date',
+)
+    ->label('Passport Expiry')
+    ->date('d M Y')
+    ->placeholder('-')
+    ->sortable()
+    ->toggleable(),
+
+TextColumn::make(
+    'passport_validity_status',
+)
+    ->label('Passport Validity')
+    ->badge()
+    ->color(
+        fn (?string $state): string =>
+            match ($state) {
+                'Valid' =>
+                    'success',
+
+                'Renewal Required',
+                'Missing Travel Date' =>
+                    'warning',
+
+                'Expired',
+                'Not Valid for Journey',
+                'Missing Passport Expiry' =>
+                    'danger',
+
+                default =>
+                    'gray',
+            },
+    )
+    ->placeholder('Not Checked')
+    ->searchable()
+    ->sortable(),
+
+TextColumn::make(
+    'passport_required_until',
+)
+    ->label('Required Until')
+    ->date('d M Y')
+    ->placeholder('-')
+    ->sortable()
+    ->toggleable(
+        isToggledHiddenByDefault: true,
+    ),
 
                 TextColumn::make('passport_status')
                     ->label('Passport')
@@ -123,7 +173,31 @@ class VisaApplicationsTable
 
             ])
             ->filters([
-                //
+                SelectFilter::make(
+                    'passport_validity_status',
+                )
+                    ->label(
+                        'Passport Validity',
+                    )
+                    ->options([
+                        'Valid' =>
+                            'Valid',
+
+                        'Renewal Required' =>
+                            'Renewal Required',
+
+                        'Not Valid for Journey' =>
+                            'Not Valid for Journey',
+
+                        'Expired' =>
+                            'Expired',
+
+                        'Missing Passport Expiry' =>
+                            'Missing Passport Expiry',
+
+                        'Missing Travel Date' =>
+                            'Missing Travel Date',
+                    ]),                //
             ])
             ->recordActions([
                 ViewAction::make(),

@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\VisaApplication;
+use App\Observers\VisaApplicationObserver;
+
 use App\Models\LoginActivity;
 use App\Observers\AccountingAutoPostingObserver;
 use Illuminate\Auth\Events\Login;
@@ -19,6 +22,9 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        VisaApplication::observe(
+            VisaApplicationObserver::class,
+        );
         date_default_timezone_set('Asia/Karachi');
 
         foreach ([

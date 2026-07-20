@@ -16,3 +16,10 @@ Schedule::command('kes:daily-backup')
 Schedule::command('tasks:send-reminders')
     ->everyMinute()
     ->withoutOverlapping(5);
+
+Schedule::command(
+    'passport:send-expiry-alerts',
+)
+    ->dailyAt('08:00')
+    ->timezone('Asia/Karachi')
+    ->withoutOverlapping(30);

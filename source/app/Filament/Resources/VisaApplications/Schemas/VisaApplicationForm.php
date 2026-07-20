@@ -2,6 +2,14 @@
 
 namespace App\Filament\Resources\VisaApplications\Schemas;
 
+use Illuminate\Support\HtmlString;
+
+use Filament\Forms\Components\Placeholder;
+
+use App\Services\PassportValidityService;
+
+use App\Services\CustomerPassportService;
+
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -37,7 +45,26 @@ class VisaApplicationForm
                             $set('passport_no', $customer->passport_no);
                         }
 
-                    }),
+                    })
+    ->afterStateUpdated(function (Set $set, mixed $state): void {
+        $defaults = app(
+            CustomerPassportService::class,
+        )->defaultsForCustomer(
+            filled($state)
+                ? (int) $state
+                : null,
+        );
+
+        $set(
+            'passport_no',
+            $defaults['passport_no'],
+        );
+
+        $set(
+            'passport_expiry_date',
+            $defaults['passport_expiry_date'],
+        );
+    }),
 
                 Select::make('country_id')
                     ->label('Country')
@@ -56,6 +83,118 @@ class VisaApplicationForm
                 TextInput::make('passport_no')
                     ->label('Passport Number')
                     ->required(),
+
+    DatePicker::make('passport_expiry_date')
+        ->label('Passport Expiry Date')
+        ->native(false)
+        ->live()
+        ->required(
+            fn (Get $get): bool =>
+                ($get('status') ?? 'Draft')
+                    !== 'Draft',
+        )
+        ->helperText(
+            'Latest Passport document se auto-fill hoti hai. Zarurat par manually update karein.',
+        ),
+
+    TextInput::make(
+        'required_passport_validity_months',
+    )
+        ->label('Required Validity After Journey')
+        ->numeric()
+        ->minValue(0)
+        ->maxValue(24)
+        ->default(
+            PassportValidityService
+                ::DEFAULT_VALIDITY_MONTHS,
+        )
+        ->suffix('months')
+        ->required()
+        ->live()
+        ->helperText(
+            'International safety default 6 months hai. Destination rule ke mutabiq change ki ja sakti hai.',
+        ),
+
+    Placeholder::make(
+        'passport_validity_preview',
+    )
+        ->label('Passport Validity Check')
+        ->content(
+            function (Get $get): HtmlString {
+                $months = (int) (
+                    $get(
+                        'required_passport_validity_months',
+                    )
+                    ?: PassportValidityService
+                        ::DEFAULT_VALIDITY_MONTHS
+                );
+
+                $result = app(
+                    PassportValidityService::class,
+                )->evaluate(
+                    passportExpiry:
+                        $get(
+                            'passport_expiry_date',
+                        ),
+                    travelDate:
+                        $get('travel_date'),
+                    returnDate:
+                        $get('return_date'),
+                    requiredMonths:
+                        $months,
+                );
+
+                $style = match (
+                    $result['severity']
+                ) {
+                    'success' =>
+                        'background:#ecfdf5;'
+                        .'border:1px solid #10b981;'
+                        .'color:#065f46;',
+
+                    'warning' =>
+                        'background:#fffbeb;'
+                        .'border:1px solid #f59e0b;'
+                        .'color:#92400e;',
+
+                    default =>
+                        'background:#fef2f2;'
+                        .'border:1px solid #ef4444;'
+                        .'color:#991b1b;',
+                };
+
+                $requiredUntil =
+                    $result['required_until']
+                        ?->format('d M Y');
+
+                $requiredText =
+                    $requiredUntil
+                        ? '<div style="margin-top:6px">'
+                            .'Passport required until: '
+                            .'<strong>'
+                            .e($requiredUntil)
+                            .'</strong></div>'
+                        : '';
+
+                return new HtmlString(
+                    '<div style="'
+                    .$style
+                    .'padding:12px 14px;'
+                    .'border-radius:10px;'
+                    .'font-weight:600;'
+                    .'line-height:1.5">'
+                    .'<div style="font-weight:800">'
+                    .e($result['status'])
+                    .'</div>'
+                    .'<div>'
+                    .e($result['message'])
+                    .'</div>'
+                    .$requiredText
+                    .'</div>',
+                );
+            },
+        )
+        ->columnSpanFull(),
 
                 Select::make('passport_status')
                     ->label('Passport Status')
@@ -76,10 +215,12 @@ class VisaApplicationForm
                     ->label('Passport Return Date'),
 
                 DatePicker::make('travel_date')
-                    ->label('Travel Date'),
+                    ->label('Travel Date')
+        ->live(),
 
                 DatePicker::make('return_date')
-                    ->label('Return Date'),
+                    ->label('Return Date')
+            ->live(),
 
                 TextInput::make('visa_fee')
                     ->label('Visa Fee')

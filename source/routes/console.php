@@ -12,3 +12,7 @@ Schedule::command('kes:daily-backup')
     ->dailyAt('02:00')
     ->timezone('Asia/Karachi')
     ->withoutOverlapping();
+
+Schedule::command('tasks:send-reminders')
+    ->everyMinute()
+    ->withoutOverlapping(5);

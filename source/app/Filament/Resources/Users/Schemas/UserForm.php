@@ -98,6 +98,11 @@ class UserForm
                     ])
                     ->collapsible(),
 
+                Section::make('Task & Follow-up Rights')
+                    ->schema([
+                        self::makePermissionCheckbox('permissions_tasks'),
+                    ])
+                    ->collapsible(),
                 Section::make('Customer Rights')
                     ->schema([
                         self::makePermissionCheckbox('permissions_customers'),
@@ -227,6 +232,14 @@ class UserForm
                 ],
             ],
 
+            'permissions_tasks' => [
+                'options' => [
+                    'tasks_view' => 'Tasks & Follow-ups - View',
+                    'tasks_create' => 'Tasks & Follow-ups - Create',
+                    'tasks_edit' => 'Tasks & Follow-ups - Edit',
+                    'tasks_delete' => 'Tasks & Follow-ups - Delete',
+                ],
+            ],
             'permissions_customers' => [
                 'options' => [
                     'customers_view' => 'Customers - View',
@@ -383,6 +396,10 @@ class UserForm
                 'promotions_edit',
                 'promotions_delete',
 
+                'tasks_view',
+                'tasks_create',
+                'tasks_edit',
+                'tasks_delete',
                 'customers_view',
                 'customers_create',
                 'customers_edit',
@@ -513,6 +530,9 @@ class UserForm
                 'visa_types_view',
                 'suppliers_view',
 
+                'tasks_view',
+                'tasks_create',
+                'tasks_edit',
                 'customers_view',
                 'customers_create',
                 'customers_edit',

@@ -170,6 +170,7 @@
             </div>
         </div>
 
+        <x-admin-task-dashboard />
         <div class="kes-dashboard-footer">
             <span>© {{ date('Y') }} Karwan E Al Saeed Travel & Tours. All rights reserved.</span>
             <span>v5.6.8 | Made with ❤️ in Pakistan</span>

@@ -28,7 +28,8 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
-            ->login()->brandName('Karwan E Al Saeed')
+            ->login()
+            ->databaseNotifications()->brandName('Karwan E Al Saeed')
             ->renderHook(
     'panels::auth.login.form.after',
     fn (): string => view('filament.admin.login-public-link')->render(),

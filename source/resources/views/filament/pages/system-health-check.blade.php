@@ -16,7 +16,7 @@
                     </h2>
 
                     <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">
-                        ERP system ke important modules, routes, storage aur backup status.
+                        ERP scheduler, queue, database, routes, storage aur backup reliability status.
                     </p>
                 </div>
 

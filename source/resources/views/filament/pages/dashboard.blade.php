@@ -1,5 +1,6 @@
 <x-filament-panels::page>
     <div class="kes-admin-dashboard">
+        <x-admin-scheduler-health />
         <div class="kes-dashboard-title-row">
             <div>
                 <h1>Dashboard</h1>

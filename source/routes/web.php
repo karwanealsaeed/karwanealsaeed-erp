@@ -1,4 +1,5 @@
 <?php
+use App\Http\Controllers\PublicBlogPostController;
 use App\Http\Controllers\PublicFaqController;
 use App\Http\Controllers\PublicGalleryController;
 use App\Http\Controllers\PublicPakistanTourController;
@@ -84,7 +85,15 @@ Route::get(
     '/faq',
     [PublicFaqController::class, 'index'],
 )->name('website.faq');
-Route::get('/blog-news', [WebsiteController::class, 'page'])->defaults('slug', 'blog-news')->name('website.blog');
+Route::get(
+    '/blog-news',
+    [PublicBlogPostController::class, 'index'],
+)->name('website.blog');
+
+Route::get(
+    '/blog-news/{blogPost}',
+    [PublicBlogPostController::class, 'show'],
+)->name('website.blog.show');
 Route::get('/contact', [WebsiteController::class, 'page'])->defaults('slug', 'contact')->name('website.contact');
 
 Route::post('/support-inquiries', [SupportInquiryController::class, 'store'])

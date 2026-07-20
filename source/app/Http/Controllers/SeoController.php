@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BlogPost;
 use App\Models\GalleryItem;
 use App\Models\PakistanTour;
 use App\Models\UmrahPackage;
@@ -85,10 +86,27 @@ class SeoController extends Controller
                 'priority' => '0.6',
             ]);
 
+        $blogUrls = BlogPost::query()
+            ->published()
+            ->whereNotNull('slug')
+            ->orderByDesc('updated_at')
+            ->get(['slug', 'updated_at'])
+            ->map(fn (BlogPost $blogPost): array => [
+                'loc' => route('website.blog.show', [
+                    'blogPost' => $blogPost->slug,
+                ]),
+                'lastmod' => $blogPost
+                    ->updated_at
+                    ?->toDateString(),
+                'changefreq' => 'monthly',
+                'priority' => '0.7',
+            ]);
+
         $urls = $staticUrls
             ->concat($packageUrls)
             ->concat($tourUrls)
-            ->concat($galleryUrls);
+            ->concat($galleryUrls)
+            ->concat($blogUrls);
 
         return response()->view(
             'website.sitemap',

@@ -214,6 +214,11 @@ class UserForm
                     'faqs_create' => 'FAQs - Create',
                     'faqs_edit' => 'FAQs - Edit',
                     'faqs_delete' => 'FAQs - Delete',
+
+                    'blog_posts_view' => 'Blog / News - View',
+                    'blog_posts_create' => 'Blog / News - Create',
+                    'blog_posts_edit' => 'Blog / News - Edit',
+                    'blog_posts_delete' => 'Blog / News - Delete',
                 ],
             ],
 
@@ -363,6 +368,10 @@ class UserForm
                 'faqs_view',
                 'faqs_create',
                 'faqs_edit',
+
+                'blog_posts_view',
+                'blog_posts_create',
+                'blog_posts_edit',
 
                 'customers_view',
                 'customers_create',

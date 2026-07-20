@@ -1,4 +1,5 @@
 <?php
+use App\Http\Controllers\PublicFaqController;
 use App\Http\Controllers\PublicGalleryController;
 use App\Http\Controllers\PublicPakistanTourController;
 use App\Http\Controllers\PublicTestimonialController;
@@ -79,7 +80,10 @@ Route::get(
     '/testimonials',
     [PublicTestimonialController::class, 'index'],
 )->name('website.testimonials');
-Route::get('/faq', [WebsiteController::class, 'page'])->defaults('slug', 'faq')->name('website.faq');
+Route::get(
+    '/faq',
+    [PublicFaqController::class, 'index'],
+)->name('website.faq');
 Route::get('/blog-news', [WebsiteController::class, 'page'])->defaults('slug', 'blog-news')->name('website.blog');
 Route::get('/contact', [WebsiteController::class, 'page'])->defaults('slug', 'contact')->name('website.contact');
 

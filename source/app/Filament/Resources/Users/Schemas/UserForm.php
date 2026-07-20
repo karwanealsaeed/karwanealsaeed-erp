@@ -209,6 +209,11 @@ class UserForm
                     'testimonials_create' => 'Testimonials - Create',
                     'testimonials_edit' => 'Testimonials - Edit',
                     'testimonials_delete' => 'Testimonials - Delete',
+
+                    'faqs_view' => 'FAQs - View',
+                    'faqs_create' => 'FAQs - Create',
+                    'faqs_edit' => 'FAQs - Edit',
+                    'faqs_delete' => 'FAQs - Delete',
                 ],
             ],
 
@@ -354,6 +359,10 @@ class UserForm
                 'testimonials_view',
                 'testimonials_create',
                 'testimonials_edit',
+
+                'faqs_view',
+                'faqs_create',
+                'faqs_edit',
 
                 'customers_view',
                 'customers_create',

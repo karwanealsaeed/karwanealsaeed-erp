@@ -194,18 +194,23 @@ class UserForm
             ],
 
             'permissions_website_content' => [
-    'options' => [
-        'pakistan_tours_view' => 'Pakistan Tours - View',
-        'pakistan_tours_create' => 'Pakistan Tours - Create',
-        'pakistan_tours_edit' => 'Pakistan Tours - Edit',
-        'pakistan_tours_delete' => 'Pakistan Tours - Delete',
+                'options' => [
+                    'pakistan_tours_view' => 'Pakistan Tours - View',
+                    'pakistan_tours_create' => 'Pakistan Tours - Create',
+                    'pakistan_tours_edit' => 'Pakistan Tours - Edit',
+                    'pakistan_tours_delete' => 'Pakistan Tours - Delete',
 
-        'gallery_view' => 'Gallery - View',
-        'gallery_create' => 'Gallery - Create',
-        'gallery_edit' => 'Gallery - Edit',
-        'gallery_delete' => 'Gallery - Delete',
-    ],
-],
+                    'gallery_view' => 'Gallery - View',
+                    'gallery_create' => 'Gallery - Create',
+                    'gallery_edit' => 'Gallery - Edit',
+                    'gallery_delete' => 'Gallery - Delete',
+
+                    'testimonials_view' => 'Testimonials - View',
+                    'testimonials_create' => 'Testimonials - Create',
+                    'testimonials_edit' => 'Testimonials - Edit',
+                    'testimonials_delete' => 'Testimonials - Delete',
+                ],
+            ],
 
             'permissions_customers' => [
                 'options' => [
@@ -345,6 +350,11 @@ class UserForm
                 'gallery_view',
                 'gallery_create',
                 'gallery_edit',
+
+                'testimonials_view',
+                'testimonials_create',
+                'testimonials_edit',
+
                 'customers_view',
                 'customers_create',
                 'customers_edit',

@@ -1,6 +1,7 @@
 <?php
 use App\Http\Controllers\PublicGalleryController;
 use App\Http\Controllers\PublicPakistanTourController;
+use App\Http\Controllers\PublicTestimonialController;
 use App\Http\Controllers\SupplierStatementPdfController;
 use App\Http\Controllers\CustomerStatementPdfController;
 use App\Http\Controllers\KarwanAiController;
@@ -63,7 +64,9 @@ Route::get(
 Route::get(
     '/pakistan-tours/{pakistanTour}',
     [PublicPakistanTourController::class, 'show'],
-)->name('website.tours.show');Route::get(
+)->name('website.tours.show');
+
+Route::get(
     '/gallery',
     [PublicGalleryController::class, 'index'],
 )->name('website.gallery');
@@ -72,7 +75,10 @@ Route::get(
     '/gallery/{galleryItem}',
     [PublicGalleryController::class, 'show'],
 )->name('website.gallery.show');
-Route::get('/testimonials', [WebsiteController::class, 'page'])->defaults('slug', 'testimonials')->name('website.testimonials');
+Route::get(
+    '/testimonials',
+    [PublicTestimonialController::class, 'index'],
+)->name('website.testimonials');
 Route::get('/faq', [WebsiteController::class, 'page'])->defaults('slug', 'faq')->name('website.faq');
 Route::get('/blog-news', [WebsiteController::class, 'page'])->defaults('slug', 'blog-news')->name('website.blog');
 Route::get('/contact', [WebsiteController::class, 'page'])->defaults('slug', 'contact')->name('website.contact');

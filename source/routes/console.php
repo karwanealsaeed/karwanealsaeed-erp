@@ -28,3 +28,8 @@ Schedule::command(
     ->dailyAt('08:00')
     ->timezone('Asia/Karachi')
     ->withoutOverlapping(30);
+
+Schedule::command('system:maintain-errors')
+    ->dailyAt('03:30')
+    ->timezone('Asia/Karachi')
+    ->withoutOverlapping(30);

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Pages;
 
+use App\Models\SystemErrorIncident;
 use App\Services\SchedulerHealthService;
 use Filament\Pages\Page;
 use Illuminate\Support\Facades\DB;
@@ -52,6 +53,9 @@ class SystemHealthCheck extends Page
                 $this->schedulerQueueChecks(
                     $schedulerHealth,
                 ),
+
+            'Error Monitoring' =>
+                $this->errorMonitoringChecks(),
 
             'Database' =>
                 $this->databaseChecks(),
@@ -146,6 +150,116 @@ class SystemHealthCheck extends Page
         ];
     }
 
+    private function errorMonitoringChecks(): array
+    {
+        $tableReady =
+            Schema::hasTable(
+                'system_error_incidents',
+            );
+
+        $unresolved =
+            $tableReady
+                ? SystemErrorIncident::query()
+                    ->unresolved()
+                    ->count()
+                : 0;
+
+        $critical =
+            $tableReady
+                ? SystemErrorIncident::query()
+                    ->unresolved()
+                    ->severity(
+                        'critical',
+                    )
+                    ->count()
+                : 0;
+
+        $stackChannels =
+            (array) config(
+                'logging.channels.stack.channels',
+                [],
+            );
+
+        $dailyLogging =
+            config(
+                'logging.default',
+            )
+            === 'daily'
+            || in_array(
+                'daily',
+                $stackChannels,
+                true,
+            );
+
+        $debugSafe =
+            ! app()->environment(
+                'production',
+            )
+            || ! config(
+                'app.debug',
+            );
+
+        return [
+            [
+                'name' =>
+                    'Structured Error Table',
+
+                'status' =>
+                    $tableReady,
+
+                'message' =>
+                    $tableReady
+                        ? 'system_error_incidents table is available.'
+                        : 'Structured error table is missing.',
+            ],
+            [
+                'name' =>
+                    'Unresolved Error Incidents',
+
+                'status' =>
+                    $unresolved === 0,
+
+                'message' =>
+                    $unresolved
+                    .' unresolved incident(s).',
+            ],
+            [
+                'name' =>
+                    'Unresolved Critical Errors',
+
+                'status' =>
+                    $critical === 0,
+
+                'message' =>
+                    $critical
+                    .' unresolved critical incident(s).',
+            ],
+            [
+                'name' =>
+                    'Daily Log Rotation',
+
+                'status' =>
+                    $dailyLogging,
+
+                'message' =>
+                    $dailyLogging
+                        ? 'Daily rotating Laravel log channel is active.'
+                        : 'Laravel logs are not using daily rotation.',
+            ],
+            [
+                'name' =>
+                    'Production Debug Mode',
+
+                'status' =>
+                    $debugSafe,
+
+                'message' =>
+                    $debugSafe
+                        ? 'Debug configuration is safe for the current environment.'
+                        : 'APP_DEBUG must be false in production.',
+            ],
+        ];
+    }
     private function databaseChecks(): array
     {
         try {

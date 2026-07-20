@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use App\Services\SystemErrorService;
 use Illuminate\Http\Request;
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -24,5 +25,19 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(
             fn (Request $request) => $request->is('api/*'),
+        );
+
+        $exceptions->report(
+            function (\Throwable $exception): void {
+                try {
+                    app(
+                        SystemErrorService::class,
+                    )->capture(
+                        $exception,
+                    );
+                } catch (\Throwable) {
+                    // Error monitoring must never break exception reporting.
+                }
+            },
         );
     })->create();

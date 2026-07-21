@@ -75,7 +75,8 @@ class CustomerDocumentForm
 
                 FileUpload::make('uploaded_files')
                     ->label('Upload Documents')
-                    ->disk('public')
+                    ->disk('local')
+                            ->visibility('private')
                     ->directory('customer-documents')
                     ->acceptedFileTypes([
                         'application/pdf',

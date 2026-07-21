@@ -32,12 +32,55 @@ class CustomerDocument extends Model
 
     protected static function booted(): void
     {
-        static::deleting(function (CustomerDocument $customerDocument): void {
-            foreach ($customerDocument->documents_list as $document) {
-                $filePath = $document['file_path'] ?? null;
+        static::deleting(function (
+            CustomerDocument $customerDocument,
+        ): void {
+            foreach (
+                $customerDocument->documents_list
+                as $document
+            ) {
+                $filePath =
+                    trim(
+                        str_replace(
+                            '\\',
+                            '/',
+                            (string) (
+                                $document['file_path']
+                                ?? ''
+                            ),
+                        ),
+                    );
 
-                if ($filePath && Storage::disk('public')->exists($filePath)) {
-                    Storage::disk('public')->delete($filePath);
+                if (
+                    $filePath === ''
+                    || str_contains(
+                        $filePath,
+                        "\0",
+                    )
+                    || str_contains(
+                        $filePath,
+                        '..',
+                    )
+                    || str_starts_with(
+                        $filePath,
+                        '/',
+                    )
+                ) {
+                    continue;
+                }
+
+                foreach (
+                    [
+                        'local',
+                        'public',
+                    ]
+                    as $diskName
+                ) {
+                    Storage::disk(
+                        $diskName,
+                    )->delete(
+                        $filePath,
+                    );
                 }
             }
         });

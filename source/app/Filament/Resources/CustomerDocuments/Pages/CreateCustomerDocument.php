@@ -30,7 +30,7 @@ class CreateCustomerDocument extends CreateRecord
         $documents = [];
 
         foreach ($filePaths as $filePath) {
-            if (! is_string($filePath) || ! Storage::disk('public')->exists($filePath)) {
+            if (! is_string($filePath) || ! Storage::disk('local')->exists($filePath)) {
                 continue;
             }
 
@@ -38,7 +38,7 @@ class CreateCustomerDocument extends CreateRecord
                 'file_name' => basename($filePath),
                 'file_path' => $filePath,
                 'file_type' => strtoupper(pathinfo($filePath, PATHINFO_EXTENSION)),
-                'file_size' => Storage::disk('public')->size($filePath),
+                'file_size' => Storage::disk('local')->size($filePath),
             ];
         }
 

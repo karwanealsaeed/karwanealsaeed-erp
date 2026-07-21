@@ -9,34 +9,90 @@ use ZipArchive;
 
 class CustomerDocumentDownloadController extends Controller
 {
-    public function __invoke(Request $request, CustomerDocument $customerDocument, string $fileIndex = '0')
-    {
+    public function __invoke(
+        Request $request,
+        CustomerDocument $customerDocument,
+        string $fileIndex = '0',
+    ) {
         $this->authorizeAccess(
             $request,
             $customerDocument,
         );
 
         if ($fileIndex === 'all') {
-            return $this->downloadAll($customerDocument);
+            return $this->downloadAll(
+                $customerDocument,
+            );
         }
 
-        $documents = $customerDocument->documents_list;
-        $document = $documents[(int) $fileIndex] ?? null;
+        $documents =
+            $customerDocument->documents_list;
 
-        abort_unless($document, 404);
+        $document =
+            $documents[
+                (int) $fileIndex
+            ]
+            ?? null;
 
-        $filePath = $document['file_path'] ?? null;
-        $fileName = $document['file_name'] ?? basename((string) $filePath);
+        abort_unless(
+            is_array(
+                $document,
+            ),
+            404,
+        );
 
-        abort_unless($filePath && Storage::disk('public')->exists($filePath), 404);
+        $filePath =
+            $this->safeFilePath(
+                $document['file_path']
+                ?? null,
+            );
 
-        $path = Storage::disk('public')->path($filePath);
+        $diskName =
+            $this->resolveDiskName(
+                $filePath,
+            );
 
-        if ($request->boolean('view')) {
-            return response()->file($path);
+        $fileName =
+            $this->safeFileName(
+                $document['file_name']
+                ?? basename(
+                    $filePath,
+                ),
+                'customer-document',
+            );
+
+        $headers = [
+            'Cache-Control' =>
+                'private, no-store, max-age=0',
+
+            'Pragma' =>
+                'no-cache',
+
+            'X-Content-Type-Options' =>
+                'nosniff',
+        ];
+
+        if (
+            $request->boolean(
+                'view',
+            )
+        ) {
+            return Storage::disk(
+                $diskName,
+            )->response(
+                $filePath,
+                $fileName,
+                $headers,
+            );
         }
 
-        return Storage::disk('public')->download($filePath, $fileName);
+        return Storage::disk(
+            $diskName,
+        )->download(
+            $filePath,
+            $fileName,
+            $headers,
+        );
     }
 
     private function authorizeAccess(
@@ -71,53 +127,297 @@ class CustomerDocumentDownloadController extends Controller
             403,
         );
     }
-    private function downloadAll(CustomerDocument $customerDocument)
-    {
-        abort_unless(class_exists(ZipArchive::class), 500, 'PHP Zip extension enabled nahi hai.');
 
-        $documents = $customerDocument->documents_list;
+    private function downloadAll(
+        CustomerDocument $customerDocument,
+    ) {
+        abort_unless(
+            class_exists(
+                ZipArchive::class,
+            ),
+            500,
+            'PHP Zip extension enabled nahi hai.',
+        );
 
-        abort_unless(count($documents) > 0, 404);
+        $documents =
+            $customerDocument->documents_list;
 
-        $tempDirectory = storage_path('app/temp');
+        abort_unless(
+            count(
+                $documents,
+            )
+            > 0,
+            404,
+        );
 
-        if (! is_dir($tempDirectory)) {
-            mkdir($tempDirectory, 0755, true);
+        $tempDirectory =
+            storage_path(
+                'app/temp',
+            );
+
+        if (
+            ! is_dir(
+                $tempDirectory,
+            )
+        ) {
+            $created =
+                mkdir(
+                    $tempDirectory,
+                    0755,
+                    true,
+                );
+
+            abort_unless(
+                $created
+                || is_dir(
+                    $tempDirectory,
+                ),
+                500,
+                'Temporary document directory create nahi hui.',
+            );
         }
 
-        $safeCustomerName = preg_replace('/[^A-Za-z0-9\-]+/', '-', $customerDocument->customer?->name ?: 'customer');
-        $zipFileName = 'customer-documents-' . $safeCustomerName . '-' . $customerDocument->id . '.zip';
-        $zipPath = $tempDirectory . DIRECTORY_SEPARATOR . $zipFileName;
+        $safeCustomerName =
+            $this->safeFileName(
+                $customerDocument->customer
+                    ?->name
+                ?: 'customer',
+                'customer',
+            );
 
-        if (file_exists($zipPath)) {
-            unlink($zipPath);
+        $zipFileName =
+            'customer-documents-'
+            .$safeCustomerName
+            .'-'
+            .$customerDocument->id
+            .'.zip';
+
+        $zipPath =
+            $tempDirectory
+            .DIRECTORY_SEPARATOR
+            .$zipFileName;
+
+        if (
+            file_exists(
+                $zipPath,
+            )
+        ) {
+            unlink(
+                $zipPath,
+            );
         }
 
-        $zip = new ZipArchive();
+        $zip =
+            new ZipArchive();
 
-        if ($zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
-            abort(500, 'ZIP file create nahi ho saki.');
-        }
+        abort_unless(
+            $zip->open(
+                $zipPath,
+                ZipArchive::CREATE
+                | ZipArchive::OVERWRITE,
+            )
+            === true,
+            500,
+            'ZIP file create nahi ho saki.',
+        );
 
-        foreach ($documents as $index => $document) {
-            $filePath = $document['file_path'] ?? null;
+        $addedFiles = 0;
 
-            if (! $filePath || ! Storage::disk('public')->exists($filePath)) {
+        foreach (
+            $documents
+            as $index => $document
+        ) {
+            if (
+                ! is_array(
+                    $document,
+                )
+            ) {
                 continue;
             }
 
-            $fullPath = Storage::disk('public')->path($filePath);
-            $fileName = $document['file_name'] ?? basename($filePath);
+            try {
+                $filePath =
+                    $this->safeFilePath(
+                        $document['file_path']
+                        ?? null,
+                    );
 
-            $zip->addFile($fullPath, ($index + 1) . '-' . $fileName);
+                $diskName =
+                    $this->resolveDiskName(
+                        $filePath,
+                    );
+            } catch (\Symfony\Component\HttpKernel\Exception\HttpException) {
+                continue;
+            }
+
+            $fileName =
+                $this->safeFileName(
+                    $document['file_name']
+                    ?? basename(
+                        $filePath,
+                    ),
+                    'document-'
+                    .(
+                        $index
+                        + 1
+                    ),
+                );
+
+            $added =
+                $zip->addFile(
+                    Storage::disk(
+                        $diskName,
+                    )->path(
+                        $filePath,
+                    ),
+                    (
+                        $index
+                        + 1
+                    )
+                    .'-'
+                    .$fileName,
+                );
+
+            if ($added) {
+                $addedFiles++;
+            }
         }
 
         $zip->close();
 
-        abort_unless(file_exists($zipPath), 404);
+        if ($addedFiles < 1) {
+            if (
+                file_exists(
+                    $zipPath,
+                )
+            ) {
+                unlink(
+                    $zipPath,
+                );
+            }
+
+            abort(
+                404,
+            );
+        }
+
+        abort_unless(
+            file_exists(
+                $zipPath,
+            ),
+            404,
+        );
 
         return response()
-            ->download($zipPath, $zipFileName)
-            ->deleteFileAfterSend(true);
+            ->download(
+                $zipPath,
+                $zipFileName,
+                [
+                    'Cache-Control' =>
+                        'private, no-store, max-age=0',
+
+                    'Pragma' =>
+                        'no-cache',
+
+                    'X-Content-Type-Options' =>
+                        'nosniff',
+                ],
+            )
+            ->deleteFileAfterSend(
+                true,
+            );
+    }
+
+    private function resolveDiskName(
+        string $filePath,
+    ): string {
+        if (
+            Storage::disk(
+                'local',
+            )->exists(
+                $filePath,
+            )
+        ) {
+            return 'local';
+        }
+
+        if (
+            Storage::disk(
+                'public',
+            )->exists(
+                $filePath,
+            )
+        ) {
+            return 'public';
+        }
+
+        abort(
+            404,
+        );
+    }
+
+    private function safeFilePath(
+        mixed $filePath,
+    ): string {
+        $path =
+            trim(
+                str_replace(
+                    '\\',
+                    '/',
+                    (string) $filePath,
+                ),
+            );
+
+        $unsafe =
+            $path === ''
+            || str_contains(
+                $path,
+                "\0",
+            )
+            || str_contains(
+                $path,
+                '..',
+            )
+            || str_starts_with(
+                $path,
+                '/',
+            );
+
+        abort_if(
+            $unsafe,
+            404,
+        );
+
+        return $path;
+    }
+
+    private function safeFileName(
+        mixed $fileName,
+        string $fallback,
+    ): string {
+        $name =
+            basename(
+                str_replace(
+                    '\\',
+                    '/',
+                    trim(
+                        (string) $fileName,
+                    ),
+                ),
+            );
+
+        $name =
+            preg_replace(
+                '/[^A-Za-z0-9._-]+/',
+                '-',
+                $name,
+            )
+            ?: '';
+
+        return trim(
+            $name,
+            '.-',
+        )
+        ?: $fallback;
     }
 }

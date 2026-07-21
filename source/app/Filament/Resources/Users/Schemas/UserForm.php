@@ -212,6 +212,9 @@ class UserForm
                     'travel_insurance_payments_edit' => 'Travel Insurance Payments - Edit',
                     'travel_insurance_payments_delete' => 'Travel Insurance Payments - Delete',
                     'travel_insurance_payments_approve' => 'Travel Insurance Payments - Approve / Reject',
+
+                    'travel_insurance_documents_download' => 'Travel Insurance - Download Policy Documents',
+                    'travel_insurance_receipts_download' => 'Travel Insurance - Download Payment Receipts',
                 ],
             ],
 

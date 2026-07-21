@@ -6,6 +6,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Services\TravelInsurancePrivateFileService;
 use Illuminate\Support\Str;
 
 class TravelInsurancePayment extends Model
@@ -83,6 +84,16 @@ class TravelInsurancePayment extends Model
                         $originalPolicyId,
                     );
                 }
+            },
+        );
+
+        static::deleting(
+            function (
+                TravelInsurancePayment $payment,
+            ): void {
+                TravelInsurancePrivateFileService::deletePaymentReceipt(
+                    $payment->receipt_path,
+                );
             },
         );
 

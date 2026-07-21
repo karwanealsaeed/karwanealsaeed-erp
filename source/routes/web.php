@@ -336,3 +336,24 @@ Route::get(
         'throttle:30,1',
     ])
     ->name('supplier-statements.pdf');
+
+// Travel Insurance private files.
+Route::middleware(
+    'auth',
+)->group(
+    function (): void {
+        Route::get(
+            '/travel-insurance-policies/{travelInsurancePolicy}/document',
+            \App\Http\Controllers\TravelInsurancePolicyDocumentDownloadController::class,
+        )->name(
+            'travel-insurance-policies.document.download',
+        );
+
+        Route::get(
+            '/travel-insurance-payments/{travelInsurancePayment}/receipt',
+            \App\Http\Controllers\TravelInsurancePaymentReceiptDownloadController::class,
+        )->name(
+            'travel-insurance-payments.receipt.download',
+        );
+    },
+);

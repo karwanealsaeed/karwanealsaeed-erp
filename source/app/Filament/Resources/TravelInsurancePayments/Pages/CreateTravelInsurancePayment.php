@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Resources\TravelInsurancePayments\Pages;
 
 use App\Filament\Resources\TravelInsurancePayments\TravelInsurancePaymentResource;
+use App\Services\TravelInsurancePrivateFileService;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateTravelInsurancePayment extends CreateRecord
@@ -31,5 +32,14 @@ class CreateTravelInsurancePayment extends CreateRecord
             null;
 
         return $data;
+    }
+
+    protected function afterCreate(): void
+    {
+        app(
+            TravelInsurancePrivateFileService::class,
+        )->syncPaymentReceipt(
+            $this->record,
+        );
     }
 }

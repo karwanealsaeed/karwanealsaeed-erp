@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Resources\TravelInsurancePayments\Schemas;
 
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -156,25 +157,44 @@ class TravelInsurancePaymentForm
                         ),
 
                     Section::make(
-                        'Receipt Document',
+                        'Private Receipt Document',
                     )
                         ->description(
-                            'Private receipt upload aur authorized download next security phase mein enable hoga.',
+                            'Payment receipt private local storage mein save hogi.',
                         )
                         ->schema(
                             [
-                                TextInput::make(
-                                    'receipt_name',
+                                FileUpload::make(
+                                    'receipt_path',
                                 )
                                     ->label(
-                                        'Existing Receipt',
+                                        'Payment Receipt',
                                     )
-                                    ->disabled()
-                                    ->dehydrated(
-                                        false,
+                                    ->disk(
+                                        'local',
                                     )
-                                    ->placeholder(
-                                        'No receipt uploaded',
+                                    ->visibility(
+                                        'private',
+                                    )
+                                    ->directory(
+                                        'travel-insurance/receipts',
+                                    )
+                                    ->acceptedFileTypes(
+                                        [
+                                            'application/pdf',
+                                            'image/jpeg',
+                                            'image/png',
+                                            'image/webp',
+                                        ],
+                                    )
+                                    ->maxSize(
+                                        10240,
+                                    )
+                                    ->storeFileNamesIn(
+                                        'receipt_name',
+                                    )
+                                    ->helperText(
+                                        'Allowed: PDF, JPG, PNG, WEBP. Maximum 10 MB.',
                                     ),
                             ],
                         ),

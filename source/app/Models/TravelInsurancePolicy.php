@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Services\TravelInsurancePrivateFileService;
 use Illuminate\Support\Str;
 
 class TravelInsurancePolicy extends Model
@@ -127,6 +128,37 @@ class TravelInsurancePolicy extends Model
                 TravelInsurancePolicy $policy,
             ): void {
                 $policy->applyFinancialCalculations();
+            },
+        );
+
+        static::deleting(
+            function (
+                TravelInsurancePolicy $policy,
+            ): void {
+                TravelInsurancePrivateFileService::deletePolicyDocument(
+                    $policy->policy_document_path,
+                );
+
+                $policy->payments()
+                    ->whereNotNull(
+                        'receipt_path',
+                    )
+                    ->pluck(
+                        'receipt_path',
+                    )
+                    ->each(
+                        function (
+                            mixed $path,
+                        ): void {
+                            TravelInsurancePrivateFileService::deletePaymentReceipt(
+                                is_string(
+                                    $path,
+                                )
+                                    ? $path
+                                    : null,
+                            );
+                        },
+                    );
             },
         );
     }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Resources\TravelInsurancePolicies\Schemas;
 
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -434,6 +435,49 @@ class TravelInsurancePolicyForm
                         )
                         ->columns(
                             2,
+                        ),
+
+                    Section::make(
+                        'Private Policy Document',
+                    )
+                        ->description(
+                            'Policy PDF ya image private local storage mein save hogi.',
+                        )
+                        ->schema(
+                            [
+                                FileUpload::make(
+                                    'policy_document_path',
+                                )
+                                    ->label(
+                                        'Policy Document',
+                                    )
+                                    ->disk(
+                                        'local',
+                                    )
+                                    ->visibility(
+                                        'private',
+                                    )
+                                    ->directory(
+                                        'travel-insurance/policies',
+                                    )
+                                    ->acceptedFileTypes(
+                                        [
+                                            'application/pdf',
+                                            'image/jpeg',
+                                            'image/png',
+                                            'image/webp',
+                                        ],
+                                    )
+                                    ->maxSize(
+                                        10240,
+                                    )
+                                    ->storeFileNamesIn(
+                                        'policy_document_name',
+                                    )
+                                    ->helperText(
+                                        'Allowed: PDF, JPG, PNG, WEBP. Maximum 10 MB.',
+                                    ),
+                            ],
                         ),
 
                     Section::make(

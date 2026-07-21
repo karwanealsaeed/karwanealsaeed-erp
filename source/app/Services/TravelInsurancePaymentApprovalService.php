@@ -106,6 +106,10 @@ class TravelInsurancePaymentApprovalService
                                 'Posted',
                         ],
                     )->saveQuietly();
+
+                    $this->syncLinkedInvoice(
+                        $lockedPayment,
+                    );
                 },
             );
         } catch (Throwable $exception) {
@@ -189,10 +193,32 @@ class TravelInsurancePaymentApprovalService
                             null,
                     ],
                 )->save();
+
+                $this->syncLinkedInvoice(
+                    $lockedPayment,
+                );
             },
         );
 
         $payment->refresh();
+    }
+
+    private function syncLinkedInvoice(
+        TravelInsurancePayment $payment,
+    ): void {
+        $policy =
+            $payment->policy()
+                ->first();
+
+        if (! $policy) {
+            return;
+        }
+
+        app(
+            \App\Services\TravelInsuranceInvoiceService::class,
+        )->syncExisting(
+            $policy,
+        );
     }
 
     private function assertReviewable(

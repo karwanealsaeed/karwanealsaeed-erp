@@ -43,6 +43,8 @@ class InvoiceForm
                         'Flight' => 'Flight',
                         'Umrah' => 'Umrah',
                         'Hotel' => 'Hotel',
+                        'Travel Insurance' => 'Travel Insurance',
+
                         'Other' => 'Other',
                     ])
                     ->default('Other')

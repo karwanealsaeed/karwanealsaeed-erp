@@ -37,6 +37,12 @@ class EditTravelInsurancePolicy extends EditRecord
             $this->record,
             $this->previousPolicyDocumentPath,
         );
+
+        app(
+            \App\Services\TravelInsuranceInvoiceService::class,
+        )->syncExisting(
+            $this->record,
+        );
     }
 
     protected function getHeaderActions(): array

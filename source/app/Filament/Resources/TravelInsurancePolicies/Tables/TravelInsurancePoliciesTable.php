@@ -281,7 +281,61 @@ class TravelInsurancePoliciesTable
             )
             ->recordActions(
                 [
-                    ViewAction::make(),
+                                        \Filament\Actions\Action::make(
+                        'createOrSyncInvoice',
+                    )
+                        ->label(
+                            fn (
+                                \App\Models\TravelInsurancePolicy $record,
+                            ): string =>
+                                filled(
+                                    $record->invoice_id,
+                                )
+                                    ? 'Sync Invoice'
+                                    : 'Create Invoice',
+                        )
+                        ->icon(
+                            'heroicon-o-document-currency-dollar',
+                        )
+                        ->color(
+                            'primary',
+                        )
+                        ->requiresConfirmation()
+                        ->modalHeading(
+                            'Create or Synchronize Insurance Invoice',
+                        )
+                        ->modalDescription(
+                            'Policy amounts, payment balance aur status invoice mein synchronize honge.',
+                        )
+                        ->visible(
+                            fn (): bool =>
+                                auth()->user()?->hasPermission(
+                                    'travel_insurance_policies_invoice',
+                                ) ?? false,
+                        )
+                        ->action(
+                            function (
+                                \App\Models\TravelInsurancePolicy $record,
+                            ): void {
+                                $invoice =
+                                    app(
+                                        \App\Services\TravelInsuranceInvoiceService::class,
+                                    )->createOrSync(
+                                        $record,
+                                    );
+
+                                \Filament\Notifications\Notification::make()
+                                    ->title(
+                                        'Insurance invoice synchronized',
+                                    )
+                                    ->body(
+                                        $invoice->invoice_no,
+                                    )
+                                    ->success()
+                                    ->send();
+                            },
+                        ),
+ViewAction::make(),
 
                     EditAction::make(),
 

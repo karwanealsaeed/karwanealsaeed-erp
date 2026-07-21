@@ -215,6 +215,8 @@ class UserForm
 
                     'travel_insurance_documents_download' => 'Travel Insurance - Download Policy Documents',
                     'travel_insurance_receipts_download' => 'Travel Insurance - Download Payment Receipts',
+
+                    'travel_insurance_policies_invoice' => 'Travel Insurance Policies - Create / Sync Invoice',
                 ],
             ],
 

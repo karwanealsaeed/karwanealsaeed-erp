@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
@@ -41,6 +42,16 @@ class CustomerPaymentUpload extends Model
         'admin_notes',
     ];
 
+    protected $hidden = [
+        'receipt_account_head_id',
+        'receivable_account_head_id',
+        'advance_account_head_id',
+        'approved_by',
+        'posted_by',
+        'rejected_by',
+        'voided_by',
+        'admin_notes',
+    ];
     protected $casts = [
         'amount' => 'decimal:2',
         'payment_date' => 'date',
@@ -168,6 +179,32 @@ class CustomerPaymentUpload extends Model
                         'Posted receipt ke accounts Edit se change nahi honge. Correct GL action use karein.',
                 ]);
             }
+        });
+
+        static::deleted(function (
+            CustomerPaymentUpload $receipt,
+        ): void {
+            $path =
+                trim(
+                    (string) $receipt
+                        ->receipt_file,
+                );
+
+            if ($path === '') {
+                return;
+            }
+
+            Storage::disk(
+                'local',
+            )->delete(
+                $path,
+            );
+
+            Storage::disk(
+                'public',
+            )->delete(
+                $path,
+            );
         });
     }
 

@@ -27,6 +27,10 @@ class Customer extends Model
         'last_portal_login_at',
     ];
 
+    protected $hidden = [
+        'portal_password',
+    ];
+
     protected $casts = [
         'date_of_birth' => 'date',
         'portal_registered_at' => 'datetime',

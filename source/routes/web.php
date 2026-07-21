@@ -10,6 +10,7 @@ use App\Http\Controllers\CustomerStatementPdfController;
 use App\Http\Controllers\KarwanAiController;
 use App\Http\Controllers\CustomerDocumentDownloadController;
 use App\Http\Controllers\CustomerPortalController;
+use App\Http\Controllers\CustomerPaymentReceiptDownloadController;
 use App\Http\Controllers\CustomerPromotionController;
 use App\Http\Controllers\DatabaseBackupDownloadController;
 use App\Http\Controllers\GoogleDriveOAuthController;
@@ -158,6 +159,14 @@ Route::middleware([
     Route::get('/customer/profile', [CustomerPortalController::class, 'profile'])
         ->name('customer.portal.profile');
 
+    Route::patch('/customer/profile', [CustomerPortalController::class, 'updateProfile'])
+        ->name('customer.portal.profile.update')
+        ->middleware('throttle:20,1');
+
+    Route::put('/customer/profile/password', [CustomerPortalController::class, 'updatePassword'])
+        ->name('customer.portal.profile.password')
+        ->middleware('throttle:5,1');
+
     Route::get('/customer/ledger', [CustomerPortalController::class, 'ledger'])
         ->name('customer.portal.ledger');
 
@@ -200,6 +209,13 @@ Route::middleware([
 
     Route::post('/customer/payment-uploads', [CustomerPortalController::class, 'storePaymentUpload'])
         ->name('customer.portal.payment_uploads.store');
+
+    Route::get(
+        '/customer/payment-uploads/{customerPaymentUpload}/receipt',
+        CustomerPaymentReceiptDownloadController::class,
+    )
+        ->name('customer.portal.payment_uploads.receipt')
+        ->middleware('throttle:30,1');
 
     Route::get('/customer/family-members', [CustomerPortalController::class, 'familyMembers'])
         ->name('customer.portal.family');

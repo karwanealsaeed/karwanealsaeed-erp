@@ -80,6 +80,40 @@ class CustomerPortalAuth
             );
         }
 
+        $currentPasswordFingerprint =
+            hash(
+                'sha256',
+                (string) $customer
+                    ->portal_password,
+            );
+
+        $sessionPasswordFingerprint =
+            (string) $request->session()
+                ->get(
+                    'customer_portal_password_fingerprint',
+                    '',
+                );
+
+        if (
+            $sessionPasswordFingerprint !== ''
+            && ! hash_equals(
+                $currentPasswordFingerprint,
+                $sessionPasswordFingerprint,
+            )
+        ) {
+            return $this->logoutResponse(
+                $request,
+                'Portal password change hone ki wajah se dobara login karein.',
+            );
+        }
+
+        if ($sessionPasswordFingerprint === '') {
+            $request->session()
+                ->put(
+                    'customer_portal_password_fingerprint',
+                    $currentPasswordFingerprint,
+                );
+        }
         $request->session()
             ->put(
                 'customer_portal_name',

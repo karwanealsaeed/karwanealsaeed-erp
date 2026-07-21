@@ -306,7 +306,8 @@ class CustomerPaymentUploadForm
 
                         FileUpload::make('receipt_file')
                             ->label('Payment Receipt')
-                            ->disk('public')
+                            ->disk('local')
+                            ->visibility('private')
                             ->directory(
                                 'customer/payment-receipts'
                             )

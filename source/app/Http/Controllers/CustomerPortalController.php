@@ -11,13 +11,20 @@ use App\Models\CustomerPaymentUpload;
 use App\Models\SupportTicket;
 use App\Models\SupportTicketReply;
 use App\Services\UnifiedCustomerStatementService;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Password;
+use Illuminate\Validation\ValidationException;
+use Throwable;
 
 class CustomerPortalController extends Controller
 {
@@ -87,6 +94,10 @@ class CustomerPortalController extends Controller
             'customer_portal_id' => $customer->id,
             'customer_portal_name' => $customer->name,
             'customer_portal_last_activity' => time(),
+            'customer_portal_password_fingerprint' =>
+                $this->portalPasswordFingerprint(
+                    $customer,
+                ),
         ]);
 
         return redirect()->route('customer.portal.dashboard');
@@ -121,9 +132,220 @@ class CustomerPortalController extends Controller
 
     public function profile(): View
     {
-        return view('customer-portal.profile', [
-            'customer' => $this->portalCustomer(),
-        ]);
+        return view(
+            'customer-portal.profile',
+            [
+                'customer' =>
+                    $this->portalCustomer(),
+            ],
+        );
+    }
+
+    public function updateProfile(
+        Request $request,
+    ): RedirectResponse {
+        $customer =
+            $this->portalCustomer();
+
+        $data =
+            $request->validate([
+                'name' => [
+                    'required',
+                    'string',
+                    'max:255',
+                ],
+
+                'father_name' => [
+                    'nullable',
+                    'string',
+                    'max:255',
+                ],
+
+                'mobile' => [
+                    'required',
+                    'string',
+                    'max:50',
+                ],
+
+                'whatsapp' => [
+                    'nullable',
+                    'string',
+                    'max:50',
+                ],
+
+                'email' => [
+                    'nullable',
+                    'email',
+                    'max:255',
+                ],
+
+                'date_of_birth' => [
+                    'nullable',
+                    'date',
+                    'before:today',
+                ],
+
+                'address' => [
+                    'nullable',
+                    'string',
+                    'max:2000',
+                ],
+
+                'city' => [
+                    'nullable',
+                    'string',
+                    'max:255',
+                ],
+
+                'country' => [
+                    'nullable',
+                    'string',
+                    'max:255',
+                ],
+            ]);
+
+        foreach (
+            [
+                'name',
+                'father_name',
+                'mobile',
+                'whatsapp',
+                'address',
+                'city',
+                'country',
+            ]
+            as $field
+        ) {
+            $value =
+                trim(
+                    (string) (
+                        $data[$field]
+                        ?? ''
+                    ),
+                );
+
+            $data[$field] =
+                $value === ''
+                    ? null
+                    : $value;
+        }
+
+        $data['name'] =
+            (string) $data['name'];
+
+        $data['mobile'] =
+            (string) $data['mobile'];
+
+        $email =
+            Str::lower(
+                trim(
+                    (string) (
+                        $data['email']
+                        ?? ''
+                    ),
+                ),
+            );
+
+        $data['email'] =
+            $email === ''
+                ? null
+                : $email;
+
+        $this->ensureUniquePortalIdentifiers(
+            $customer,
+            $data,
+        );
+
+        $customer->update(
+            $data,
+        );
+
+        $request->session()
+            ->put(
+                'customer_portal_name',
+                $customer->name,
+            );
+
+        return redirect()
+            ->route(
+                'customer.portal.profile',
+            )
+            ->with(
+                'success',
+                'Profile successfully update ho gaya hai.',
+            );
+    }
+
+    public function updatePassword(
+        Request $request,
+    ): RedirectResponse {
+        $customer =
+            $this->portalCustomer();
+
+        $data =
+            $request->validate([
+                'current_password' => [
+                    'required',
+                    'string',
+                ],
+
+                'password' => [
+                    'required',
+                    'confirmed',
+                    Password::min(8)
+                        ->letters()
+                        ->numbers(),
+                ],
+            ]);
+
+        if (
+            ! Hash::check(
+                $data['current_password'],
+                (string) $customer
+                    ->portal_password,
+            )
+        ) {
+            throw ValidationException::withMessages([
+                'current_password' =>
+                    'Current portal password ghalat hai.',
+            ]);
+        }
+
+        $customer->forceFill([
+            'portal_password' =>
+                Hash::make(
+                    $data['password'],
+                ),
+        ])->save();
+
+        $request->session()
+            ->regenerate();
+
+        $request->session()
+            ->put([
+                'customer_portal_id' =>
+                    $customer->id,
+
+                'customer_portal_name' =>
+                    $customer->name,
+
+                'customer_portal_last_activity' =>
+                    time(),
+
+                'customer_portal_password_fingerprint' =>
+                    $this->portalPasswordFingerprint(
+                        $customer,
+                    ),
+            ]);
+
+        return redirect()
+            ->route(
+                'customer.portal.profile',
+            )
+            ->with(
+                'success',
+                'Portal password successfully change ho gaya hai.',
+            );
     }
 
     public function visaApplications(): View
@@ -269,41 +491,189 @@ class CustomerPortalController extends Controller
 
     public function paymentUploads(): View
     {
-        $customer = $this->portalCustomer();
+        $customer =
+            $this->portalCustomer();
 
-        $uploads = CustomerPaymentUpload::query()
-            ->where('customer_id', $customer->id)
-            ->latest()
-            ->get();
+        $uploads =
+            CustomerPaymentUpload::query()
+                ->select([
+                    'id',
+                    'customer_id',
+                    'upload_no',
+                    'service_type',
+                    'reference_no',
+                    'amount',
+                    'payment_method',
+                    'payment_date',
+                    'transaction_id',
+                    'receipt_file',
+                    'status',
+                    'customer_notes',
+                    'rejection_reason',
+                    'created_at',
+                ])
+                ->where(
+                    'customer_id',
+                    $customer->id,
+                )
+                ->latest(
+                    'id',
+                )
+                ->get();
 
-        return view('customer-portal.payment-uploads', compact('customer', 'uploads'));
+        return view(
+            'customer-portal.payment-uploads',
+            [
+                'customer' =>
+                    $customer,
+
+                'uploads' =>
+                    $uploads,
+            ],
+        );
     }
 
-    public function storePaymentUpload(Request $request): RedirectResponse
-    {
-        $customer = $this->portalCustomer();
+    public function storePaymentUpload(
+        Request $request,
+    ): RedirectResponse {
+        $customer =
+            $this->portalCustomer();
 
-        $data = $request->validate([
-            'service_type' => ['required', 'string', 'max:255'],
-            'reference_no' => ['nullable', 'string', 'max:255'],
-            'amount' => ['required', 'numeric', 'min:1'],
-            'payment_method' => ['required', 'string', 'max:255'],
-            'payment_date' => ['required', 'date'],
-            'transaction_id' => ['nullable', 'string', 'max:255'],
-            'receipt_file' => ['nullable', 'file', 'mimes:jpg,jpeg,png,pdf,webp', 'max:5120'],
-            'customer_notes' => ['nullable', 'string', 'max:3000'],
-        ]);
+        $data =
+            $request->validate([
+                'service_type' => [
+                    'required',
+                    Rule::in([
+                        'Visa',
+                        'Flight',
+                        'Umrah',
+                        'Hotel',
+                        'Insurance',
+                        'Pakistan Tours',
+                        'Other',
+                    ]),
+                ],
 
-        if ($request->hasFile('receipt_file')) {
-            $data['receipt_file'] = $request->file('receipt_file')->store('customer-payment-uploads', 'public');
+                'reference_no' => [
+                    'nullable',
+                    'string',
+                    'max:255',
+                ],
+
+                'amount' => [
+                    'required',
+                    'numeric',
+                    'min:1',
+                    'max:100000000',
+                ],
+
+                'payment_method' => [
+                    'required',
+                    Rule::in([
+                        'Bank Transfer',
+                        'Cash Deposit',
+                        'JazzCash',
+                        'EasyPaisa',
+                        'Cheque',
+                        'Credit Card',
+                        'Other',
+                    ]),
+                ],
+
+                'payment_date' => [
+                    'required',
+                    'date',
+                    'before_or_equal:today',
+                ],
+
+                'transaction_id' => [
+                    'nullable',
+                    'string',
+                    'max:255',
+                ],
+
+                'receipt_file' => [
+                    'required',
+                    'file',
+                    'mimes:jpg,jpeg,png,pdf,webp',
+                    'max:5120',
+                ],
+
+                'customer_notes' => [
+                    'nullable',
+                    'string',
+                    'max:3000',
+                ],
+            ]);
+
+        foreach (
+            [
+                'reference_no',
+                'transaction_id',
+                'customer_notes',
+            ]
+            as $field
+        ) {
+            $value =
+                trim(
+                    (string) (
+                        $data[$field]
+                        ?? ''
+                    ),
+                );
+
+            $data[$field] =
+                $value === ''
+                    ? null
+                    : $value;
         }
 
-        $data['customer_id'] = $customer->id;
-        $data['status'] = 'Pending';
+        $receiptPath =
+            $request->file(
+                'receipt_file',
+            )->store(
+                'customer/payment-receipts',
+                'local',
+            );
 
-        CustomerPaymentUpload::create($data);
+        if (! is_string($receiptPath)) {
+            throw new \RuntimeException(
+                'Payment receipt private storage mein save nahi hui.',
+            );
+        }
 
-        return back()->with('success', 'Payment proof upload ho gaya hai. Admin approval ke baad ledger update ho jayega.');
+        try {
+            $data['receipt_file'] =
+                $receiptPath;
+
+            $data['customer_id'] =
+                $customer->id;
+
+            $data['status'] =
+                'Pending';
+
+            CustomerPaymentUpload::query()
+                ->create(
+                    $data,
+                );
+        } catch (Throwable $exception) {
+            Storage::disk(
+                'local',
+            )->delete(
+                $receiptPath,
+            );
+
+            throw $exception;
+        }
+
+        return redirect()
+            ->route(
+                'customer.portal.payment_uploads',
+            )
+            ->with(
+                'success',
+                'Payment proof securely upload ho gaya hai. Admin approval ke baad ledger update hoga.',
+            );
     }
 
     public function familyMembers(): View
@@ -518,6 +888,88 @@ class CustomerPortalController extends Controller
             );
     }
 
+    private function ensureUniquePortalIdentifiers(
+        Customer $customer,
+        array $data,
+    ): void {
+        $errors = [];
+
+        foreach (
+            [
+                'mobile',
+                'whatsapp',
+                'email',
+            ]
+            as $field
+        ) {
+            $value =
+                trim(
+                    (string) (
+                        $data[$field]
+                        ?? ''
+                    ),
+                );
+
+            if ($value === '') {
+                continue;
+            }
+
+            $exists =
+                Customer::query()
+                    ->whereKeyNot(
+                        $customer->getKey(),
+                    )
+                    ->where(function (
+                        Builder $query,
+                    ) use (
+                        $value,
+                    ): void {
+                        $query
+                            ->where(
+                                'mobile',
+                                $value,
+                            )
+                            ->orWhere(
+                                'whatsapp',
+                                $value,
+                            )
+                            ->orWhere(
+                                'email',
+                                $value,
+                            )
+                            ->orWhere(
+                                'cnic',
+                                $value,
+                            )
+                            ->orWhere(
+                                'passport_no',
+                                $value,
+                            );
+                    })
+                    ->exists();
+
+            if ($exists) {
+                $errors[$field] =
+                    'Yeh login/contact detail kisi doosre portal account ke saath registered hai.';
+            }
+        }
+
+        if ($errors !== []) {
+            throw ValidationException::withMessages(
+                $errors,
+            );
+        }
+    }
+
+    private function portalPasswordFingerprint(
+        Customer $customer,
+    ): string {
+        return hash(
+            'sha256',
+            (string) $customer
+                ->portal_password,
+        );
+    }
     private function portalCustomer(): Customer
     {
         $customer =

@@ -8,9 +8,13 @@ use App\Services\DatabaseRestoreService;
 use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\ViewAction;
+use Filament\Forms\Components\Checkbox;
+use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 
 class DatabaseBackupsTable
 {
@@ -342,7 +346,11 @@ class DatabaseBackupsTable
                                         .$plan['database_name']
                                         .' | '
                                         .$plan['formatted_file_size']
-                                        .' | Actual execution abhi locked hai.',
+                                        .(
+                                            $plan['execution_enabled']
+                                                ? ' | Restore execution enabled hai.'
+                                                : ' | Actual execution abhi locked hai.'
+                                        ),
                                     )
                                     ->success()
                                     ->send();
@@ -365,6 +373,225 @@ class DatabaseBackupsTable
                         },
                     ),
 
+                Action::make('restore_database')
+                    ->label('Restore Database')
+                    ->icon('heroicon-o-arrow-path-rounded-square')
+                    ->color('danger')
+                    ->requiresConfirmation()
+                    ->modalIcon(
+                        'heroicon-o-exclamation-triangle',
+                    )
+                    ->modalHeading(
+                        fn (
+                            DatabaseBackup $record,
+                        ): string =>
+                            'Restore Database from '
+                            .$record->backup_no,
+                    )
+                    ->modalDescription(
+                        fn (
+                            DatabaseBackup $record,
+                        ): string =>
+                            'Current database overwrite hogi. Pehle verified safety backup create hogi. '
+                            .'Confirmation ke liye '
+                            .$record->backup_no
+                            .' type karein aur current account password enter karein.',
+                    )
+                    ->modalSubmitActionLabel(
+                        'Create Safety Backup and Restore',
+                    )
+                    ->closeModalByClickingAway(
+                        false,
+                    )
+                    ->closeModalByEscaping(
+                        false,
+                    )
+                    ->disabled(
+                        fn (): bool =>
+                            ! (
+                                (bool) config(
+                                    'database_restore.execution_enabled',
+                                    false,
+                                )
+                            ),
+                    )
+                    ->tooltip(
+                        fn (): string =>
+                            config(
+                                'database_restore.execution_enabled',
+                                false,
+                            )
+                                ? 'Verified safety backup create karke database restore karein.'
+                                : 'Restore execution environment configuration se locked hai.',
+                    )
+                    ->hidden(
+                        fn (): bool =>
+                            ! (
+                                auth()->user()
+                                    ?->hasPermission(
+                                        'database_backups.restore',
+                                    )
+                                ?? false
+                            ),
+                    )
+                    ->schema(
+                        fn (
+                            DatabaseBackup $record,
+                        ): array => [
+                            TextInput::make(
+                                'confirmation',
+                            )
+                                ->label(
+                                    'Type Backup Number',
+                                )
+                                ->helperText(
+                                    'Bilkul isi tarah type karein: '
+                                    .$record->backup_no,
+                                )
+                                ->placeholder(
+                                    $record->backup_no,
+                                )
+                                ->required()
+                                ->maxLength(
+                                    50,
+                                ),
+
+                            TextInput::make(
+                                'password',
+                            )
+                                ->label(
+                                    'Current Account Password',
+                                )
+                                ->password()
+                                ->revealable()
+                                ->required()
+                                ->maxLength(
+                                    255,
+                                ),
+
+                            Checkbox::make(
+                                'acknowledge',
+                            )
+                                ->label(
+                                    'Main samajhta hoon ke current database overwrite hogi aur operation ke duran application maintenance mode mein jayegi.',
+                                )
+                                ->accepted()
+                                ->required(),
+                        ],
+                    )
+                    ->action(
+                        function (
+                            DatabaseBackup $record,
+                            array $data,
+                        ): void {
+                            try {
+                                $user =
+                                    auth()->user();
+
+                                if (
+                                    ! $user
+                                    || ! $user
+                                        ->hasPermission(
+                                            'database_backups.restore',
+                                        )
+                                ) {
+                                    throw new RuntimeException(
+                                        'Database restore permission required hai.',
+                                    );
+                                }
+
+                                if (
+                                    trim(
+                                        (string) (
+                                            $data['confirmation']
+                                            ?? ''
+                                        ),
+                                    )
+                                    !== (string) $record
+                                        ->backup_no
+                                ) {
+                                    throw ValidationException::withMessages([
+                                        'confirmation' =>
+                                            'Exact backup number type karein: '
+                                            .$record->backup_no,
+                                    ]);
+                                }
+
+                                if (
+                                    ! (
+                                        $data['acknowledge']
+                                        ?? false
+                                    )
+                                ) {
+                                    throw ValidationException::withMessages([
+                                        'acknowledge' =>
+                                            'Database overwrite acknowledgement required hai.',
+                                    ]);
+                                }
+
+                                if (
+                                    ! Hash::check(
+                                        (string) (
+                                            $data['password']
+                                            ?? ''
+                                        ),
+                                        (string) $user
+                                            ->password,
+                                    )
+                                ) {
+                                    throw ValidationException::withMessages([
+                                        'password' =>
+                                            'Current account password incorrect hai.',
+                                    ]);
+                                }
+
+                                $result =
+                                    app(
+                                        DatabaseRestoreService::class,
+                                    )->execute(
+                                        backup: $record,
+                                        confirmation: (string) $data[
+                                            'confirmation'
+                                        ],
+                                        requestedBy: $user->id,
+                                    );
+
+                                Notification::make()
+                                    ->title(
+                                        'Database restored successfully',
+                                    )
+                                    ->body(
+                                        'Source: '
+                                        .$result['source_backup_no']
+                                        .' | Safety backup: '
+                                        .$result['safety_backup_no']
+                                        .' | Restore log: #'
+                                        .$result['restore_log_id'],
+                                    )
+                                    ->success()
+                                    ->persistent()
+                                    ->send();
+                            } catch (ValidationException $exception) {
+                                throw $exception;
+                            } catch (\Throwable $exception) {
+                                report(
+                                    $exception,
+                                );
+
+                                Notification::make()
+                                    ->title(
+                                        'Database restore failed',
+                                    )
+                                    ->body(
+                                        $exception
+                                            ->getMessage(),
+                                    )
+                                    ->danger()
+                                    ->persistent()
+                                    ->send();
+                            }
+                        },
+                    ),
                 Action::make('download')
                     ->label('Download')
                     ->icon(

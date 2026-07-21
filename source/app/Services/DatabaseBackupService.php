@@ -27,6 +27,7 @@ class DatabaseBackupService
             [
                 'Manual',
                 'Scheduled',
+                'Pre-Restore',
             ],
             true,
         )

@@ -4,6 +4,7 @@ namespace App\Filament\Resources\DatabaseBackups\Tables;
 
 use App\Models\DatabaseBackup;
 use App\Services\DatabaseBackupService;
+use App\Services\DatabaseRestoreService;
 use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\ViewAction;
@@ -299,6 +300,70 @@ class DatabaseBackupsTable
                                 ->drive_web_view_link,
                     )
                     ->openUrlInNewTab(),
+
+                Action::make('restore_readiness')
+                    ->label('Restore Check')
+                    ->icon('heroicon-o-shield-check')
+                    ->color('warning')
+                    ->requiresConfirmation()
+                    ->modalHeading('Check Restore Readiness')
+                    ->modalDescription(
+                        'Backup integrity, database target, SQL safety and MySQL client check honge. Database mein koi change nahi hoga.',
+                    )
+                    ->hidden(
+                        fn (): bool =>
+                            ! (
+                                auth()->user()
+                                    ?->hasPermission(
+                                        'database_backups.restore',
+                                    )
+                                ?? false
+                            ),
+                    )
+                    ->action(
+                        function (
+                            DatabaseBackup $record,
+                        ): void {
+                            try {
+                                $plan =
+                                    app(
+                                        DatabaseRestoreService::class,
+                                    )->inspect(
+                                        $record,
+                                    );
+
+                                Notification::make()
+                                    ->title(
+                                        'Backup restore ke liye ready hai',
+                                    )
+                                    ->body(
+                                        $plan['backup_no']
+                                        .' | '
+                                        .$plan['database_name']
+                                        .' | '
+                                        .$plan['formatted_file_size']
+                                        .' | Actual execution abhi locked hai.',
+                                    )
+                                    ->success()
+                                    ->send();
+                            } catch (\Throwable $exception) {
+                                report(
+                                    $exception,
+                                );
+
+                                Notification::make()
+                                    ->title(
+                                        'Restore readiness check failed',
+                                    )
+                                    ->body(
+                                        $exception
+                                            ->getMessage(),
+                                    )
+                                    ->danger()
+                                    ->send();
+                            }
+                        },
+                    ),
 
                 Action::make('download')
                     ->label('Download')

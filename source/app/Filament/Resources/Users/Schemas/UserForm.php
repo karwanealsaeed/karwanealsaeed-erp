@@ -196,6 +196,11 @@ class UserForm
                     'suppliers_create' => 'Suppliers - Create',
                     'suppliers_edit' => 'Suppliers - Edit',
                     'suppliers_delete' => 'Suppliers - Delete',
+
+                    'insurance_providers_view' => 'Insurance Providers - View',
+                    'insurance_providers_create' => 'Insurance Providers - Create',
+                    'insurance_providers_edit' => 'Insurance Providers - Edit',
+                    'insurance_providers_delete' => 'Insurance Providers - Delete',
                 ],
             ],
 

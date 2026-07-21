@@ -61,6 +61,26 @@ return [
     'allow_testing_non_mysql' =>
         false,
 
+    'lock_path' =>
+        'restore-locks/database-restore.lock',
+
+    'maintenance_retry_seconds' =>
+        max(
+            15,
+            (int) env(
+                'DATABASE_RESTORE_MAINTENANCE_RETRY_SECONDS',
+                60,
+            ),
+        ),
+
+    'required_tables' => [
+        'users',
+        'migrations',
+        'database_backups',
+        'database_restore_logs',
+        'activity_logs',
+    ],
+
     'required_markers' => [
         'SET FOREIGN_KEY_CHECKS=0;',
         'START TRANSACTION;',

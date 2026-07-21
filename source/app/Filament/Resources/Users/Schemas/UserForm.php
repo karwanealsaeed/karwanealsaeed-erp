@@ -164,6 +164,7 @@ class UserForm
                     'activity_logs_view' => 'Activity Logs - View',
                     'database_backups_view' => 'Database Backups - View',
                     'database_backups_create' => 'Database Backups - Create',
+                    'database_backups_restore' => 'Database Backups - Restore',
                     'database_backups_download' => 'Database Backups - Download',
                     'database_backups_delete' => 'Database Backups - Delete',
                 ],

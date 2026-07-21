@@ -14,7 +14,8 @@ class RestoreDatabaseBackup extends Command
         'database:restore
         {backup : Backup database ID or backup number}
         {--dry-run : Validate restore readiness without changing data}
-        {--confirm= : Exact backup number confirmation}';
+        {--confirm= : Exact backup number confirmation}
+        {--requested-by= : User ID recorded in restore audit}';
 
     protected $description =
         'Validate or restore a verified ERP database backup';
@@ -104,29 +105,35 @@ class RestoreDatabaseBackup extends Command
                 return self::SUCCESS;
             }
 
-            $restoreService
-                ->assertConfirmation(
-                    $backup,
-                    (string) $this->option(
+            $result =
+                $restoreService->execute(
+                    backup: $backup,
+                    confirmation: (string) $this->option(
                         'confirm',
                     ),
+                    requestedBy: $this->requestedBy(),
                 );
 
-            if (
-                ! config(
-                    'database_restore.execution_enabled',
-                    false,
-                )
-            ) {
-                throw new RuntimeException(
-                    'Actual restore execution abhi locked hai. '
-                    .'Isolated restore drill pass hone ke baad enable hogi.',
-                );
-            }
-
-            throw new RuntimeException(
-                'Restore executor Phase 2 mein activate hoga.',
+            $this->info(
+                'Database restore completed successfully.',
             );
+
+            $this->line(
+                'Source backup: '
+                .$result['source_backup_no'],
+            );
+
+            $this->line(
+                'Safety backup: '
+                .$result['safety_backup_no'],
+            );
+
+            $this->line(
+                'Restore log ID: '
+                .$result['restore_log_id'],
+            );
+
+            return self::SUCCESS;
         } catch (Throwable $exception) {
             $this->error(
                 $exception->getMessage(),
@@ -134,6 +141,28 @@ class RestoreDatabaseBackup extends Command
 
             return self::FAILURE;
         }
+    }
+
+    private function requestedBy(): ?int
+    {
+        $value =
+            trim(
+                (string) $this->option(
+                    'requested-by',
+                ),
+            );
+
+        if ($value === '') {
+            return null;
+        }
+
+        if (! ctype_digit($value)) {
+            throw new RuntimeException(
+                'requested-by valid numeric user ID honi chahiye.',
+            );
+        }
+
+        return (int) $value;
     }
 
     private function resolveBackup(

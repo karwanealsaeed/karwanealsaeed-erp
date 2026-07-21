@@ -539,3 +539,221 @@
         opacity: 1;
     }
 }
+
+/* COMPACT AI VISUAL REFINEMENT START */
+.karwan-ai-widget {
+    right: 18px;
+    bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+    width: min(332px, calc(100vw - 24px));
+}
+
+.karwan-ai-details > summary {
+    gap: 8px;
+    min-width: 126px;
+    min-height: 42px;
+    padding: 8px 13px;
+    font-size: 13px;
+    box-shadow: 0 10px 26px rgba(8, 76, 56, 0.28);
+}
+
+.karwan-ai-details > summary:hover {
+    box-shadow: 0 13px 30px rgba(8, 76, 56, 0.34);
+}
+
+.karwan-ai-summary-icon {
+    width: 25px;
+    height: 25px;
+    font-size: 0;
+}
+
+.karwan-ai-icon-svg {
+    width: 16px;
+    height: 16px;
+}
+
+.karwan-ai-summary-status {
+    width: 7px;
+    height: 7px;
+    border-width: 1.5px;
+    box-shadow: 0 0 0 2px rgba(49, 209, 124, 0.17);
+}
+
+.karwan-ai-panel {
+    bottom: 50px;
+    width: min(332px, calc(100vw - 24px));
+    max-height: min(520px, calc(100dvh - 82px));
+    border-radius: 16px;
+    box-shadow: 0 20px 48px rgba(11, 31, 58, 0.2);
+}
+
+.karwan-ai-head {
+    gap: 10px;
+    padding: 11px 13px;
+}
+
+.karwan-ai-head > div {
+    gap: 0;
+}
+
+.karwan-ai-head strong {
+    font-size: 14px;
+}
+
+.karwan-ai-head span {
+    font-size: 10.5px;
+}
+
+.karwan-ai-head button {
+    min-width: 36px;
+    min-height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 6px 8px;
+    border-radius: 9px;
+    font-size: 11px;
+}
+
+.karwan-ai-button-icon {
+    width: 15px;
+    height: 15px;
+    flex: 0 0 auto;
+}
+
+.karwan-ai-status {
+    min-height: 22px;
+    padding: 5px 12px 2px;
+    font-size: 10.5px;
+}
+
+.karwan-ai-status:empty {
+    min-height: 5px;
+}
+
+.karwan-ai-messages {
+    min-height: 150px;
+    max-height: min(235px, calc(100dvh - 275px));
+    gap: 8px;
+    padding: 10px 12px 12px;
+}
+
+.karwan-ai-message {
+    max-width: 88%;
+    padding: 8px 10px;
+    border-radius: 12px;
+    font-size: 13px;
+    line-height: 1.45;
+}
+
+.karwan-ai-form {
+    gap: 7px;
+    padding: 10px 12px 11px;
+}
+
+.karwan-ai-form textarea {
+    min-height: 58px;
+    max-height: 96px;
+    padding: 9px 10px;
+    border-radius: 10px;
+    font-size: 13px;
+}
+
+.karwan-ai-form-meta {
+    gap: 8px;
+    font-size: 9.5px;
+}
+
+.karwan-ai-form button {
+    min-height: 40px;
+    padding: 8px 13px;
+    border-radius: 10px;
+    font-size: 13px;
+}
+
+.karwan-ai-footer {
+    justify-content: flex-end;
+    padding: 7px 12px calc(8px + env(safe-area-inset-bottom, 0px));
+    font-size: 10.5px;
+}
+
+.karwan-ai-footer > span {
+    display: none;
+}
+
+.karwan-ai-footer a {
+    min-height: 34px;
+    gap: 6px;
+    text-decoration: none;
+}
+
+.karwan-ai-whatsapp-icon {
+    width: 17px;
+    height: 17px;
+    flex: 0 0 auto;
+}
+
+.karwan-ai-widget[dir="rtl"] {
+    right: auto;
+    left: 18px;
+}
+
+@media (max-width: 640px) {
+    .karwan-ai-widget,
+    .karwan-ai-widget[dir="rtl"] {
+        right: 10px;
+        left: 10px;
+        bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+    }
+
+    .karwan-ai-details > summary,
+    .karwan-ai-widget[dir="rtl"] .karwan-ai-details > summary {
+        min-width: 122px;
+        min-height: 42px;
+    }
+
+    .karwan-ai-panel,
+    .karwan-ai-widget[dir="rtl"] .karwan-ai-panel {
+        right: 10px;
+        bottom: calc(62px + env(safe-area-inset-bottom, 0px));
+        left: 10px;
+        max-height: calc(100dvh - 82px);
+        border-radius: 15px;
+    }
+
+    .karwan-ai-messages {
+        min-height: 145px;
+        max-height: calc(100dvh - 320px);
+    }
+
+    .karwan-ai-footer {
+        align-items: center;
+        flex-direction: row;
+    }
+}
+
+@media (max-width: 380px) {
+    .karwan-ai-panel,
+    .karwan-ai-widget[dir="rtl"] .karwan-ai-panel {
+        right: 7px;
+        left: 7px;
+    }
+
+    .karwan-ai-head {
+        padding: 10px 11px;
+    }
+
+    .karwan-ai-head button span {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+    }
+
+    .karwan-ai-form-meta span:first-child {
+        display: none;
+    }
+}
+/* COMPACT AI VISUAL REFINEMENT END */

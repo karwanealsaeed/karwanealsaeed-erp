@@ -1,4 +1,14 @@
 @php
+    $karwanAiWhatsapp =
+        preg_replace(
+            '/[^0-9]/',
+            '',
+            data_get($company ?? null, 'whatsapp')
+                ?: data_get($company ?? null, 'mobile')
+                ?: '+923012592342',
+        );
+@endphp
+@php
     $karwanAiMessageLimit =
         (int) config(
             'karwan_ai.message_max_length',
@@ -30,7 +40,73 @@
                 <span
                     class="karwan-ai-summary-icon"
                     aria-hidden="true"
-                >🤖</span>
+                >
+                    <svg
+                        class="karwan-ai-icon-svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <path
+                            d="M12 3V5"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                            stroke-linecap="round"
+                        />
+
+                        <path
+                            d="M9.5 3H14.5"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                            stroke-linecap="round"
+                        />
+
+                        <rect
+                            x="4.5"
+                            y="6"
+                            width="15"
+                            height="12"
+                            rx="4"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                        />
+
+                        <circle
+                            cx="9"
+                            cy="12"
+                            r="1.25"
+                            fill="currentColor"
+                        />
+
+                        <circle
+                            cx="15"
+                            cy="12"
+                            r="1.25"
+                            fill="currentColor"
+                        />
+
+                        <path
+                            d="M9 15H15"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                            stroke-linecap="round"
+                        />
+
+                        <path
+                            d="M4.5 10H3"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                            stroke-linecap="round"
+                        />
+
+                        <path
+                            d="M21 10H19.5"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                            stroke-linecap="round"
+                        />
+                    </svg>
+                </span>
 
                 <span>{{ __('website.ai_name') }}</span>
 
@@ -60,7 +136,42 @@
                         id="karwanAiClear"
                         aria-label="{{ __('website.ai_clear') }}"
                     >
-                        {{ __('website.ai_clear') }}
+                        <svg
+                            class="karwan-ai-button-icon"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            aria-hidden="true"
+                        >
+                            <path
+                                d="M4 7H20"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                                stroke-linecap="round"
+                            />
+
+                            <path
+                                d="M9 7V4H15V7"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                                stroke-linejoin="round"
+                            />
+
+                            <path
+                                d="M7 7L8 20H16L17 7"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                                stroke-linejoin="round"
+                            />
+
+                            <path
+                                d="M10 11V16M14 11V16"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                                stroke-linecap="round"
+                            />
+                        </svg>
+
+                        <span>{{ __('website.ai_clear') }}</span>
                     </button>
                 </header>
 
@@ -151,11 +262,33 @@
                     </span>
 
                     <a
-                        href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $company->whatsapp ?? '+923012592342') }}"
+                        href="https://wa.me/{{ $karwanAiWhatsapp }}"
                         target="_blank"
                         rel="noopener noreferrer"
                     >
-                        {{ __('website.ai_whatsapp_support') }}
+                        <svg
+                            class="karwan-ai-whatsapp-icon"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            aria-hidden="true"
+                        >
+                            <path
+                                d="M20 11.6A8 8 0 0 1 8.15 18.62L4 20L5.38 15.85A8 8 0 1 1 20 11.6Z"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                                stroke-linejoin="round"
+                            />
+
+                            <path
+                                d="M9.15 8.3C9.35 7.85 9.55 7.84 9.82 7.84H10.18C10.32 7.84 10.53 7.9 10.64 8.17L11.18 9.48C11.27 9.7 11.23 9.85 11.1 10.02L10.55 10.68C10.4 10.85 10.34 10.99 10.48 11.23C10.9 11.95 11.45 12.55 12.13 13.02C12.36 13.18 12.53 13.16 12.7 12.96L13.4 12.15C13.56 11.97 13.73 11.93 13.95 12.02L15.35 12.68C15.58 12.79 15.72 12.91 15.75 13.08C15.79 13.25 15.79 14.04 15.26 14.62C14.75 15.18 14.09 15.39 13.35 15.24C12.71 15.11 11.89 14.78 10.91 14.17C9.5 13.28 8.54 12.18 7.96 11.22C7.37 10.25 7.33 9.38 7.64 8.75C7.86 8.32 8.16 8.01 8.48 7.93"
+                                stroke="currentColor"
+                                stroke-width="1.45"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            />
+                        </svg>
+
+                        <span>{{ __('website.ai_whatsapp_support') }}</span>
                     </a>
                 </footer>
             </section>

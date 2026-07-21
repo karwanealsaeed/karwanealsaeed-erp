@@ -101,7 +101,18 @@ class KarwanAiKnowledgeService
             }
         }
 
-        $score += min(10, max(0, (int) $record->priority));
+        if ($score <= 0) {
+            return 0;
+        }
+
+        $score +=
+            min(
+                10,
+                max(
+                    0,
+                    (int) $record->priority,
+                ),
+            );
 
         return $score;
     }

@@ -30,6 +30,36 @@ class KarwanAiService
         }
 
         if ($this->containsAny($text, [
+            'what services',
+            'which services',
+            'services do you offer',
+            'your services',
+            'available services',
+            'kya services',
+            'kia services',
+            'kai kia services',
+            'services kya',
+            'services kia',
+            'services hn',
+            'services hain',
+            'kon si services',
+            'konsi services',
+            'kaun si services',
+            'کیا سروسز',
+            'کون سی سروسز',
+            'سروسز کیا',
+            'خدمات',
+        ])) {
+            return $this->result(
+                $language,
+                'Services',
+                false,
+                'Karwan E Al Saeed provides Umrah packages, visit visas and visa consultancy, domestic and international air tickets, hotel booking, travel insurance, Pakistan tours, booking support, payments, invoices and registered Agent Portal services.',
+                'کاروانِ آل سعید عمرہ پیکجز، وزٹ ویزا اور ویزا کنسلٹنسی، ملکی و بین الاقوامی ائیر ٹکٹ، ہوٹل بکنگ، ٹریول انشورنس، پاکستان ٹورز، بکنگ سپورٹ، ادائیگی، انوائس اور رجسٹرڈ ایجنٹ پورٹل کی خدمات فراہم کرتا ہے۔',
+                'Karwan E Al Saeed Umrah packages, visit visas aur visa consultancy, domestic aur international air tickets, hotel booking, travel insurance, Pakistan tours, booking support, payments, invoices aur registered Agent Portal services provide karta hai.'
+            );
+        }
+        if ($this->containsAny($text, [
             'assalam', 'salam', 'hello', 'hi', 'aoa', 'السلام', 'سلام',
         ])) {
             return $this->result(

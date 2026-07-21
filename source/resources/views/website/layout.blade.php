@@ -133,7 +133,7 @@
                 </div>
 
                 <div class="kes-topbar-right">
-                    <a href="tel:{{ preg_replace('/[^0-9+]/', '', $company->mobile ?? '+923012592342') }}">
+                    <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $company->whatsapp ?: ($company->mobile ?? '+923012592342')) }}" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp: {{ $company->mobile ?? '+92 301 2592342' }}">
                         <span class="kes-topbar-label">{{ __('website.call_us') }}:</span>
                         {{ $company->mobile ?? '+92 301 2592342' }}
                     </a>
@@ -347,7 +347,7 @@
 
                     <div>
                         <span>{{ __('website.phone') }}</span>
-                        <a href="tel:{{ preg_replace('/[^0-9+]/', '', $company->mobile ?? '+923012592342') }}">
+                        <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $company->whatsapp ?: ($company->mobile ?? '+923012592342')) }}" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp: {{ $company->mobile ?? '+92 301 2592342' }}">
                             {{ $company->mobile ?? '+92 301 2592342' }}
                         </a>
                     </div>
@@ -377,140 +377,6 @@
             </div>
         </div>
     </footer>
-
-    <a class="kes-whatsapp"
-       href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $company->whatsapp ?? '+923012592342') }}"
-       target="_blank">
-        WA
-    </a>
-<div class="kes-support-widget">
-    <details class="kes-support-box"
-        @if(session('support_success') || session('support_error') || $errors->supportInquiry->any()) open @endif
-    >
-        <summary>💬 {{ __('website.support_widget') }}</summary>
-
-        <div class="kes-support-panel">
-            <div class="kes-support-head">
-                <strong>{{ __('website.support_help_heading') }}</strong>
-                <span>{{ __('website.support_team_name') }}</span>
-            </div>
-
-            @if (session('support_success'))
-                <div class="kes-support-alert success">
-                    {{ session('support_success') }}
-                </div>
-            @endif
-
-            @if (session('support_reply'))
-                <div class="kes-support-alert reply">
-                    {{ session('support_reply') }}
-                </div>
-            @endif
-
-            @if (session('support_error'))
-                <div class="kes-support-alert error">
-                    {{ session('support_error') }}
-                </div>
-            @endif
-
-            @if ($errors->supportInquiry->any())
-                <div class="kes-support-alert error">
-                    @foreach ($errors->supportInquiry->all() as $error)
-                        <div>{{ $error }}</div>
-                    @endforeach
-                </div>
-            @endif
-
-            <form method="POST" action="{{ route('support-inquiries.store') }}">
-                @csrf
-
-                <input
-                    type="text"
-                    name="name"
-                    value="{{ old('name') }}"
-                    placeholder="{{ __('website.support_name_placeholder') }}"
-                    required
-                >
-
-                <input
-                    type="text"
-                    name="mobile"
-                    value="{{ old('mobile') }}"
-                    placeholder="{{ __('website.support_mobile_placeholder') }}"
-                    required
-                >
-
-                <input
-                    type="email"
-                    name="email"
-                    value="{{ old('email') }}"
-                    placeholder="{{ __('website.support_email_placeholder') }}"
-                >
-
-                <select name="service_type">
-                    <option value="">
-                        {{ __('website.support_select_service') }}
-                    </option>
-
-                    <option value="Umrah Package"
-                        @selected(old('service_type') === 'Umrah Package')>
-                        {{ __('website.support_umrah_package') }}
-                    </option>
-
-                    <option value="Visit Visa"
-                        @selected(old('service_type') === 'Visit Visa')>
-                        {{ __('website.support_visit_visa') }}
-                    </option>
-
-                    <option value="Air Ticketing"
-                        @selected(old('service_type') === 'Air Ticketing')>
-                        {{ __('website.air_ticketing') }}
-                    </option>
-
-                    <option value="Hotel Booking"
-                        @selected(old('service_type') === 'Hotel Booking')>
-                        {{ __('website.hotel_booking') }}
-                    </option>
-
-                    <option value="Travel Insurance"
-                        @selected(old('service_type') === 'Travel Insurance')>
-                        {{ __('website.support_travel_insurance') }}
-                    </option>
-
-                    <option value="Pakistan Tours"
-                        @selected(old('service_type') === 'Pakistan Tours')>
-                        {{ __('website.pakistan_tours') }}
-                    </option>
-                </select>
-
-                <input
-                    type="text"
-                    name="subject"
-                    value="{{ old('subject') }}"
-                    placeholder="{{ __('website.support_subject_placeholder') }}"
-                >
-
-                <textarea
-                    name="message"
-                    rows="4"
-                    placeholder="{{ __('website.support_message_placeholder') }}"
-                    required
-                >{{ old('message') }}</textarea>
-
-                <button type="submit">
-                    {{ __('website.support_submit') }}
-                </button>
-            </form>
-
-            <a class="kes-support-whatsapp"
-               href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $company->whatsapp ?? '+923012592342') }}"
-               target="_blank"
-               rel="noopener">
-                {{ __('website.support_whatsapp_now') }}
-            </a>
-        </div>
-    </details>
-</div>
 
 @include('components.karwan-ai-widget')
 

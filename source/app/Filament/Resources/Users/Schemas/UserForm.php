@@ -170,6 +170,10 @@ class UserForm
                     'ai_knowledge_bases_edit' => 'Karwan AI Knowledge Base - Edit',
                     'ai_knowledge_bases_delete' => 'Karwan AI Knowledge Base - Delete',
 
+
+                    'ai_settings_view' => 'Karwan AI Settings - View',
+                    'ai_settings_edit' => 'Karwan AI Settings - Edit',
+                    'ai_usage_logs_view' => 'Karwan AI Usage Logs - View',
                     'activity_logs_view' => 'Activity Logs - View',
                     'database_backups_view' => 'Database Backups - View',
                     'database_backups_create' => 'Database Backups - Create',
@@ -402,6 +406,9 @@ class UserForm
                 'ai_knowledge_bases_create',
                 'ai_knowledge_bases_edit',
 
+
+                'ai_settings_view',
+                'ai_usage_logs_view',
                 'activity_logs_view',
 
                 'countries_view',

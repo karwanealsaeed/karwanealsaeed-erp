@@ -23,6 +23,7 @@ use App\Http\Controllers\PublicUmrahPackageController;
 use App\Http\Controllers\SeoController;
 use App\Http\Controllers\RefundPrintController;
 use App\Http\Controllers\ReportExportController;
+use App\Http\Controllers\TravelInsuranceReportExportController;
 use App\Http\Controllers\StaffPayrollPrintController;
 use App\Http\Controllers\SupportInquiryController;
 use App\Http\Controllers\UmrahPackagePosterPrintController;
@@ -315,6 +316,14 @@ Route::get('/refunds/{refund}/print', RefundPrintController::class)
 Route::get('/reports/{report}/{format}', ReportExportController::class)
     ->where('format', 'print|pdf|excel')
     ->name('reports.export')
+    ->middleware('auth');
+
+Route::get(
+    '/travel-insurance-report/{format}',
+    TravelInsuranceReportExportController::class,
+)
+    ->where('format', 'print|pdf|excel')
+    ->name('travel-insurance-report.export')
     ->middleware('auth');
 
 Route::get('/database-backups/{databaseBackup}/download', DatabaseBackupDownloadController::class)

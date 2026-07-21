@@ -51,6 +51,8 @@ class TravelInsurancePolicy extends Model
         'policy_document_mime',
         'policy_document_size',
         'notes',
+        'expiry_alert_fingerprint',
+        'expiry_alert_sent_at',
     ];
 
     protected function casts(): array
@@ -103,6 +105,9 @@ class TravelInsurancePolicy extends Model
 
             'policy_document_size' =>
                 'integer',
+
+            'expiry_alert_sent_at' =>
+                'datetime',
         ];
     }
 

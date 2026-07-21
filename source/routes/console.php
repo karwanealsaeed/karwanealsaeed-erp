@@ -29,6 +29,13 @@ Schedule::command(
     ->timezone('Asia/Karachi')
     ->withoutOverlapping(30);
 
+Schedule::command(
+    'travel-insurance:send-expiry-alerts',
+)
+    ->dailyAt('08:15')
+    ->timezone('Asia/Karachi')
+    ->withoutOverlapping(30);
+
 Schedule::command('system:maintain-errors')
     ->dailyAt('03:30')
     ->timezone('Asia/Karachi')

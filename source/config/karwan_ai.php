@@ -7,10 +7,6 @@ return [
     |--------------------------------------------------------------------------
     | Karwan AI Emergency Switch
     |--------------------------------------------------------------------------
-    |
-    | Is switch ko false karne par chat, history aur clear endpoints safe
-    | 503 response denge. Existing records delete ya modify nahi honge.
-    |
     */
 
     'enabled' =>
@@ -21,6 +17,75 @@ return [
             ),
             FILTER_VALIDATE_BOOL,
         ),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Provider Foundation
+    |--------------------------------------------------------------------------
+    |
+    | Phase 8A3A ships only the local provider. External providers remain
+    | disabled and no external API request is made.
+    |
+    */
+
+    'provider' =>
+        (string) env(
+            'KARWAN_AI_PROVIDER',
+            'local',
+        ),
+
+    'model' =>
+        env(
+            'KARWAN_AI_MODEL',
+        ),
+
+    'external_enabled' =>
+        filter_var(
+            env(
+                'KARWAN_AI_EXTERNAL_ENABLED',
+                false,
+            ),
+            FILTER_VALIDATE_BOOL,
+        ),
+
+    'fallback_enabled' =>
+        filter_var(
+            env(
+                'KARWAN_AI_FALLBACK_ENABLED',
+                true,
+            ),
+            FILTER_VALIDATE_BOOL,
+        ),
+
+    'timeout_seconds' =>
+        max(
+            1,
+            min(
+                (int) env(
+                    'KARWAN_AI_TIMEOUT_SECONDS',
+                    10,
+                ),
+                60,
+            ),
+        ),
+
+    'max_output_characters' =>
+        max(
+            100,
+            min(
+                (int) env(
+                    'KARWAN_AI_MAX_OUTPUT_CHARACTERS',
+                    4000,
+                ),
+                12000,
+            ),
+        ),
+
+    'allowed_providers' => [
+        'local',
+        'openai',
+        'gemini',
+    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -56,9 +121,6 @@ return [
     |--------------------------------------------------------------------------
     | Public Route Rate Limits
     |--------------------------------------------------------------------------
-    |
-    | Laravel throttle format: maximum requests, minutes.
-    |
     */
 
     'rate_limits' => [
@@ -85,10 +147,6 @@ return [
     |--------------------------------------------------------------------------
     | Session Ownership HMAC
     |--------------------------------------------------------------------------
-    |
-    | APP_KEY default signing key hai. Raw session ID database mein save nahi
-    | hoti. Optional dedicated key environment se provide ki ja sakti hai.
-    |
     */
 
     'session_hmac_key' =>

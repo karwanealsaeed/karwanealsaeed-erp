@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Models\AiChatMessage;
-use App\Services\KarwanAiKnowledgeService;
-use App\Services\KarwanAiService;
+use App\Services\KarwanAiManager;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -20,8 +19,7 @@ class KarwanAiController extends Controller
 {
     public function chat(
         Request $request,
-        KarwanAiService $karwanAi,
-        KarwanAiKnowledgeService $knowledgeService,
+        KarwanAiManager $karwanAiManager,
     ): JsonResponse {
         $disabledResponse =
             $this->disabledResponse();
@@ -107,21 +105,17 @@ class KarwanAiController extends Controller
         $customerId =
             $this->customerId();
 
-        $knowledgeAnswer =
-            $knowledgeService->answer(
-                $message,
-            );
-
         $answer =
-            $knowledgeAnswer
-            ?? $karwanAi->answer(
-                $message,
+            $karwanAiManager->answer(
+                message: $message,
+                sessionToken: $sessionToken,
+                customerId: $customerId,
             );
 
         $answerSource =
-            $knowledgeAnswer
-                ? 'knowledge_base'
-                : 'rules';
+            (string) $answer[
+                'source'
+            ];
 
         if (
             Schema::hasTable(
@@ -163,6 +157,16 @@ class KarwanAiController extends Controller
                                 'source' =>
                                     'user',
 
+                                'request_id' =>
+                                    $answer[
+                                        'request_id'
+                                    ],
+
+                                'provider' =>
+                                    $answer[
+                                        'provider'
+                                    ],
+
                                 'version' =>
                                     1,
                             ],
@@ -198,6 +202,36 @@ class KarwanAiController extends Controller
                                 'source' =>
                                     $answerSource,
 
+                                'request_id' =>
+                                    $answer[
+                                        'request_id'
+                                    ],
+
+                                'provider' =>
+                                    $answer[
+                                        'provider'
+                                    ],
+
+                                'requested_provider' =>
+                                    $answer[
+                                        'requested_provider'
+                                    ],
+
+                                'model' =>
+                                    $answer[
+                                        'model'
+                                    ],
+
+                                'fallback_used' =>
+                                    $answer[
+                                        'fallback_used'
+                                    ],
+
+                                'latency_ms' =>
+                                    $answer[
+                                        'latency_ms'
+                                    ],
+
                                 'version' =>
                                     1,
                             ],
@@ -228,6 +262,36 @@ class KarwanAiController extends Controller
 
                 'source' =>
                     $answerSource,
+
+                'provider' =>
+                    $answer[
+                        'provider'
+                    ],
+
+                'requested_provider' =>
+                    $answer[
+                        'requested_provider'
+                    ],
+
+                'model' =>
+                    $answer[
+                        'model'
+                    ],
+
+                'fallback_used' =>
+                    $answer[
+                        'fallback_used'
+                    ],
+
+                'latency_ms' =>
+                    $answer[
+                        'latency_ms'
+                    ],
+
+                'request_id' =>
+                    $answer[
+                        'request_id'
+                    ],
             ],
         );
     }

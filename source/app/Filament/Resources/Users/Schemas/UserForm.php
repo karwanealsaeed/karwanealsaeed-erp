@@ -161,6 +161,15 @@ class UserForm
                 'options' => [
                     'users_manage' => 'Users & Roles - Manage',
                     'settings_manage' => 'Company Settings - Manage',
+
+                    'ai_chat_messages_view' => 'Karwan AI Chat Logs - View',
+                    'ai_chat_messages_delete' => 'Karwan AI Chat Logs - Delete',
+
+                    'ai_knowledge_bases_view' => 'Karwan AI Knowledge Base - View',
+                    'ai_knowledge_bases_create' => 'Karwan AI Knowledge Base - Create',
+                    'ai_knowledge_bases_edit' => 'Karwan AI Knowledge Base - Edit',
+                    'ai_knowledge_bases_delete' => 'Karwan AI Knowledge Base - Delete',
+
                     'activity_logs_view' => 'Activity Logs - View',
                     'database_backups_view' => 'Database Backups - View',
                     'database_backups_create' => 'Database Backups - Create',
@@ -386,6 +395,13 @@ class UserForm
             'Manager' => [
                 'users_manage',
                 'settings_manage',
+
+                'ai_chat_messages_view',
+
+                'ai_knowledge_bases_view',
+                'ai_knowledge_bases_create',
+                'ai_knowledge_bases_edit',
+
                 'activity_logs_view',
 
                 'countries_view',

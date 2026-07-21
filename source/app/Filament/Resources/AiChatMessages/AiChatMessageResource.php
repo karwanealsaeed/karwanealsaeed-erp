@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources\AiChatMessages;
 
 use App\Filament\Resources\AiChatMessages\Pages\ListAiChatMessages;
@@ -11,53 +13,132 @@ use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 use UnitEnum;
 
 class AiChatMessageResource extends Resource
 {
-    protected static ?string $model = AiChatMessage::class;
+    protected static ?string $model =
+        AiChatMessage::class;
 
-    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-chat-bubble-left-right';
+    protected static string|BackedEnum|null $navigationIcon =
+        'heroicon-o-chat-bubble-left-right';
 
-    protected static string|UnitEnum|null $navigationGroup = 'Settings';
+    protected static string|UnitEnum|null $navigationGroup =
+        'Settings';
 
-    protected static ?string $navigationLabel = 'AI Chat Logs';
+    protected static ?string $navigationLabel =
+        'AI Chat Logs';
 
-    protected static ?string $modelLabel = 'AI Chat Message';
+    protected static ?string $modelLabel =
+        'AI Chat Message';
 
-    protected static ?string $pluralModelLabel = 'AI Chat Logs';
+    protected static ?string $pluralModelLabel =
+        'AI Chat Logs';
 
-    protected static ?int $navigationSort = 91;
+    protected static ?int $navigationSort =
+        91;
+
+    public static function canAccess(): bool
+    {
+        return auth()
+            ->user()
+            ?->hasPermission(
+                'ai_chat_messages.view',
+            )
+            ?? false;
+    }
+
+    public static function canViewAny(): bool
+    {
+        return self::canAccess();
+    }
+
+    public static function canView(
+        Model $record,
+    ): bool {
+        return self::canAccess();
+    }
 
     public static function canCreate(): bool
     {
         return false;
     }
 
-    public static function infolist(Schema $schema): Schema
-    {
-        return AiChatMessageInfolist::configure($schema);
+    public static function canEdit(
+        Model $record,
+    ): bool {
+        return false;
     }
 
-    public static function table(Table $table): Table
+    public static function canDelete(
+        Model $record,
+    ): bool {
+        return auth()
+            ->user()
+            ?->hasPermission(
+                'ai_chat_messages.delete',
+            )
+            ?? false;
+    }
+
+    public static function canDeleteAny(): bool
     {
-        return AiChatMessagesTable::configure($table);
+        return auth()
+            ->user()
+            ?->hasPermission(
+                'ai_chat_messages.delete',
+            )
+            ?? false;
+    }
+
+    public static function infolist(
+        Schema $schema,
+    ): Schema {
+        return AiChatMessageInfolist::configure(
+            $schema,
+        );
+    }
+
+    public static function table(
+        Table $table,
+    ): Table {
+        return AiChatMessagesTable::configure(
+            $table,
+        );
     }
 
     public static function getNavigationBadge(): ?string
     {
-        $count = AiChatMessage::query()
-            ->where('needs_human_support', true)
-            ->count();
+        if (! self::canAccess()) {
+            return null;
+        }
 
-        return $count > 0 ? (string) $count : null;
+        $count =
+            AiChatMessage::query()
+                ->where(
+                    'needs_human_support',
+                    true,
+                )
+                ->count();
+
+        return $count > 0
+            ? (string) $count
+            : null;
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => ListAiChatMessages::route('/'),
-            'view' => ViewAiChatMessage::route('/{record}'),
+            'index' =>
+                ListAiChatMessages::route(
+                    '/',
+                ),
+
+            'view' =>
+                ViewAiChatMessage::route(
+                    '/{record}',
+                ),
         ];
     }
 }

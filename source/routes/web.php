@@ -115,13 +115,31 @@ Route::get('/contact', [WebsiteController::class, 'page'])->defaults('slug', 'co
 Route::post('/support-inquiries', [SupportInquiryController::class, 'store'])
     ->name('support-inquiries.store');
 Route::post('/karwan-ai/chat', [KarwanAiController::class, 'chat'])
-    ->name('karwan-ai.chat');
+    ->name('karwan-ai.chat')
+    ->middleware(
+        'throttle:'.config(
+            'karwan_ai.rate_limits.chat',
+            '20,1',
+        ),
+    );
 
 Route::get('/karwan-ai/history', [KarwanAiController::class, 'history'])
-    ->name('karwan-ai.history');
+    ->name('karwan-ai.history')
+    ->middleware(
+        'throttle:'.config(
+            'karwan_ai.rate_limits.history',
+            '60,1',
+        ),
+    );
 
 Route::delete('/karwan-ai/clear', [KarwanAiController::class, 'clear'])
-    ->name('karwan-ai.clear');
+    ->name('karwan-ai.clear')
+    ->middleware(
+        'throttle:'.config(
+            'karwan_ai.rate_limits.clear',
+            '10,1',
+        ),
+    );
 /*
 |--------------------------------------------------------------------------
 | Customer Portal Public Routes

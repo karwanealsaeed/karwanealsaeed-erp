@@ -1444,3 +1444,119 @@ a {
         color: #000000 !important;
     }
 }
+/* CUSTOMER PORTAL PHASE 4B START */
+
+.cp-sr-only {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
+.cp-table-wrap[tabindex="0"]:focus-visible {
+    outline: 3px solid var(--cp-gold);
+    outline-offset: 3px;
+}
+
+.cp-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px solid var(--cp-border);
+}
+
+.cp-pagination p {
+    margin: 0;
+    color: var(--cp-muted);
+    font-size: 14px;
+}
+
+.cp-pagination-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.cp-pagination-actions a,
+.cp-pagination-actions span {
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 13px;
+    border: 1px solid var(--cp-border);
+    border-radius: 10px;
+    text-decoration: none;
+    background: #ffffff;
+    color: var(--cp-green);
+    font-weight: 700;
+}
+
+.cp-pagination-actions a:hover {
+    border-color: var(--cp-gold);
+}
+
+.cp-pagination-actions span[aria-disabled="true"] {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.cp-pagination-actions span[aria-current="page"] {
+    background: var(--cp-green);
+    color: #ffffff;
+    border-color: var(--cp-green);
+}
+
+.cp-field-block {
+    margin-top: 16px;
+}
+
+.cp-field-block label {
+    display: block;
+    margin-bottom: 7px;
+    font-weight: 700;
+}
+
+.cp-file-action {
+    margin-bottom: 8px;
+}
+
+.cp-body a:focus-visible,
+.cp-body button:focus-visible,
+.cp-body input:focus-visible,
+.cp-body select:focus-visible,
+.cp-body textarea:focus-visible,
+.cp-auth-body a:focus-visible,
+.cp-auth-body button:focus-visible,
+.cp-auth-body input:focus-visible {
+    outline: 3px solid var(--cp-gold);
+    outline-offset: 3px;
+}
+
+@media (max-width: 640px) {
+    .cp-pagination {
+        align-items: stretch;
+    }
+
+    .cp-pagination,
+    .cp-pagination-actions {
+        width: 100%;
+    }
+
+    .cp-pagination-actions a,
+    .cp-pagination-actions span {
+        flex: 1 1 auto;
+    }
+}
+
+/* CUSTOMER PORTAL PHASE 4B END */

@@ -60,13 +60,13 @@
             <table class="cp-table">
                 <thead>
                     <tr>
-                        <th>Date</th>
-                        <th>Type</th>
-                        <th>Reference</th>
-                        <th>Description</th>
-                        <th class="right">Debit</th>
-                        <th class="right">Credit</th>
-                        <th class="right">Balance</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Reference</th>
+                        <th scope="col">Description</th>
+                        <th scope="col" class="right">Debit</th>
+                        <th scope="col" class="right">Credit</th>
+                        <th scope="col" class="right">Balance</th>
                     </tr>
                 </thead>
 

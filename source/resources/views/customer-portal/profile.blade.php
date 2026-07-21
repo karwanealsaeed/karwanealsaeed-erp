@@ -159,22 +159,22 @@
             <table class="cp-table">
                 <tbody>
                     <tr>
-                        <th>CNIC</th>
+                        <th scope="row">CNIC</th>
                         <td>{{ $customer->cnic ?: '-' }}</td>
                     </tr>
 
                     <tr>
-                        <th>Passport No</th>
+                        <th scope="row">Passport No</th>
                         <td>{{ $customer->passport_no ?: '-' }}</td>
                     </tr>
 
                     <tr>
-                        <th>Account Type</th>
+                        <th scope="row">Account Type</th>
                         <td>{{ $customer->customer_type ?: '-' }}</td>
                     </tr>
 
                     <tr>
-                        <th>Status</th>
+                        <th scope="row">Status</th>
                         <td>{{ $customer->status ?: '-' }}</td>
                     </tr>
                 </tbody>

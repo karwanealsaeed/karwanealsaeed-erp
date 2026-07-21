@@ -49,19 +49,19 @@
 
                 <label>
                     <span>Mobile / Email / CNIC / Passport</span>
-                    <input type="text" name="login" value="{{ old('login') }}" placeholder="Enter mobile, email, CNIC or passport" required autofocus>
+                    <input type="text" name="login" value="{{ old('login') }}" placeholder="Enter mobile, email, CNIC or passport" autocomplete="username" required autofocus>
                 </label>
 
                 <label>
                     <span>Password</span>
-                    <input type="password" name="password" placeholder="Enter agent portal password" required>
+                    <input type="password" name="password" placeholder="Enter agent portal password" autocomplete="current-password" required>
                 </label>
 
                 <button type="submit">Login</button>
             </form>
 
             <div class="cp-auth-links">
-                <a href="https://wa.me/923012592342" target="_blank">Request Agent Login</a>
+                <a href="https://wa.me/923012592342" target="_blank" rel="noopener noreferrer">Request Agent Login</a>
                 <a href="{{ route('website.home') }}">Back to Website</a>
             </div>
         </div>

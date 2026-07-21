@@ -4,60 +4,144 @@
     <div class="cp-page-head">
         <div>
             <h1>Notifications & Offers</h1>
-            <p>Latest updates, alerts and promotions. Unread: {{ $unreadCount ?? 0 }}</p>
+            <p>
+                Latest updates and alerts. Unread: {{ $unreadCount ?? 0 }}
+            </p>
         </div>
 
-        @if (($notifications->count() ?? 0) > 0)
-            <form method="POST" action="{{ route('customer.portal.notifications.mark_all_read') }}">
+        @if ($notifications->total() > 0)
+            <form
+                method="POST"
+                action="{{ route('customer.portal.notifications.mark_all_read') }}"
+            >
                 @csrf
-                <button type="submit">Mark All Read</button>
+
+                <button type="submit">
+                    Mark All Read
+                </button>
             </form>
         @endif
     </div>
 
     @if (session('success'))
-        <div class="cp-alert success">{{ session('success') }}</div>
+        <div class="cp-alert success">
+            {{ session('success') }}
+        </div>
     @endif
 
     <div class="cp-card-grid">
         @forelse ($notifications as $notification)
             @php
-                $isRead = in_array((int) $notification->id, $readNotificationIds ?? [], true);
+                $isRead = in_array(
+                    (int) $notification->id,
+                    $readNotificationIds ?? [],
+                    true,
+                );
+
+                $actionUrl = trim(
+                    (string) ($notification->action_url ?? ''),
+                );
+
+                $actionScheme = strtolower(
+                    (string) parse_url(
+                        $actionUrl,
+                        PHP_URL_SCHEME,
+                    ),
+                );
+
+                $isSafeRelativeUrl =
+                    str_starts_with($actionUrl, '/')
+                    && ! str_starts_with($actionUrl, '//');
+
+                $isSafeAbsoluteUrl =
+                    in_array(
+                        $actionScheme,
+                        [
+                            'http',
+                            'https',
+                        ],
+                        true,
+                    );
+
+                $hasSafeActionUrl =
+                    $actionUrl !== ''
+                    && (
+                        $isSafeRelativeUrl
+                        || $isSafeAbsoluteUrl
+                    );
             @endphp
 
-            <div class="cp-info-card cp-notification-card {{ $isRead ? 'read' : 'unread' }}">
+            <article class="cp-info-card cp-notification-card {{ $isRead ? 'read' : 'unread' }}">
                 <div class="cp-notification-top">
                     <span>
                         {{ $notification->type }}
-                        {{ $notification->service_type ? '• ' . $notification->service_type : '' }}
+
+                        {{
+                            $notification->service_type
+                                ? '• '.$notification->service_type
+                                : ''
+                        }}
                     </span>
 
-                    <strong>{{ $isRead ? 'Read' : 'Unread' }}</strong>
+                    <strong>
+                        {{ $isRead ? 'Read' : 'Unread' }}
+                    </strong>
                 </div>
 
-                <h3>{{ $notification->title }}</h3>
-                <p>{{ $notification->message }}</p>
+                <h2>
+                    {{ $notification->title }}
+                </h2>
+
+                <p>
+                    {{ $notification->message }}
+                </p>
 
                 <div class="cp-notification-actions">
                     @if (! $isRead)
-                        <form method="POST" action="{{ route('customer.portal.notifications.read', $notification) }}">
+                        <form
+                            method="POST"
+                            action="{{ route('customer.portal.notifications.read', $notification) }}"
+                        >
                             @csrf
-                            <button type="submit">Mark Read</button>
+
+                            <button type="submit">
+                                Mark Read
+                            </button>
                         </form>
                     @endif
 
-                    @if ($notification->action_url)
-                        <a href="{{ $notification->action_url }}" target="_blank">
+                    @if ($hasSafeActionUrl)
+                        <a
+                            href="{{ $actionUrl }}"
+                            @if ($isSafeAbsoluteUrl)
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            @endif
+                        >
                             {{ $notification->action_label ?: 'Open' }}
                         </a>
                     @endif
                 </div>
-            </div>
+            </article>
         @empty
             <div class="cp-info-card">
-                <h3>No notifications</h3>
-                <p>Abhi koi new notification ya offer available nahi hai.</p>
+                <h2>No notifications</h2>
+
+                <p>
+                    Abhi koi new notification ya offer available nahi hai.
+                </p>
             </div>
         @endforelse
     </div>
+
+    @include(
+        'customer-portal.partials.pagination',
+        [
+            'paginator' =>
+                $notifications,
+
+            'label' =>
+                'Notifications pagination',
+        ]
+    )
 @endsection

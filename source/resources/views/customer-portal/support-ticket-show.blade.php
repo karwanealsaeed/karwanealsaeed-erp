@@ -25,7 +25,15 @@
     <div class="cp-form-card">
         <form method="POST" action="{{ route('customer.portal.support.reply', $ticket) }}">
             @csrf
-            <textarea name="message" rows="4" placeholder="Write reply..." required></textarea>
+            <label for="support-reply-message">Reply Message</label>
+            <textarea
+                id="support-reply-message"
+                name="message"
+                rows="4"
+                maxlength="5000"
+                placeholder="Write reply..."
+                required
+            >{{ old('message') }}</textarea>
             <button type="submit">Send Reply</button>
         </form>
     </div>

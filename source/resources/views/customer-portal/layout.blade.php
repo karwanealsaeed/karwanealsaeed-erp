@@ -10,13 +10,20 @@
 </head>
 <body class="cp-body">
     <div class="cp-mobile-top">
-        <button type="button" onclick="document.body.classList.toggle('cp-menu-open')">☰</button>
+        <button
+            id="customerPortalMenuButton"
+            type="button"
+            aria-label="Open customer portal navigation"
+            aria-controls="customerPortalSidebar"
+            aria-expanded="false"
+            onclick="document.body.classList.toggle('cp-menu-open'); this.setAttribute('aria-expanded', document.body.classList.contains('cp-menu-open') ? 'true' : 'false');"
+        >☰</button>
         <strong>Agent Portal</strong>
         <a href="{{ route('website.home') }}">Website</a>
     </div>
 
     <div class="cp-app">
-        <aside class="cp-sidebar">
+        <aside class="cp-sidebar" id="customerPortalSidebar">
             <div class="cp-sidebar-brand">
                 <div class="cp-sidebar-logo">K</div>
                 <div>
@@ -30,7 +37,7 @@
                 <strong>{{ session('customer_portal_name', 'Customer') }}</strong>
             </div>
 
-            <nav class="cp-nav">
+            <nav class="cp-nav" aria-label="Customer portal navigation">
                 <a href="{{ route('customer.portal.dashboard') }}" class="{{ request()->routeIs('customer.portal.dashboard') ? 'active' : '' }}">
                     <span>🏠</span> Dashboard
                 </a>
@@ -108,7 +115,7 @@
 
                 <div class="cp-topbar-actions">
                     <a href="{{ route('website.home') }}">Public Website</a>
-                    <a href="https://wa.me/923012592342" target="_blank">WhatsApp</a>
+                    <a href="https://wa.me/923012592342" target="_blank" rel="noopener noreferrer">WhatsApp</a>
                 </div>
             </div>
 
@@ -118,7 +125,7 @@
         </main>
     </div>
 
-    <div class="cp-backdrop" onclick="document.body.classList.remove('cp-menu-open')"></div>
+    <div class="cp-backdrop" onclick="document.body.classList.remove('cp-menu-open'); document.getElementById('customerPortalMenuButton')?.setAttribute('aria-expanded', 'false')"></div>
 
     <script>
         let customerPortalTimer;

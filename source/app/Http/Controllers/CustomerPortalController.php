@@ -14,7 +14,7 @@ use App\Services\UnifiedCustomerStatementService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
@@ -350,57 +350,517 @@ class CustomerPortalController extends Controller
 
     public function visaApplications(): View
     {
-        $customer = $this->portalCustomer();
+        $customer =
+            $this->portalCustomer();
 
-        return view('customer-portal.list', [
-            'customer' => $customer,
-            'title' => 'Visa Applications',
-            'records' => $this->rowsFromTable('visa_applications', $customer->id),
-        ]);
+        return view(
+            'customer-portal.list',
+            [
+                'customer' =>
+                    $customer,
+
+                'heading' =>
+                    'Visa Applications',
+
+                'columns' => [
+                    [
+                        'key' =>
+                            'application_no',
+
+                        'label' =>
+                            'Application No',
+                    ],
+
+                    [
+                        'key' =>
+                            'passport_no',
+
+                        'label' =>
+                            'Passport No',
+                    ],
+
+                    [
+                        'key' =>
+                            'travel_date',
+
+                        'label' =>
+                            'Travel Date',
+
+                        'type' =>
+                            'date',
+                    ],
+
+                    [
+                        'key' =>
+                            'return_date',
+
+                        'label' =>
+                            'Return Date',
+
+                        'type' =>
+                            'date',
+                    ],
+
+                    [
+                        'key' =>
+                            'status',
+
+                        'label' =>
+                            'Status',
+
+                        'type' =>
+                            'status',
+                    ],
+
+                    [
+                        'key' =>
+                            'total_amount',
+
+                        'label' =>
+                            'Total',
+
+                        'type' =>
+                            'money',
+                    ],
+
+                    [
+                        'key' =>
+                            'balance_amount',
+
+                        'label' =>
+                            'Balance',
+
+                        'type' =>
+                            'money',
+                    ],
+                ],
+
+                'records' =>
+                    $this->rowsFromTable(
+                        'visa_applications',
+                        (int) $customer->id,
+                    ),
+            ],
+        );
     }
 
     public function flightBookings(): View
     {
-        $customer = $this->portalCustomer();
+        $customer =
+            $this->portalCustomer();
 
-        return view('customer-portal.list', [
-            'customer' => $customer,
-            'title' => 'Flight Bookings',
-            'records' => $this->rowsFromTable('flight_bookings', $customer->id),
-        ]);
+        return view(
+            'customer-portal.list',
+            [
+                'customer' =>
+                    $customer,
+
+                'heading' =>
+                    'Flight Bookings',
+
+                'columns' => [
+                    [
+                        'key' =>
+                            'booking_no',
+
+                        'label' =>
+                            'Booking No',
+                    ],
+
+                    [
+                        'key' =>
+                            'pnr',
+
+                        'label' =>
+                            'PNR',
+                    ],
+
+                    [
+                        'key' =>
+                            'ticket_no',
+
+                        'label' =>
+                            'Ticket No',
+                    ],
+
+                    [
+                        'key' =>
+                            'departure_date',
+
+                        'label' =>
+                            'Departure',
+
+                        'type' =>
+                            'date',
+                    ],
+
+                    [
+                        'key' =>
+                            'return_date',
+
+                        'label' =>
+                            'Return',
+
+                        'type' =>
+                            'date',
+                    ],
+
+                    [
+                        'key' =>
+                            'status',
+
+                        'label' =>
+                            'Status',
+
+                        'type' =>
+                            'status',
+                    ],
+
+                    [
+                        'key' =>
+                            'total_amount',
+
+                        'label' =>
+                            'Total',
+
+                        'type' =>
+                            'money',
+                    ],
+
+                    [
+                        'key' =>
+                            'balance_amount',
+
+                        'label' =>
+                            'Balance',
+
+                        'type' =>
+                            'money',
+                    ],
+                ],
+
+                'records' =>
+                    $this->rowsFromTable(
+                        'flight_bookings',
+                        (int) $customer->id,
+                    ),
+            ],
+        );
     }
 
     public function umrahBookings(): View
     {
-        $customer = $this->portalCustomer();
+        $customer =
+            $this->portalCustomer();
 
-        return view('customer-portal.list', [
-            'customer' => $customer,
-            'title' => 'Umrah Bookings',
-            'records' => $this->rowsFromTable('umrah_bookings', $customer->id),
-        ]);
+        return view(
+            'customer-portal.list',
+            [
+                'customer' =>
+                    $customer,
+
+                'heading' =>
+                    'Umrah Bookings',
+
+                'columns' => [
+                    [
+                        'key' =>
+                            'booking_no',
+
+                        'label' =>
+                            'Booking No',
+                    ],
+
+                    [
+                        'key' =>
+                            'package_name',
+
+                        'label' =>
+                            'Package',
+                    ],
+
+                    [
+                        'key' =>
+                            'travel_date',
+
+                        'label' =>
+                            'Travel Date',
+
+                        'type' =>
+                            'date',
+                    ],
+
+                    [
+                        'key' =>
+                            'return_date',
+
+                        'label' =>
+                            'Return Date',
+
+                        'type' =>
+                            'date',
+                    ],
+
+                    [
+                        'key' =>
+                            'no_of_persons',
+
+                        'label' =>
+                            'Persons',
+                    ],
+
+                    [
+                        'key' =>
+                            'status',
+
+                        'label' =>
+                            'Status',
+
+                        'type' =>
+                            'status',
+                    ],
+
+                    [
+                        'key' =>
+                            'package_amount',
+
+                        'label' =>
+                            'Package Amount',
+
+                        'type' =>
+                            'money',
+                    ],
+
+                    [
+                        'key' =>
+                            'balance_amount',
+
+                        'label' =>
+                            'Balance',
+
+                        'type' =>
+                            'money',
+                    ],
+                ],
+
+                'records' =>
+                    $this->rowsFromTable(
+                        'umrah_bookings',
+                        (int) $customer->id,
+                    ),
+            ],
+        );
     }
 
     public function hotelBookings(): View
     {
-        $customer = $this->portalCustomer();
+        $customer =
+            $this->portalCustomer();
 
-        return view('customer-portal.list', [
-            'customer' => $customer,
-            'title' => 'Hotel Bookings',
-            'records' => $this->rowsFromTable('hotel_bookings', $customer->id),
-        ]);
+        return view(
+            'customer-portal.list',
+            [
+                'customer' =>
+                    $customer,
+
+                'heading' =>
+                    'Hotel Bookings',
+
+                'columns' => [
+                    [
+                        'key' =>
+                            'booking_no',
+
+                        'label' =>
+                            'Booking No',
+                    ],
+
+                    [
+                        'key' =>
+                            'hotel_name',
+
+                        'label' =>
+                            'Hotel',
+                    ],
+
+                    [
+                        'key' =>
+                            'city',
+
+                        'label' =>
+                            'City',
+                    ],
+
+                    [
+                        'key' =>
+                            'check_in_date',
+
+                        'label' =>
+                            'Check In',
+
+                        'type' =>
+                            'date',
+                    ],
+
+                    [
+                        'key' =>
+                            'check_out_date',
+
+                        'label' =>
+                            'Check Out',
+
+                        'type' =>
+                            'date',
+                    ],
+
+                    [
+                        'key' =>
+                            'status',
+
+                        'label' =>
+                            'Status',
+
+                        'type' =>
+                            'status',
+                    ],
+
+                    [
+                        'key' =>
+                            'total_amount',
+
+                        'label' =>
+                            'Total',
+
+                        'type' =>
+                            'money',
+                    ],
+
+                    [
+                        'key' =>
+                            'balance_amount',
+
+                        'label' =>
+                            'Balance',
+
+                        'type' =>
+                            'money',
+                    ],
+                ],
+
+                'records' =>
+                    $this->rowsFromTable(
+                        'hotel_bookings',
+                        (int) $customer->id,
+                    ),
+            ],
+        );
     }
 
     public function invoices(): View
     {
-        $customer = $this->portalCustomer();
+        $customer =
+            $this->portalCustomer();
 
-        return view('customer-portal.list', [
-            'customer' => $customer,
-            'title' => 'Invoices',
-            'records' => $this->rowsFromTable('invoices', $customer->id),
-        ]);
+        return view(
+            'customer-portal.list',
+            [
+                'customer' =>
+                    $customer,
+
+                'heading' =>
+                    'Invoices',
+
+                'columns' => [
+                    [
+                        'key' =>
+                            'invoice_no',
+
+                        'label' =>
+                            'Invoice No',
+                    ],
+
+                    [
+                        'key' =>
+                            'invoice_date',
+
+                        'label' =>
+                            'Invoice Date',
+
+                        'type' =>
+                            'date',
+                    ],
+
+                    [
+                        'key' =>
+                            'due_date',
+
+                        'label' =>
+                            'Due Date',
+
+                        'type' =>
+                            'date',
+                    ],
+
+                    [
+                        'key' =>
+                            'service_type',
+
+                        'label' =>
+                            'Service',
+                    ],
+
+                    [
+                        'key' =>
+                            'status',
+
+                        'label' =>
+                            'Status',
+
+                        'type' =>
+                            'status',
+                    ],
+
+                    [
+                        'key' =>
+                            'total_amount',
+
+                        'label' =>
+                            'Total',
+
+                        'type' =>
+                            'money',
+                    ],
+
+                    [
+                        'key' =>
+                            'paid_amount',
+
+                        'label' =>
+                            'Paid',
+
+                        'type' =>
+                            'money',
+                    ],
+
+                    [
+                        'key' =>
+                            'balance_amount',
+
+                        'label' =>
+                            'Balance',
+
+                        'type' =>
+                            'money',
+                    ],
+                ],
+
+                'records' =>
+                    $this->rowsFromTable(
+                        'invoices',
+                        (int) $customer->id,
+                    ),
+            ],
+        );
     }
 
     public function documents(): View
@@ -417,11 +877,21 @@ class CustomerPortalController extends Controller
                         'customer_id',
                         $customer->id,
                     )
-                    ->latest(
+                    ->orderByDesc(
                         'id',
                     )
-                    ->get()
-                : collect();
+                    ->paginate(
+                        15,
+                        [
+                            '*',
+                        ],
+                        'page',
+                    )
+                    ->withQueryString()
+                : $this->emptyPortalPaginator(
+                    15,
+                    'page',
+                );
 
         return view(
             'customer-portal.documents',
@@ -437,22 +907,89 @@ class CustomerPortalController extends Controller
 
     public function vouchers(): View
     {
-        $customer = $this->portalCustomer();
+        $customer =
+            $this->portalCustomer();
 
-        $records = collect();
+        return view(
+            'customer-portal.list',
+            [
+                'customer' =>
+                    $customer,
 
-        if (Schema::hasTable('umrah_vouchers')) {
-            $records = DB::table('umrah_vouchers')
-                ->where('customer_id', $customer->id)
-                ->latest('id')
-                ->get();
-        }
+                'heading' =>
+                    'Vouchers',
 
-        return view('customer-portal.list', [
-            'customer' => $customer,
-            'title' => 'Vouchers',
-            'records' => $records,
-        ]);
+                'columns' => [
+                    [
+                        'key' =>
+                            'voucher_no',
+
+                        'label' =>
+                            'Voucher No',
+                    ],
+
+                    [
+                        'key' =>
+                            'booking_reference',
+
+                        'label' =>
+                            'Booking Reference',
+                    ],
+
+                    [
+                        'key' =>
+                            'lead_guest',
+
+                        'label' =>
+                            'Lead Guest',
+                    ],
+
+                    [
+                        'key' =>
+                            'adults',
+
+                        'label' =>
+                            'Adults',
+                    ],
+
+                    [
+                        'key' =>
+                            'children',
+
+                        'label' =>
+                            'Children',
+                    ],
+
+                    [
+                        'key' =>
+                            'status',
+
+                        'label' =>
+                            'Status',
+
+                        'type' =>
+                            'status',
+                    ],
+
+                    [
+                        'key' =>
+                            'created_at',
+
+                        'label' =>
+                            'Created',
+
+                        'type' =>
+                            'date',
+                    ],
+                ],
+
+                'records' =>
+                    $this->rowsFromTable(
+                        'umrah_vouchers',
+                        (int) $customer->id,
+                    ),
+            ],
+        );
     }
 
     public function ledger(): View
@@ -516,10 +1053,13 @@ class CustomerPortalController extends Controller
                     'customer_id',
                     $customer->id,
                 )
-                ->latest(
+                ->orderByDesc(
                     'id',
                 )
-                ->get();
+                ->paginate(
+                    15,
+                )
+                ->withQueryString();
 
         return view(
             'customer-portal.payment-uploads',
@@ -678,14 +1218,30 @@ class CustomerPortalController extends Controller
 
     public function familyMembers(): View
     {
-        $customer = $this->portalCustomer();
+        $customer =
+            $this->portalCustomer();
 
-        $members = CustomerFamilyMember::query()
-            ->where('customer_id', $customer->id)
-            ->latest()
-            ->get();
+        $members =
+            CustomerFamilyMember::query()
+                ->where(
+                    'customer_id',
+                    $customer->id,
+                )
+                ->orderByDesc(
+                    'id',
+                )
+                ->paginate(
+                    15,
+                )
+                ->withQueryString();
 
-        return view('customer-portal.family-members', compact('customer', 'members'));
+        return view(
+            'customer-portal.family-members',
+            compact(
+                'customer',
+                'members',
+            ),
+        );
     }
 
     public function storeFamilyMember(Request $request): RedirectResponse
@@ -723,25 +1279,79 @@ class CustomerPortalController extends Controller
 
     public function notifications(): View
     {
-        $customer = $this->portalCustomer();
+        $customer =
+            $this->portalCustomer();
 
-        $notifications = $this->notificationsQuery($customer)
-            ->latest()
-            ->get();
+        $notifications =
+            $this->notificationsQuery(
+                $customer,
+            )
+                ->orderByDesc(
+                    'id',
+                )
+                ->paginate(
+                    12,
+                )
+                ->withQueryString();
 
-        $readNotificationIds = CustomerNotificationRead::query()
-            ->where('customer_id', $customer->id)
-            ->whereNotNull('read_at')
-            ->pluck('customer_notification_id')
-            ->map(fn ($id): int => (int) $id)
-            ->toArray();
+        $notificationIds =
+            $notifications
+                ->getCollection()
+                ->pluck(
+                    'id',
+                )
+                ->map(
+                    fn ($id): int =>
+                        (int) $id,
+                )
+                ->values()
+                ->all();
 
-        return view('customer-portal.notifications', [
-            'customer' => $customer,
-            'notifications' => $notifications,
-            'readNotificationIds' => $readNotificationIds,
-            'unreadCount' => $this->unreadNotificationsCount($customer),
-        ]);
+        $readNotificationIds = [];
+
+        if ($notificationIds !== []) {
+            $readNotificationIds =
+                CustomerNotificationRead::query()
+                    ->where(
+                        'customer_id',
+                        $customer->id,
+                    )
+                    ->whereNotNull(
+                        'read_at',
+                    )
+                    ->whereIn(
+                        'customer_notification_id',
+                        $notificationIds,
+                    )
+                    ->pluck(
+                        'customer_notification_id',
+                    )
+                    ->map(
+                        fn ($id): int =>
+                            (int) $id,
+                    )
+                    ->values()
+                    ->all();
+        }
+
+        return view(
+            'customer-portal.notifications',
+            [
+                'customer' =>
+                    $customer,
+
+                'notifications' =>
+                    $notifications,
+
+                'readNotificationIds' =>
+                    $readNotificationIds,
+
+                'unreadCount' =>
+                    $this->unreadNotificationsCount(
+                        $customer,
+                    ),
+            ],
+        );
     }
 
     public function markNotificationRead(CustomerNotification $customerNotification): RedirectResponse
@@ -757,27 +1367,59 @@ class CustomerPortalController extends Controller
 
     public function markAllNotificationsRead(): RedirectResponse
     {
-        $customer = $this->portalCustomer();
+        $customer =
+            $this->portalCustomer();
 
-        $this->notificationsQuery($customer)
-            ->get()
-            ->each(function (CustomerNotification $notification) use ($customer): void {
-                $this->markNotificationAsRead($notification, $customer);
+        $this->notificationsQuery(
+            $customer,
+        )
+            ->lazyById(
+                200,
+            )
+            ->each(function (
+                CustomerNotification $notification,
+            ) use (
+                $customer,
+            ): void {
+                $this->markNotificationAsRead(
+                    $notification,
+                    $customer,
+                );
             });
 
-        return back()->with('success', 'All notifications read mark ho gayi hain.');
+        return back()
+            ->with(
+                'success',
+                'All notifications read mark ho gayi hain.',
+            );
     }
 
     public function supportTickets(): View
     {
-        $customer = $this->portalCustomer();
+        $customer =
+            $this->portalCustomer();
 
-        $tickets = SupportTicket::query()
-            ->where('customer_id', $customer->id)
-            ->latest()
-            ->get();
+        $tickets =
+            SupportTicket::query()
+                ->where(
+                    'customer_id',
+                    $customer->id,
+                )
+                ->orderByDesc(
+                    'id',
+                )
+                ->paginate(
+                    15,
+                )
+                ->withQueryString();
 
-        return view('customer-portal.support-tickets', compact('customer', 'tickets'));
+        return view(
+            'customer-portal.support-tickets',
+            compact(
+                'customer',
+                'tickets',
+            ),
+        );
     }
 
     public function storeSupportTicket(Request $request): RedirectResponse
@@ -858,15 +1500,48 @@ class CustomerPortalController extends Controller
 
     public function bookingTracking(): View
     {
-        $customer = $this->portalCustomer();
+        $customer =
+            $this->portalCustomer();
 
-        return view('customer-portal.booking-tracking', [
-            'customer' => $customer,
-            'visaApplications' => $this->rowsFromTable('visa_applications', $customer->id),
-            'flightBookings' => $this->rowsFromTable('flight_bookings', $customer->id),
-            'umrahBookings' => $this->rowsFromTable('umrah_bookings', $customer->id),
-            'hotelBookings' => $this->rowsFromTable('hotel_bookings', $customer->id),
-        ]);
+        return view(
+            'customer-portal.booking-tracking',
+            [
+                'customer' =>
+                    $customer,
+
+                'visaApplications' =>
+                    $this->rowsFromTable(
+                        'visa_applications',
+                        (int) $customer->id,
+                        'visa_page',
+                        5,
+                    ),
+
+                'flightBookings' =>
+                    $this->rowsFromTable(
+                        'flight_bookings',
+                        (int) $customer->id,
+                        'flight_page',
+                        5,
+                    ),
+
+                'umrahBookings' =>
+                    $this->rowsFromTable(
+                        'umrah_bookings',
+                        (int) $customer->id,
+                        'umrah_page',
+                        5,
+                    ),
+
+                'hotelBookings' =>
+                    $this->rowsFromTable(
+                        'hotel_bookings',
+                        (int) $customer->id,
+                        'hotel_page',
+                        5,
+                    ),
+            ],
+        );
     }
 
     public function logout(
@@ -1002,16 +1677,69 @@ class CustomerPortalController extends Controller
         return $customer;
     }
 
-    private function rowsFromTable(string $table, int $customerId): Collection
-    {
-        if (! Schema::hasTable($table) || ! Schema::hasColumn($table, 'customer_id')) {
-            return collect();
+    private function rowsFromTable(
+        string $table,
+        int $customerId,
+        string $pageName = 'page',
+        int $perPage = 15,
+    ): LengthAwarePaginator {
+        if (
+            ! Schema::hasTable(
+                $table,
+            )
+            || ! Schema::hasColumn(
+                $table,
+                'customer_id',
+            )
+        ) {
+            return $this->emptyPortalPaginator(
+                $perPage,
+                $pageName,
+            );
         }
 
-        return DB::table($table)
-            ->where('customer_id', $customerId)
-            ->latest('id')
-            ->get();
+        return DB::table(
+            $table,
+        )
+            ->where(
+                'customer_id',
+                $customerId,
+            )
+            ->orderByDesc(
+                'id',
+            )
+            ->paginate(
+                $perPage,
+                [
+                    '*',
+                ],
+                $pageName,
+            )
+            ->withQueryString();
+    }
+
+    private function emptyPortalPaginator(
+        int $perPage,
+        string $pageName,
+    ): LengthAwarePaginator {
+        return new LengthAwarePaginator(
+            [],
+            0,
+            $perPage,
+            LengthAwarePaginator::resolveCurrentPage(
+                $pageName,
+            ),
+            [
+                'path' =>
+                    request()->url(),
+
+                'query' =>
+                    request()->query(),
+
+                'pageName' =>
+                    $pageName,
+            ],
+        );
     }
 
     private function notificationsQuery(Customer $customer)

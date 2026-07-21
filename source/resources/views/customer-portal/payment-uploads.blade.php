@@ -4,7 +4,9 @@
     <div class="cp-page-head">
         <div>
             <h1>Payment Upload</h1>
-            <p>Upload payment proof securely for office review.</p>
+            <p>
+                Upload payment proof securely for office review.
+            </p>
         </div>
     </div>
 
@@ -65,7 +67,9 @@
                 </div>
 
                 <div>
-                    <label for="payment-reference">Invoice / Booking Reference</label>
+                    <label for="payment-reference">
+                        Invoice / Booking Reference
+                    </label>
 
                     <input
                         id="payment-reference"
@@ -87,6 +91,7 @@
                         min="1"
                         max="100000000"
                         step="0.01"
+                        inputmode="decimal"
                         required
                     >
                 </div>
@@ -162,7 +167,7 @@
                 </div>
             </div>
 
-            <div style="margin-top: 16px;">
+            <div class="cp-field-block">
                 <label for="payment-notes">Notes</label>
 
                 <textarea
@@ -180,89 +185,111 @@
     </div>
 
     <div class="cp-table-card">
-        <table class="cp-table">
-            <thead>
-                <tr>
-                    <th>Upload No</th>
-                    <th>Service</th>
-                    <th>Reference</th>
-                    <th>Amount</th>
-                    <th>Method</th>
-                    <th>Date</th>
-                    <th>Status</th>
-                    <th>Receipt</th>
-                </tr>
-            </thead>
+        <div
+            class="cp-table-wrap"
+            role="region"
+            aria-label="Payment uploads"
+            tabindex="0"
+        >
+            <table class="cp-table">
+                <caption class="cp-sr-only">
+                    Payment uploads
+                </caption>
 
-            <tbody>
-                @forelse ($uploads as $upload)
+                <thead>
                     <tr>
-                        <td>{{ $upload->upload_no }}</td>
-                        <td>{{ $upload->service_type }}</td>
-                        <td>{{ $upload->reference_no ?: '-' }}</td>
-
-                        <td>
-                            PKR {{ number_format((float) $upload->amount, 2) }}
-                        </td>
-
-                        <td>{{ $upload->payment_method }}</td>
-
-                        <td>
-                            {{ $upload->payment_date?->format('d M Y') ?: '-' }}
-                        </td>
-
-                        <td>
-                            <span class="cp-badge">
-                                {{ $upload->status }}
-                            </span>
-
-                            @if (
-                                $upload->status === 'Rejected'
-                                && filled($upload->rejection_reason)
-                            )
-                                <br>
-
-                                <small>
-                                    {{ $upload->rejection_reason }}
-                                </small>
-                            @endif
-                        </td>
-
-                        <td>
-                            @if (filled($upload->receipt_file))
-                                <a
-                                    href="{{ route('customer.portal.payment_uploads.receipt', [
-                                        'customerPaymentUpload' => $upload,
-                                        'view' => 1,
-                                    ]) }}"
-                                    target="_blank"
-                                    rel="noopener"
-                                >
-                                    View
-                                </a>
-
-                                &nbsp;|&nbsp;
-
-                                <a
-                                    href="{{ route('customer.portal.payment_uploads.receipt', [
-                                        'customerPaymentUpload' => $upload,
-                                    ]) }}"
-                                >
-                                    Download
-                                </a>
-                            @else
-                                -
-                            @endif
-                        </td>
+                        <th scope="col">Upload No</th>
+                        <th scope="col">Service</th>
+                        <th scope="col">Reference</th>
+                        <th scope="col">Amount</th>
+                        <th scope="col">Method</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Receipt</th>
                     </tr>
-                @empty
-                    <tr>
-                        <td colspan="8">
-                            No payment uploads found.
-                        </td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
+                </thead>
+
+                <tbody>
+                    @forelse ($uploads as $upload)
+                        <tr>
+                            <td>{{ $upload->upload_no }}</td>
+                            <td>{{ $upload->service_type }}</td>
+                            <td>{{ $upload->reference_no ?: '-' }}</td>
+
+                            <td>
+                                PKR {{ number_format((float) $upload->amount, 2) }}
+                            </td>
+
+                            <td>{{ $upload->payment_method }}</td>
+
+                            <td>
+                                {{ $upload->payment_date?->format('d M Y') ?: '-' }}
+                            </td>
+
+                            <td>
+                                <span class="cp-badge">
+                                    {{ $upload->status }}
+                                </span>
+
+                                @if (
+                                    $upload->status === 'Rejected'
+                                    && filled($upload->rejection_reason)
+                                )
+                                    <br>
+
+                                    <small>
+                                        {{ $upload->rejection_reason }}
+                                    </small>
+                                @endif
+                            </td>
+
+                            <td>
+                                @if (filled($upload->receipt_file))
+                                    <a
+                                        href="{{ route('customer.portal.payment_uploads.receipt', [
+                                            'customerPaymentUpload' => $upload,
+                                            'view' => 1,
+                                        ]) }}"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        View
+                                    </a>
+
+                                    <span aria-hidden="true"> | </span>
+
+                                    <a
+                                        href="{{ route('customer.portal.payment_uploads.receipt', [
+                                            'customerPaymentUpload' => $upload,
+                                        ]) }}"
+                                    >
+                                        Download
+                                    </a>
+                                @else
+                                    -
+                                @endif
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="8">
+                                No payment uploads found.
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+
+        @include(
+            'customer-portal.partials.pagination',
+            [
+                'paginator' =>
+                    $uploads,
+
+                'label' =>
+                    'Payment uploads pagination',
+            ]
+        )
     </div>
 @endsection

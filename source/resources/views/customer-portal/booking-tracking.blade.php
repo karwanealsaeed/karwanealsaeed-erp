@@ -4,7 +4,9 @@
     <div class="cp-page-head">
         <div>
             <h1>Booking Tracking</h1>
-            <p>Track all your visa, flight, Umrah and hotel bookings.</p>
+            <p>
+                Track your visa, flight, Umrah and hotel bookings.
+            </p>
         </div>
     </div>
 
@@ -17,29 +19,72 @@
         <div class="cp-table-card">
             <h2>{{ $title }}</h2>
 
-            <table class="cp-table">
-                <thead>
-                    <tr>
-                        <th>Reference</th>
-                        <th>Status</th>
-                        <th>Created</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse ($records as $record)
+            <div
+                class="cp-table-wrap"
+                role="region"
+                aria-label="{{ $title }}"
+                tabindex="0"
+            >
+                <table class="cp-table">
+                    <caption class="cp-sr-only">
+                        {{ $title }}
+                    </caption>
+
+                    <thead>
                         <tr>
-                            <td>{{ $record->booking_no ?? $record->application_no ?? $record->reference_no ?? ('#' . $record->id) }}</td>
-                            <td>{{ $record->status ?? '-' }}</td>
-                            <td>{{ isset($record->created_at) ? \Carbon\Carbon::parse($record->created_at)->format('d M Y') : '-' }}</td>
+                            <th scope="col">Reference</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Created</th>
                         </tr>
-                    @empty
-                        <tr>
-                            <td colspan="3">No records found.</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                    </thead>
+
+                    <tbody>
+                        @forelse ($records as $record)
+                            <tr>
+                                <td>
+                                    {{
+                                        $record->booking_no
+                                        ?? $record->application_no
+                                        ?? $record->reference_no
+                                        ?? ('#'.$record->id)
+                                    }}
+                                </td>
+
+                                <td>
+                                    <span class="cp-badge">
+                                        {{ $record->status ?? '-' }}
+                                    </span>
+                                </td>
+
+                                <td>
+                                    {{
+                                        isset($record->created_at)
+                                            ? \Carbon\Carbon::parse($record->created_at)->format('d M Y')
+                                            : '-'
+                                    }}
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="3">
+                                    No records found.
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+
+            @include(
+                'customer-portal.partials.pagination',
+                [
+                    'paginator' =>
+                        $records,
+
+                    'label' =>
+                        $title.' pagination',
+                ]
+            )
         </div>
-        <br>
     @endforeach
 @endsection

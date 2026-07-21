@@ -4,74 +4,185 @@
     <div class="cp-page-head">
         <div>
             <h1>Support Tickets</h1>
-            <p>Create and track your support requests.</p>
+            <p>
+                Create and track your support requests.
+            </p>
         </div>
     </div>
 
     @if (session('success'))
-        <div class="cp-alert success">{{ session('success') }}</div>
+        <div class="cp-alert success">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    @if ($errors->any())
+        <div class="cp-alert">
+            <strong>Please correct the following:</strong>
+
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
     @endif
 
     <div class="cp-form-card">
-        <form method="POST" action="{{ route('customer.portal.support.store') }}">
+        <form
+            method="POST"
+            action="{{ route('customer.portal.support.store') }}"
+        >
             @csrf
 
             <div class="cp-form-grid">
-                <select name="service_type">
-                    <option value="">Select Service</option>
-                    <option value="Umrah Package">Umrah Package</option>
-                    <option value="Visit Visa">Visit Visa</option>
-                    <option value="Air Ticketing">Air Ticketing</option>
-                    <option value="Hotel Booking">Hotel Booking</option>
-                    <option value="Travel Insurance">Travel Insurance</option>
-                    <option value="Pakistan Tours">Pakistan Tours</option>
-                </select>
+                <div>
+                    <label for="support-service">Service</label>
 
-                <select name="priority">
-                    <option value="Normal">Normal</option>
-                    <option value="High">High</option>
-                    <option value="Urgent">Urgent</option>
-                </select>
+                    <select
+                        id="support-service"
+                        name="service_type"
+                    >
+                        <option value="">Select Service</option>
 
-                <input type="text" name="subject" placeholder="Subject" required>
+                        @foreach ([
+                            'Umrah Package',
+                            'Visit Visa',
+                            'Air Ticketing',
+                            'Hotel Booking',
+                            'Travel Insurance',
+                            'Pakistan Tours',
+                        ] as $service)
+                            <option
+                                value="{{ $service }}"
+                                @selected(old('service_type') === $service)
+                            >
+                                {{ $service }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div>
+                    <label for="support-priority">Priority</label>
+
+                    <select
+                        id="support-priority"
+                        name="priority"
+                    >
+                        @foreach ([
+                            'Normal',
+                            'High',
+                            'Urgent',
+                        ] as $priority)
+                            <option
+                                value="{{ $priority }}"
+                                @selected(old('priority', 'Normal') === $priority)
+                            >
+                                {{ $priority }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div>
+                    <label for="support-subject">Subject</label>
+
+                    <input
+                        id="support-subject"
+                        type="text"
+                        name="subject"
+                        value="{{ old('subject') }}"
+                        maxlength="255"
+                        required
+                    >
+                </div>
             </div>
 
-            <textarea name="message" rows="4" placeholder="Write your issue..." required></textarea>
+            <div class="cp-field-block">
+                <label for="support-message">Message</label>
 
-            <button type="submit">Create Ticket</button>
+                <textarea
+                    id="support-message"
+                    name="message"
+                    rows="4"
+                    maxlength="5000"
+                    required
+                >{{ old('message') }}</textarea>
+            </div>
+
+            <button type="submit">
+                Create Ticket
+            </button>
         </form>
     </div>
 
     <div class="cp-table-card">
-        <table class="cp-table">
-            <thead>
-                <tr>
-                    <th>Ticket No</th>
-                    <th>Subject</th>
-                    <th>Service</th>
-                    <th>Priority</th>
-                    <th>Status</th>
-                    <th>Created</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse ($tickets as $ticket)
+        <div
+            class="cp-table-wrap"
+            role="region"
+            aria-label="Support tickets"
+            tabindex="0"
+        >
+            <table class="cp-table">
+                <caption class="cp-sr-only">
+                    Support tickets
+                </caption>
+
+                <thead>
                     <tr>
-                        <td>
-                            <a href="{{ route('customer.portal.support.show', $ticket) }}">{{ $ticket->ticket_no }}</a>
-                        </td>
-                        <td>{{ $ticket->subject }}</td>
-                        <td>{{ $ticket->service_type ?: '-' }}</td>
-                        <td>{{ $ticket->priority }}</td>
-                        <td>{{ $ticket->status }}</td>
-                        <td>{{ $ticket->created_at->format('d M Y') }}</td>
+                        <th scope="col">Ticket No</th>
+                        <th scope="col">Subject</th>
+                        <th scope="col">Service</th>
+                        <th scope="col">Priority</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Created</th>
                     </tr>
-                @empty
-                    <tr>
-                        <td colspan="6">No support tickets found.</td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
+                </thead>
+
+                <tbody>
+                    @forelse ($tickets as $ticket)
+                        <tr>
+                            <td>
+                                <a href="{{ route('customer.portal.support.show', $ticket) }}">
+                                    {{ $ticket->ticket_no }}
+                                </a>
+                            </td>
+
+                            <td>{{ $ticket->subject }}</td>
+                            <td>{{ $ticket->service_type ?: '-' }}</td>
+                            <td>{{ $ticket->priority }}</td>
+
+                            <td>
+                                <span class="cp-badge">
+                                    {{ $ticket->status }}
+                                </span>
+                            </td>
+
+                            <td>
+                                {{ $ticket->created_at->format('d M Y') }}
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="6">
+                                No support tickets found.
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+
+        @include(
+            'customer-portal.partials.pagination',
+            [
+                'paginator' =>
+                    $tickets,
+
+                'label' =>
+                    'Support tickets pagination',
+            ]
+        )
     </div>
 @endsection

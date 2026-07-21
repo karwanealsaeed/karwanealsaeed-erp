@@ -128,13 +128,15 @@ Route::get('/customer/login', [CustomerPortalController::class, 'login'])
     ->name('customer.portal.login');
 
 Route::post('/customer/login', [CustomerPortalController::class, 'authenticate'])
-    ->name('customer.portal.authenticate');
+    ->name('customer.portal.authenticate')
+    ->middleware('throttle:6,1');
 
 Route::get('/customer/register', [CustomerPortalController::class, 'register'])
     ->name('customer.portal.register');
 
 Route::post('/customer/register', [CustomerPortalController::class, 'storeRegistration'])
-    ->name('customer.portal.register.store');
+    ->name('customer.portal.register.store')
+    ->middleware('throttle:10,1');
 
 /*
 |--------------------------------------------------------------------------
@@ -142,7 +144,10 @@ Route::post('/customer/register', [CustomerPortalController::class, 'storeRegist
 |--------------------------------------------------------------------------
 */
 
-Route::middleware('customer.portal')->group(function (): void {
+Route::middleware([
+    'customer.portal',
+    'throttle:120,1',
+])->group(function (): void {
     Route::get('/customer/dashboard', [CustomerPortalController::class, 'dashboard'])
         ->name('customer.portal.dashboard');
     Route::get(

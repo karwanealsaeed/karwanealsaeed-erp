@@ -42,35 +42,41 @@ class CustomerPortalController extends Controller
             ->orWhere('passport_no', $login)
             ->first();
 
-        if (! $customer) {
+        if (
+            ! $customer
+            || (
+                $customer->customer_type
+                ?? 'Customer'
+            )
+            !== 'Agent'
+            || blank(
+                $customer->portal_password,
+            )
+            || ! Hash::check(
+                $data['password'],
+                (string) $customer
+                    ->portal_password,
+            )
+            || (
+                $customer->status
+                ?? 'Active'
+            )
+            !== 'Active'
+        ) {
             return back()
-                ->withInput()
-                ->with('error', 'Agent account nahi mila. Please office se contact karein.');
+                ->withInput(
+                    $request->except(
+                        'password',
+                    ),
+                )
+                ->with(
+                    'error',
+                    'Login details ghalat hain ya portal access available nahi hai.',
+                );
         }
 
-        if (($customer->customer_type ?? 'Customer') !== 'Agent') {
-            return back()
-                ->withInput()
-                ->with('error', 'Ye portal sirf Agents ke liye hai. Customer portal access enabled nahi hai.');
-        }
-
-        if (blank($customer->portal_password)) {
-            return back()
-                ->withInput()
-                ->with('error', 'Is agent ka portal password set nahi hai. Admin se password set karwayen.');
-        }
-
-        if (! Hash::check($data['password'], $customer->portal_password)) {
-            return back()
-                ->withInput()
-                ->with('error', 'Password ghalat hai.');
-        }
-
-        if (($customer->status ?? 'Active') !== 'Active') {
-            return back()
-                ->withInput()
-                ->with('error', 'Aap ka agent account active nahi hai.');
-        }
+        $request->session()
+            ->regenerate();
 
         $customer->update([
             'last_portal_login_at' => now(),
@@ -457,24 +463,53 @@ class CustomerPortalController extends Controller
         ]);
     }
 
-    public function logout(): RedirectResponse
-    {
-        session()->forget([
-            'customer_portal_id',
-            'customer_portal_name',
-            'customer_portal_last_activity',
-        ]);
+    public function logout(
+        Request $request,
+    ): RedirectResponse {
+        $request->session()
+            ->invalidate();
+
+        $request->session()
+            ->regenerateToken();
 
         return redirect()
-            ->route('customer.portal.login')
-            ->with('success', 'You have been logged out successfully.');
+            ->route(
+                'customer.portal.login',
+            )
+            ->with(
+                'success',
+                'You have been logged out successfully.',
+            );
     }
 
     private function portalCustomer(): Customer
     {
-        $customer = Customer::find((int) session('customer_portal_id'));
+        $customer =
+            Customer::query()
+                ->find(
+                    (int) session(
+                        'customer_portal_id',
+                    ),
+                );
 
-        abort_unless($customer, 403);
+        abort_unless(
+            $customer
+            && (
+                $customer->customer_type
+                ?? 'Customer'
+            )
+            === 'Agent'
+            && (
+                $customer->status
+                ?? 'Active'
+            )
+            === 'Active'
+            && filled(
+                $customer->portal_password,
+            ),
+            403,
+            'Portal customer session valid nahi hai.',
+        );
 
         return $customer;
     }

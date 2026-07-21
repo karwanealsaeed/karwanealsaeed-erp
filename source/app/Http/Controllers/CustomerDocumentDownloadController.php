@@ -11,7 +11,10 @@ class CustomerDocumentDownloadController extends Controller
 {
     public function __invoke(Request $request, CustomerDocument $customerDocument, string $fileIndex = '0')
     {
-        abort_unless(auth()->user()?->hasPermission('customer_documents.download') ?? false, 403);
+        $this->authorizeAccess(
+            $request,
+            $customerDocument,
+        );
 
         if ($fileIndex === 'all') {
             return $this->downloadAll($customerDocument);
@@ -36,6 +39,38 @@ class CustomerDocumentDownloadController extends Controller
         return Storage::disk('public')->download($filePath, $fileName);
     }
 
+    private function authorizeAccess(
+        Request $request,
+        CustomerDocument $customerDocument,
+    ): void {
+        if (
+            $request->routeIs(
+                'customer.portal.documents.download',
+            )
+        ) {
+            abort_unless(
+                (int) $request->session()
+                    ->get(
+                        'customer_portal_id',
+                        0,
+                    )
+                === (int) $customerDocument
+                    ->customer_id,
+                403,
+            );
+
+            return;
+        }
+
+        abort_unless(
+            $request->user()
+                ?->hasPermission(
+                    'customer_documents.download',
+                )
+            ?? false,
+            403,
+        );
+    }
     private function downloadAll(CustomerDocument $customerDocument)
     {
         abort_unless(class_exists(ZipArchive::class), 500, 'PHP Zip extension enabled nahi hai.');

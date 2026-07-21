@@ -179,6 +179,16 @@ Route::middleware([
     Route::get('/customer/documents', [CustomerPortalController::class, 'documents'])
         ->name('customer.portal.documents');
 
+    Route::get(
+        '/customer/documents/{customerDocument}/download/{fileIndex?}',
+        CustomerDocumentDownloadController::class,
+    )
+        ->where(
+            'fileIndex',
+            'all|[0-9]+',
+        )
+        ->name('customer.portal.documents.download');
+
     Route::get('/customer/vouchers', [CustomerPortalController::class, 'vouchers'])
         ->name('customer.portal.vouchers');
 

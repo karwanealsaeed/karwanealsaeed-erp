@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use App\Models\CustomerDocument;
 use App\Models\CustomerFamilyMember;
 use App\Models\CustomerNotification;
 use App\Models\CustomerNotificationRead;
 use App\Models\CustomerPaymentUpload;
 use App\Models\SupportTicket;
 use App\Models\SupportTicketReply;
-use Carbon\Carbon;
+use App\Services\UnifiedCustomerStatementService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -111,7 +112,7 @@ class CustomerPortalController extends Controller
 
         return view('customer-portal.dashboard', [
             'customer' => $customer,
-            'ledgerBalance' => $this->customerLedgerRows($customer->id)->last()['balance'] ?? 0,
+            'ledgerBalance' => ($this->customerStatement((int) $customer->id)['stats']['closing_balance'] ?? 0),
             'notificationsCount' => $this->unreadNotificationsCount($customer),
             'supportTicketsCount' => SupportTicket::query()->where('customer_id', $customer->id)->count(),
             'paymentUploadsCount' => CustomerPaymentUpload::query()->where('customer_id', $customer->id)->count(),
@@ -182,21 +183,34 @@ class CustomerPortalController extends Controller
 
     public function documents(): View
     {
-        $customer = $this->portalCustomer();
+        $customer =
+            $this->portalCustomer();
 
-        $documents = collect();
+        $documents =
+            Schema::hasTable(
+                'customer_documents',
+            )
+                ? CustomerDocument::query()
+                    ->where(
+                        'customer_id',
+                        $customer->id,
+                    )
+                    ->latest(
+                        'id',
+                    )
+                    ->get()
+                : collect();
 
-        if (Schema::hasTable('customer_documents')) {
-            $documents = DB::table('customer_documents')
-                ->where('customer_id', $customer->id)
-                ->latest('id')
-                ->get();
-        }
+        return view(
+            'customer-portal.documents',
+            [
+                'customer' =>
+                    $customer,
 
-        return view('customer-portal.documents', [
-            'customer' => $customer,
-            'documents' => $documents,
-        ]);
+                'documents' =>
+                    $documents,
+            ],
+        );
     }
 
     public function vouchers(): View
@@ -221,14 +235,36 @@ class CustomerPortalController extends Controller
 
     public function ledger(): View
     {
-        $customer = $this->portalCustomer();
-        $rows = $this->customerLedgerRows($customer->id);
+        $customer =
+            $this->portalCustomer();
 
-        return view('customer-portal.ledger', [
-            'customer' => $customer,
-            'rows' => $rows,
-            'closingBalance' => $rows->last()['balance'] ?? 0,
-        ]);
+        $statement =
+            $this->customerStatement(
+                (int) $customer->id,
+            );
+
+        return view(
+            'customer-portal.ledger',
+            [
+                'customer' =>
+                    $customer,
+
+                'statement' =>
+                    $statement,
+
+                'rows' =>
+                    collect(
+                        $statement['rows']
+                        ?? [],
+                    ),
+
+                'closingBalance' =>
+                    (float) (
+                        $statement['stats']['closing_balance']
+                        ?? 0
+                    ),
+            ],
+        );
     }
 
     public function paymentUploads(): View
@@ -600,134 +636,23 @@ class CustomerPortalController extends Controller
         );
     }
 
-    private function customerLedgerRows(int $customerId): Collection
-    {
-        $rows = collect();
+    private function customerStatement(
+        int $customerId,
+    ): array {
+        return app(
+            UnifiedCustomerStatementService::class,
+        )->generate(
+            customerId:
+                $customerId,
 
-        foreach ([
-            'invoices' => ['Invoice', ['invoice_no', 'reference_no'], ['total_amount', 'grand_total', 'net_amount', 'amount'], ['invoice_date', 'date', 'created_at']],
-            'visa_applications' => ['Visa Application', ['application_no', 'reference_no'], ['total_fee', 'fee', 'amount'], ['application_date', 'date', 'created_at']],
-            'flight_bookings' => ['Flight Booking', ['booking_no', 'reference_no'], ['total_amount', 'amount'], ['booking_date', 'date', 'created_at']],
-            'umrah_bookings' => ['Umrah Booking', ['booking_no', 'reference_no'], ['package_amount', 'total_amount', 'amount'], ['booking_date', 'date', 'created_at']],
-            'hotel_bookings' => ['Hotel Booking', ['booking_no', 'reference_no'], ['total_amount', 'amount'], ['booking_date', 'date', 'created_at']],
-        ] as $table => [$label, $refColumns, $amountColumns, $dateColumns]) {
-            if (! Schema::hasTable($table) || ! Schema::hasColumn($table, 'customer_id')) {
-                continue;
-            }
+            dateFrom:
+                '1900-01-01',
 
-            foreach (DB::table($table)->where('customer_id', $customerId)->get() as $record) {
-                $amount = $this->firstRecordAmount($record, $amountColumns);
+            dateTo:
+                '2999-12-31',
 
-                if ($amount <= 0) {
-                    continue;
-                }
-
-                $rows->push([
-                    'date' => $this->firstRecordDate($record, $dateColumns),
-                    'type' => $label,
-                    'reference' => $this->firstRecordText($record, $refColumns, strtoupper(substr($table, 0, 2)) . '-' . $record->id),
-                    'description' => $label . ' posted',
-                    'debit' => $amount,
-                    'credit' => 0,
-                ]);
-            }
-        }
-
-        foreach ([
-            'payments' => 'Visa Payment',
-            'flight_payments' => 'Flight Payment',
-            'umrah_payments' => 'Umrah Payment',
-            'hotel_payments' => 'Hotel Payment',
-        ] as $table => $label) {
-            if (! Schema::hasTable($table) || ! Schema::hasColumn($table, 'customer_id')) {
-                continue;
-            }
-
-            foreach (DB::table($table)->where('customer_id', $customerId)->get() as $record) {
-                $amount = $this->firstRecordAmount($record, ['amount', 'paid_amount', 'payment_amount', 'received_amount']);
-
-                if ($amount <= 0) {
-                    continue;
-                }
-
-                $rows->push([
-                    'date' => $this->firstRecordDate($record, ['payment_date', 'paid_at', 'date', 'created_at']),
-                    'type' => $label,
-                    'reference' => $this->firstRecordText($record, ['receipt_no', 'payment_no', 'reference_no'], strtoupper(substr($table, 0, 2)) . '-' . $record->id),
-                    'description' => 'Payment received',
-                    'debit' => 0,
-                    'credit' => $amount,
-                ]);
-            }
-        }
-
-        if (Schema::hasTable('customer_payment_uploads')) {
-            foreach (
-                DB::table('customer_payment_uploads')
-                    ->where('customer_id', $customerId)
-                    ->where('status', 'Approved')
-                    ->get() as $record
-            ) {
-                $amount = $this->firstRecordAmount($record, ['amount']);
-
-                if ($amount <= 0) {
-                    continue;
-                }
-
-                $rows->push([
-                    'date' => $this->firstRecordDate($record, ['payment_date', 'approved_at', 'created_at']),
-                    'type' => 'Approved Payment Upload',
-                    'reference' => $this->firstRecordText($record, ['upload_no', 'reference_no'], 'PU-' . $record->id),
-                    'description' => 'Payment approved by admin',
-                    'debit' => 0,
-                    'credit' => $amount,
-                ]);
-            }
-        }
-
-        $balance = 0;
-
-        return $rows
-            ->sortBy(fn (array $row): string => $row['date'] . $row['reference'])
-            ->values()
-            ->map(function (array $row) use (&$balance): array {
-                $balance += (float) $row['debit'] - (float) $row['credit'];
-                $row['balance'] = $balance;
-
-                return $row;
-            });
-    }
-
-    private function firstRecordAmount(object $record, array $columns): float
-    {
-        foreach ($columns as $column) {
-            if (property_exists($record, $column) && is_numeric($record->{$column})) {
-                return (float) $record->{$column};
-            }
-        }
-
-        return 0;
-    }
-
-    private function firstRecordText(object $record, array $columns, string $fallback = '-'): string
-    {
-        foreach ($columns as $column) {
-            if (property_exists($record, $column) && filled($record->{$column})) {
-                return (string) $record->{$column};
-            }
-        }
-
-        return $fallback;
-    }
-
-    private function firstRecordDate(object $record, array $columns): string
-    {
-        foreach ($columns as $column) {
-            if (property_exists($record, $column) && filled($record->{$column})) {
-                return Carbon::parse($record->{$column})->format('Y-m-d');
-            }
-        }
-
-        return now()->format('Y-m-d');
+            serviceType:
+                'all',
+        );
     }
 }

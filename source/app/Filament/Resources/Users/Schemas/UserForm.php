@@ -206,6 +206,12 @@ class UserForm
                     'travel_insurance_policies_create' => 'Travel Insurance Policies - Create',
                     'travel_insurance_policies_edit' => 'Travel Insurance Policies - Edit',
                     'travel_insurance_policies_delete' => 'Travel Insurance Policies - Delete',
+
+                    'travel_insurance_payments_view' => 'Travel Insurance Payments - View',
+                    'travel_insurance_payments_create' => 'Travel Insurance Payments - Create',
+                    'travel_insurance_payments_edit' => 'Travel Insurance Payments - Edit',
+                    'travel_insurance_payments_delete' => 'Travel Insurance Payments - Delete',
+                    'travel_insurance_payments_approve' => 'Travel Insurance Payments - Approve / Reject',
                 ],
             ],
 

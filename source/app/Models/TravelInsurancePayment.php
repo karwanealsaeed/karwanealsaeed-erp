@@ -67,7 +67,22 @@ class TravelInsurancePayment extends Model
             function (
                 TravelInsurancePayment $payment,
             ): void {
+                $originalPolicyId =
+                    (int) $payment->getOriginal(
+                        'travel_insurance_policy_id',
+                    );
+
                 $payment->refreshPolicyPaymentTotals();
+
+                if (
+                    $originalPolicyId > 0
+                    && $originalPolicyId !==
+                        (int) $payment->travel_insurance_policy_id
+                ) {
+                    static::refreshPolicyPaymentTotalsFor(
+                        $originalPolicyId,
+                    );
+                }
             },
         );
 
@@ -103,12 +118,37 @@ class TravelInsurancePayment extends Model
         );
     }
 
+    public function isAccountingLocked(): bool
+    {
+        if (
+            $this->posting_status === 'Posted'
+        ) {
+            return true;
+        }
+
+        return filled(
+            $this->account_voucher_id,
+        );
+    }
+
     private function refreshPolicyPaymentTotals(): void
     {
+        static::refreshPolicyPaymentTotalsFor(
+            (int) $this->travel_insurance_policy_id,
+        );
+    }
+
+    private static function refreshPolicyPaymentTotalsFor(
+        int $policyId,
+    ): void {
+        if ($policyId <= 0) {
+            return;
+        }
+
         $policy =
             TravelInsurancePolicy::query()
                 ->find(
-                    $this->travel_insurance_policy_id,
+                    $policyId,
                 );
 
         $policy?->refreshPaymentTotals();

@@ -201,6 +201,11 @@ class UserForm
                     'insurance_providers_create' => 'Insurance Providers - Create',
                     'insurance_providers_edit' => 'Insurance Providers - Edit',
                     'insurance_providers_delete' => 'Insurance Providers - Delete',
+
+                    'travel_insurance_policies_view' => 'Travel Insurance Policies - View',
+                    'travel_insurance_policies_create' => 'Travel Insurance Policies - Create',
+                    'travel_insurance_policies_edit' => 'Travel Insurance Policies - Edit',
+                    'travel_insurance_policies_delete' => 'Travel Insurance Policies - Delete',
                 ],
             ],
 

@@ -10,6 +10,8 @@ use App\Http\Controllers\CustomerStatementPdfController;
 use App\Http\Controllers\KarwanAiController;
 use App\Http\Controllers\CustomerDocumentDownloadController;
 use App\Http\Controllers\CustomerPortalController;
+use App\Http\Controllers\CustomerPortalTravelInsuranceController;
+use App\Http\Controllers\CustomerPortalTravelInsuranceDownloadController;
 use App\Http\Controllers\CustomerPaymentReceiptDownloadController;
 use App\Http\Controllers\CustomerPromotionController;
 use App\Http\Controllers\DatabaseBackupDownloadController;
@@ -181,6 +183,31 @@ Route::middleware([
 
     Route::get('/customer/hotel-bookings', [CustomerPortalController::class, 'hotelBookings'])
         ->name('customer.portal.hotels');
+
+    Route::get(
+        '/customer/travel-insurance',
+        CustomerPortalTravelInsuranceController::class,
+    )->name('customer.portal.travel_insurance');
+
+    Route::get(
+        '/customer/travel-insurance/payments/{travelInsurancePayment}/receipt',
+        [
+            CustomerPortalTravelInsuranceDownloadController::class,
+            'paymentReceipt',
+        ],
+    )
+        ->name('customer.portal.travel_insurance.payment_receipt')
+        ->middleware('throttle:30,1');
+
+    Route::get(
+        '/customer/travel-insurance/{travelInsurancePolicy}/document',
+        [
+            CustomerPortalTravelInsuranceDownloadController::class,
+            'policyDocument',
+        ],
+    )
+        ->name('customer.portal.travel_insurance.policy_document')
+        ->middleware('throttle:30,1');
 
     Route::get('/customer/invoices', [CustomerPortalController::class, 'invoices'])
         ->name('customer.portal.invoices');

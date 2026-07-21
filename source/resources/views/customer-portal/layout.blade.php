@@ -66,6 +66,10 @@
                     <span>🏨</span> Hotel Bookings
                 </a>
 
+                <a href="{{ route('customer.portal.travel_insurance') }}" class="{{ request()->routeIs('customer.portal.travel_insurance*') ? 'active' : '' }}">
+                    <span>🛡️</span> Travel Insurance
+                </a>
+
                 <a href="{{ route('customer.portal.invoices') }}" class="{{ request()->routeIs('customer.portal.invoices') ? 'active' : '' }}">
                     <span>🧾</span> Invoices
                 </a>

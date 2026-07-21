@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Filament\Resources\TravelInsurancePayments\TravelInsurancePaymentResource;
 use App\Filament\Resources\Users\Schemas\UserForm;
+use App\Models\AccountHead;
 use App\Models\Customer;
 use App\Models\InsuranceProvider;
 use App\Models\TravelInsurancePayment;
@@ -194,6 +195,8 @@ class TravelInsurancePaymentResourceTest extends TestCase
 
     public function test_approval_updates_policy_paid_balance(): void
     {
+        $this->ensureAccountingAccounts();
+
         $reviewer =
             $this->createUser(
                 [
@@ -254,7 +257,7 @@ class TravelInsurancePaymentResourceTest extends TestCase
         );
     }
 
-    public function test_rejection_removes_payment_from_policy_balance(): void
+    public function test_rejection_keeps_unapproved_payment_out_of_policy_balance(): void
     {
         $reviewer =
             $this->createUser(
@@ -268,17 +271,9 @@ class TravelInsurancePaymentResourceTest extends TestCase
                 2000,
             );
 
-        $service =
-            app(
-                TravelInsurancePaymentApprovalService::class,
-            );
-
-        $service->approve(
-            $payment,
-            $reviewer,
-        );
-
-        $service->reject(
+        app(
+            TravelInsurancePaymentApprovalService::class,
+        )->reject(
             $payment,
             $reviewer,
         );
@@ -289,6 +284,15 @@ class TravelInsurancePaymentResourceTest extends TestCase
         $this->assertSame(
             'Rejected',
             $payment->status,
+        );
+
+        $this->assertSame(
+            'Pending',
+            $payment->posting_status,
+        );
+
+        $this->assertNull(
+            $payment->account_voucher_id,
         );
 
         $this->assertSame(
@@ -359,15 +363,8 @@ class TravelInsurancePaymentResourceTest extends TestCase
         );
     }
 
-    public function test_moving_approved_payment_refreshes_old_and_new_policies(): void
+    public function test_moving_unposted_approved_payment_refreshes_old_and_new_policies(): void
     {
-        $reviewer =
-            $this->createUser(
-                [
-                    'travel_insurance_payments_approve',
-                ],
-            );
-
         $firstPolicy =
             $this->createPolicy(
                 'First',
@@ -394,25 +391,25 @@ class TravelInsurancePaymentResourceTest extends TestCase
                         'Cash',
 
                     'status' =>
-                        'Pending',
+                        'Approved',
 
                     'posting_status' =>
                         'Pending',
                 ],
             );
 
-        app(
-            TravelInsurancePaymentApprovalService::class,
-        )->approve(
-            $payment,
-            $reviewer,
-        );
-
         $firstPolicy->refresh();
 
         $this->assertSame(
             '3000.00',
             $firstPolicy->paid_amount,
+        );
+
+        $this->assertSame(
+            'Unposted approved fixture',
+            $payment->posting_status === 'Pending'
+                ? 'Unposted approved fixture'
+                : 'Unexpected posting state',
         );
 
         $payment->update(
@@ -433,6 +430,61 @@ class TravelInsurancePaymentResourceTest extends TestCase
         $this->assertSame(
             '3000.00',
             $secondPolicy->paid_amount,
+        );
+    }
+
+    private function ensureAccountingAccounts(): void
+    {
+        AccountHead::query()->firstOrCreate(
+            [
+                'name' =>
+                    'Cash in Hand',
+            ],
+            [
+                'code' =>
+                    'A-10001',
+
+                'type' =>
+                    'Asset',
+
+                'sub_type' =>
+                    'Cash',
+
+                'opening_debit' =>
+                    0,
+
+                'opening_credit' =>
+                    0,
+
+                'status' =>
+                    'Active',
+            ],
+        );
+
+        AccountHead::query()->firstOrCreate(
+            [
+                'name' =>
+                    'Bank Account',
+            ],
+            [
+                'code' =>
+                    'A-10002',
+
+                'type' =>
+                    'Asset',
+
+                'sub_type' =>
+                    'Bank',
+
+                'opening_debit' =>
+                    0,
+
+                'opening_credit' =>
+                    0,
+
+                'status' =>
+                    'Active',
+            ],
         );
     }
 

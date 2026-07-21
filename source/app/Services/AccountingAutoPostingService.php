@@ -126,13 +126,20 @@ class AccountingAutoPostingService
     }
     private function isPaymentModel(string $class): bool
     {
-        return in_array(class_basename($class), [
-            'Payment',
-            'VisaPayment',
-            'FlightPayment',
-            'UmrahPayment',
-            'HotelPayment',
-        ], true);
+        return in_array(
+            class_basename(
+                $class,
+            ),
+            [
+                'Payment',
+                'VisaPayment',
+                'FlightPayment',
+                'UmrahPayment',
+                'HotelPayment',
+                'TravelInsurancePayment',
+            ],
+            true,
+        );
     }
 
     private function isExpenseModel(string $class): bool
@@ -147,6 +154,23 @@ class AccountingAutoPostingService
 
     private function postPayment(Model $model): bool
     {
+        if (
+            class_basename(
+                $model,
+            ) === 'TravelInsurancePayment'
+        ) {
+            if (
+                (string) $model->status
+                !== 'Approved'
+            ) {
+                $this->removeForModel(
+                    $model,
+                );
+
+                return false;
+            }
+        }
+
         $amount = $this->amount($model, [
             'amount',
             'paid_amount',
@@ -365,17 +389,96 @@ class AccountingAutoPostingService
         ]);
     }
 
-    private function incomeAccountForPayment(Model $model): ?AccountHead
-    {
-        $accountName = match (class_basename($model)) {
-            'FlightPayment' => 'Flight Sales Income',
-            'UmrahPayment' => 'Umrah Sales Income',
-            'HotelPayment' => 'Hotel Sales Income',
-            default => 'Visa Sales Income',
-        };
+    private function incomeAccountForPayment(
+        Model $model,
+    ): ?AccountHead {
+        $modelName =
+            class_basename(
+                $model,
+            );
 
-        return AccountHead::query()->where('name', $accountName)->first()
-            ?: AccountHead::query()->where('type', 'Income')->orderBy('id')->first();
+        $accountName =
+            match ($modelName) {
+                'FlightPayment' =>
+                    'Flight Sales Income',
+
+                'UmrahPayment' =>
+                    'Umrah Sales Income',
+
+                'HotelPayment' =>
+                    'Hotel Sales Income',
+
+                'TravelInsurancePayment' =>
+                    'Travel Insurance Sales Income',
+
+                default =>
+                    'Visa Sales Income',
+            };
+
+        $account =
+            AccountHead::query()
+                ->where(
+                    'name',
+                    $accountName,
+                )
+                ->first();
+
+        if ($account) {
+            return $account;
+        }
+
+        if (
+            $modelName ===
+            'TravelInsurancePayment'
+        ) {
+            return AccountHead::query()
+                ->create(
+                    [
+                        'code' =>
+                            'I-'
+                            .str_pad(
+                                (string) (
+                                    ((int) AccountHead::query()
+                                        ->max(
+                                            'id',
+                                        ))
+                                    + 1
+                                ),
+                                5,
+                                '0',
+                                STR_PAD_LEFT,
+                            ),
+
+                        'name' =>
+                            'Travel Insurance Sales Income',
+
+                        'type' =>
+                            'Income',
+
+                        'sub_type' =>
+                            'Sales',
+
+                        'opening_debit' =>
+                            0,
+
+                        'opening_credit' =>
+                            0,
+
+                        'status' =>
+                            'Active',
+                    ],
+                );
+        }
+
+        return AccountHead::query()
+            ->where(
+                'type',
+                'Income',
+            )
+            ->orderBy(
+                'id',
+            )
+            ->first();
     }
 
     private function expenseAccount(Model $model): ?AccountHead
@@ -453,6 +556,22 @@ class AccountingAutoPostingService
 
     private function partyName(Model $model): string
     {
+        if (
+            class_basename(
+                $model,
+            ) === 'TravelInsurancePayment'
+        ) {
+            $customerName =
+                $model->policy
+                    ?->customer
+                    ?->name;
+
+            if (filled($customerName)) {
+                return $this->cleanValue(
+                    $customerName,
+                );
+            }
+        }
         if (method_exists($model, 'staffMember') && $model->staffMember) {
             return (string) $model->staffMember->name;
         }

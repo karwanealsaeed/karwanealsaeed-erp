@@ -36,6 +36,13 @@ Schedule::command(
     ->timezone('Asia/Karachi')
     ->withoutOverlapping(30);
 
+Schedule::command(
+    'visa:send-expiry-alerts',
+)
+    ->dailyAt('08:30')
+    ->timezone('Asia/Karachi')
+    ->withoutOverlapping(30);
+
 Schedule::command('system:maintain-errors')
     ->dailyAt('03:30')
     ->timezone('Asia/Karachi')

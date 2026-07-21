@@ -353,97 +353,41 @@ class CustomerPortalController extends Controller
         $customer =
             $this->portalCustomer();
 
+        $visaApplications =
+            \App\Models\VisaApplication::query()
+                ->with(
+                    [
+                        'country:id,name',
+                        'visaType:id,name',
+                    ],
+                )
+                ->where(
+                    'customer_id',
+                    $customer->id,
+                )
+                ->latest(
+                    'id',
+                )
+                ->paginate(
+                    15,
+                    [
+                        '*',
+                    ],
+                    'visa_page',
+                )
+                ->withQueryString();
+
         return view(
-            'customer-portal.list',
+            'customer-portal.visa-applications',
             [
                 'customer' =>
                     $customer,
 
-                'heading' =>
-                    'Visa Applications',
-
-                'columns' => [
-                    [
-                        'key' =>
-                            'application_no',
-
-                        'label' =>
-                            'Application No',
-                    ],
-
-                    [
-                        'key' =>
-                            'passport_no',
-
-                        'label' =>
-                            'Passport No',
-                    ],
-
-                    [
-                        'key' =>
-                            'travel_date',
-
-                        'label' =>
-                            'Travel Date',
-
-                        'type' =>
-                            'date',
-                    ],
-
-                    [
-                        'key' =>
-                            'return_date',
-
-                        'label' =>
-                            'Return Date',
-
-                        'type' =>
-                            'date',
-                    ],
-
-                    [
-                        'key' =>
-                            'status',
-
-                        'label' =>
-                            'Status',
-
-                        'type' =>
-                            'status',
-                    ],
-
-                    [
-                        'key' =>
-                            'total_amount',
-
-                        'label' =>
-                            'Total',
-
-                        'type' =>
-                            'money',
-                    ],
-
-                    [
-                        'key' =>
-                            'balance_amount',
-
-                        'label' =>
-                            'Balance',
-
-                        'type' =>
-                            'money',
-                    ],
-                ],
-
-                'records' =>
-                    $this->rowsFromTable(
-                        'visa_applications',
-                        (int) $customer->id,
-                    ),
+                'visaApplications' =>
+                    $visaApplications,
             ],
         );
     }
-
     public function flightBookings(): View
     {
         $customer =

@@ -81,6 +81,32 @@ TextEntry::make(
     ->dateTime('d M Y h:i A')
     ->placeholder('-'),
 
+                TextEntry::make(
+                    'visa_issue_date',
+                )
+                    ->label(
+                        'Visa Issue Date',
+                    )
+                    ->date(
+                        'd M Y',
+                    )
+                    ->placeholder(
+                        '-',
+                    ),
+
+                TextEntry::make(
+                    'visa_expiry_date',
+                )
+                    ->label(
+                        'Visa Expiry Date',
+                    )
+                    ->date(
+                        'd M Y',
+                    )
+                    ->placeholder(
+                        '-',
+                    ),
+
                 TextEntry::make('passport_status')
                     ->label('Passport Status')
                     ->badge(),

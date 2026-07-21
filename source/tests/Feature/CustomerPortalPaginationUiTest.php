@@ -68,33 +68,19 @@ class CustomerPortalPaginationUiTest extends TestCase
             )
             ->assertOk()
             ->assertViewIs(
-                'customer-portal.list',
+                'customer-portal.visa-applications',
             )
             ->assertViewHas(
-                'heading',
-                'Visa Applications',
-            )
-            ->assertViewHas(
-                'columns',
-                fn (
-                    array $columns,
-                ): bool =>
-                    count(
-                        $columns,
-                    )
-                    >= 5,
-            )
-            ->assertViewHas(
-                'records',
-                fn (
-                    mixed $records,
-                ): bool =>
-                    $records
-                    instanceof LengthAwarePaginator
-                    && $records->perPage()
-                    === 15,
-            );
-    }
+                'visaApplications',
+                function (
+                    $visaApplications,
+                ): bool {
+                    return $visaApplications
+                        instanceof \Illuminate\Contracts\Pagination\LengthAwarePaginator
+                        && $visaApplications->getPageName()
+                            === 'visa_page';
+                },
+            );    }
 
     public function test_booking_tracking_uses_unique_paginator_names(): void
     {

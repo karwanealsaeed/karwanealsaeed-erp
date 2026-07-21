@@ -196,6 +196,35 @@ class VisaApplicationForm
         )
         ->columnSpanFull(),
 
+                DatePicker::make(
+                    'visa_issue_date',
+                )
+                    ->label(
+                        'Visa Issue Date',
+                    )
+                    ->native(
+                        false,
+                    )
+                    ->helperText(
+                        'Issued/approved Visa ki actual issue date.',
+                    ),
+
+                DatePicker::make(
+                    'visa_expiry_date',
+                )
+                    ->label(
+                        'Visa Expiry Date',
+                    )
+                    ->native(
+                        false,
+                    )
+                    ->afterOrEqual(
+                        'visa_issue_date',
+                    )
+                    ->helperText(
+                        'Expiry alerts isi date ke mutabiq generate honge.',
+                    ),
+
                 Select::make('passport_status')
                     ->label('Passport Status')
                     ->options([

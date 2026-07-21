@@ -90,6 +90,79 @@ TextColumn::make(
         isToggledHiddenByDefault: true,
     ),
 
+                TextColumn::make(
+                    'visa_issue_date',
+                )
+                    ->label(
+                        'Visa Issued',
+                    )
+                    ->date(
+                        'd M Y',
+                    )
+                    ->placeholder(
+                        '-',
+                    )
+                    ->sortable()
+                    ->toggleable(
+                        isToggledHiddenByDefault:
+                            true,
+                    ),
+
+                TextColumn::make(
+                    'visa_expiry_date',
+                )
+                    ->label(
+                        'Visa Expiry',
+                    )
+                    ->date(
+                        'd M Y',
+                    )
+                    ->placeholder(
+                        '-',
+                    )
+                    ->sortable()
+                    ->color(
+                        function (
+                            $record,
+                        ): string {
+                            if (! $record->visa_expiry_date) {
+                                return 'danger';
+                            }
+
+                            if (
+                                $record->visa_expiry_date
+                                    ->isPast()
+                            ) {
+                                return 'danger';
+                            }
+
+                            if (
+                                $record->visa_expiry_date
+                                    ->lessThanOrEqualTo(
+                                        today()->addDays(
+                                            7,
+                                        ),
+                                    )
+                            ) {
+                                return 'danger';
+                            }
+
+                            if (
+                                $record->visa_expiry_date
+                                    ->lessThanOrEqualTo(
+                                        today()->addDays(
+                                            30,
+                                        ),
+                                    )
+                            ) {
+                                return 'warning';
+                            }
+
+                            return 'success';
+                        },
+                    )
+                    ->toggleable(),
+
                 TextColumn::make('passport_status')
                     ->label('Passport')
                     ->badge()

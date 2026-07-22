@@ -42,7 +42,7 @@ class AccountVoucherForm
 
                         Select::make('status')
                             ->required()
-                            ->default('Posted')
+                            ->default('Draft')
                             ->options([
                                 'Draft' => 'Draft',
                                 'Posted' => 'Posted',

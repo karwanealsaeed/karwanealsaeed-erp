@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Services\AccountingPeriodLockService;
+use App\Services\AccountVoucherPostingValidator;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -203,21 +204,52 @@ class AccountVoucher extends Model
                 return;
             }
 
-            $this->lines()->with('accountHead')->get()->each(function (AccountVoucherLine $line): void {
-                AccountLedger::create([
-                    'account_head_id' => $line->account_head_id,
-                    'account_voucher_id' => $this->id,
-                    'account_voucher_line_id' => $line->id,
-                    'entry_date' => $this->voucher_date,
-                    'voucher_no' => $this->voucher_no,
-                    'voucher_type' => $this->voucher_type,
-                    'reference_no' => $this->reference_no,
-                    'description' => $line->description ?: $this->description,
-                    'debit' => $line->debit,
-                    'credit' => $line->credit,
-                    'status' => $this->status,
-                ]);
-            });
+            $lines =
+                $this->lines()
+                    ->with('accountHead')
+                    ->get();
+
+            if (
+                ! app(
+                    AccountVoucherPostingValidator::class
+                )->isBalanced(
+                    $lines->all()
+                )
+            ) {
+                return;
+            }
+
+            $lines->each(
+                function (
+                    AccountVoucherLine $line
+                ): void {
+                    AccountLedger::create([
+                        'account_head_id' =>
+                            $line->account_head_id,
+                        'account_voucher_id' =>
+                            $this->id,
+                        'account_voucher_line_id' =>
+                            $line->id,
+                        'entry_date' =>
+                            $this->voucher_date,
+                        'voucher_no' =>
+                            $this->voucher_no,
+                        'voucher_type' =>
+                            $this->voucher_type,
+                        'reference_no' =>
+                            $this->reference_no,
+                        'description' =>
+                            $line->description
+                            ?: $this->description,
+                        'debit' =>
+                            $line->debit,
+                        'credit' =>
+                            $line->credit,
+                        'status' =>
+                            $this->status,
+                    ]);
+                }
+            );
         });
     }
 

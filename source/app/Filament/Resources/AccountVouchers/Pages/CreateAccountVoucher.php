@@ -8,4 +8,12 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateAccountVoucher extends CreateRecord
 {
     protected static string $resource = AccountVoucherResource::class;
+
+    protected function mutateFormDataBeforeCreate(
+        array $data
+    ): array {
+        $data['status'] = 'Draft';
+
+        return $data;
+    }
 }

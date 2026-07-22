@@ -11,7 +11,9 @@ use UnitEnum;
 
 class BankReconciliation extends Page
 {
-    protected static string|BackedEnum|null
+
+    use \App\Filament\Concerns\HasRbacPageAuthorization;
+protected static string|BackedEnum|null
         $navigationIcon =
             'heroicon-o-scale';
 

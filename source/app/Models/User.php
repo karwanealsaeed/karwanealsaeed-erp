@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+
+use App\Support\RbacPermissionRegistry;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -40,7 +42,10 @@ class User extends Authenticatable implements FilamentUser
 
     public function canAccessPanel(Panel $panel): bool
     {
-        return (bool) $this->is_active;
+        return RbacPermissionRegistry::canAccessPanel(
+            $this,
+            $panel,
+        );
     }
 
     public function isAdmin(): bool
@@ -54,16 +59,10 @@ class User extends Authenticatable implements FilamentUser
             return true;
         }
 
-        $permissions = $this->permissions ?? [];
-
-        if (! is_array($permissions)) {
-            return false;
-        }
-
-        $normalPermission = str_replace('.', '_', $permission);
-
-        return in_array($permission, $permissions, true)
-            || in_array($normalPermission, $permissions, true);
+        return RbacPermissionRegistry::userHasPermission(
+            $this->permissions,
+            $permission,
+        );
     }
 
     public function hasAnyPermission(array $permissions): bool
@@ -72,15 +71,11 @@ class User extends Authenticatable implements FilamentUser
             return true;
         }
 
-        foreach ($permissions as $permission) {
-            if ($this->hasPermission($permission)) {
-                return true;
-            }
-        }
-
-        return false;
+        return RbacPermissionRegistry::userHasAnyPermission(
+            $this->permissions,
+            $permissions,
+        );
     }
-
     public function canManageSettings(): bool
     {
         return $this->hasPermission('settings.manage');

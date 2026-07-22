@@ -18,7 +18,9 @@ use UnitEnum;
 
 class StaffLeaveResource extends Resource
 {
-    protected static ?string $model = StaffLeave::class;
+
+    use \App\Filament\Concerns\HasRbacResourceAuthorization;
+protected static ?string $model = StaffLeave::class;
 
     protected static string|BackedEnum|null $navigationIcon =
         'heroicon-o-calendar-days';

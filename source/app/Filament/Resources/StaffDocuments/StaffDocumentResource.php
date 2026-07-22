@@ -18,7 +18,9 @@ use UnitEnum;
 
 class StaffDocumentResource extends Resource
 {
-    protected static ?string $model = StaffDocument::class;
+
+    use \App\Filament\Concerns\HasRbacResourceAuthorization;
+protected static ?string $model = StaffDocument::class;
 
     protected static string|BackedEnum|null $navigationIcon =
         'heroicon-o-document-text';

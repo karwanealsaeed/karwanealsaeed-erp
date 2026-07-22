@@ -19,7 +19,9 @@ use Filament\Tables\Table;
 class SupplierResource extends Resource
 {
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-building-storefront';
+
+    use \App\Filament\Concerns\HasRbacResourceAuthorization;
+protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-building-storefront';
 
 
     protected static ?string $model = Supplier::class;

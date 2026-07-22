@@ -12,7 +12,9 @@ use UnitEnum;
 
 class SupplierAgingReport extends Page
 {
-    protected static string|BackedEnum|null
+
+    use \App\Filament\Concerns\HasRbacPageAuthorization;
+protected static string|BackedEnum|null
         $navigationIcon = 'heroicon-o-building-storefront';
 
     protected static string|UnitEnum|null

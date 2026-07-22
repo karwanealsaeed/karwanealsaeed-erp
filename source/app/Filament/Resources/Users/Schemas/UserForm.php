@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\Users\Schemas;
 
+
+use App\Support\RbacPermissionRegistry;
 use App\Models\User;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Select;
@@ -46,12 +48,9 @@ class UserForm
 
                         Select::make('role')
                             ->label('User Type / Role')
-                            ->options([
-                                'Admin' => 'Admin',
-                                'Manager' => 'Manager',
-                                'Accountant' => 'Accountant',
-                                'Sales Staff' => 'Sales Staff',
-                            ])
+                            ->options(
+                                RbacPermissionRegistry::roleOptions(),
+                            )
                             ->default('Sales Staff')
                             ->live()
                             ->afterStateUpdated(function (?string $state, Set $set): void {
@@ -316,6 +315,8 @@ class UserForm
 
             'permissions_finance' => [
                 'options' => [
+                    RbacPermissionRegistry::ACCOUNTING_MANAGE => 'Accounting Control Center - Manage',
+
                     'visa_payments_view' => 'Visa Payments - View',
                     'visa_payments_create' => 'Visa Payments - Create',
                     'visa_payments_edit' => 'Visa Payments - Edit',
@@ -397,6 +398,7 @@ class UserForm
             'Admin' => array_keys(self::getPermissionOptions()),
 
             'Manager' => [
+                RbacPermissionRegistry::ACCOUNTING_MANAGE,
                 'users_manage',
                 'settings_manage',
 
@@ -516,6 +518,7 @@ class UserForm
             ],
 
             'Accountant' => [
+                RbacPermissionRegistry::ACCOUNTING_MANAGE,
                 'customers_view',
                 'customer_documents_view',
                 'customer_documents_download',

@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\Users\Tables;
 
+
+use App\Support\RbacPermissionRegistry;
 use App\Models\User;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
@@ -60,12 +62,9 @@ class UsersTable
             ->filters([
                 SelectFilter::make('role')
                     ->label('Role')
-                    ->options([
-                        'Admin' => 'Admin',
-                        'Manager' => 'Manager',
-                        'Accountant' => 'Accountant',
-                        'Sales Staff' => 'Sales Staff',
-                    ]),
+                    ->options(
+                        RbacPermissionRegistry::roleOptions(),
+                    ),
 
                 TernaryFilter::make('is_active')
                     ->label('Active Status'),

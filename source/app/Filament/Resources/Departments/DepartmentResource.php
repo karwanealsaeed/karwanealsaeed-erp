@@ -18,7 +18,9 @@ use UnitEnum;
 
 class DepartmentResource extends Resource
 {
-    protected static ?string $model = Department::class;
+
+    use \App\Filament\Concerns\HasRbacResourceAuthorization;
+protected static ?string $model = Department::class;
 
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-building-office-2';
 

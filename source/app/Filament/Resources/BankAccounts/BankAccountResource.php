@@ -18,7 +18,9 @@ use UnitEnum;
 
 class BankAccountResource extends Resource
 {
-    protected static ?string $model =
+
+    use \App\Filament\Concerns\HasRbacResourceAuthorization;
+protected static ?string $model =
         BankAccount::class;
 
     protected static string|BackedEnum|null

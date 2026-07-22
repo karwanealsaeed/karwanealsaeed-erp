@@ -19,6 +19,9 @@ class UmrahGroupFlight extends Model
         'airline',
         'airline_code',
         'route',
+        'from_airport_id',
+        'to_airport_id',
+        'return_airport_id',
         'from_city',
         'to_city',
         'return_city',
@@ -59,6 +62,47 @@ class UmrahGroupFlight extends Model
 
                 $record->airline = $airline->name;
                 $record->airline_code = $airline->code;
+            }
+
+            $airportFields = [
+                'from_airport_id' => 'from_city',
+                'to_airport_id' => 'to_city',
+                'return_airport_id' => 'return_city',
+            ];
+
+            foreach ($airportFields as $idColumn => $snapshotColumn) {
+                if (blank($record->{$idColumn})) {
+                    continue;
+                }
+
+                $airport = Airport::query()
+                    ->where('id', $record->{$idColumn})
+                    ->where('status', true)
+                    ->first();
+
+                if (! $airport instanceof Airport) {
+                    throw ValidationException::withMessages([
+                        $idColumn => 'Please select an active airport.',
+                    ]);
+                }
+
+                $record->{$snapshotColumn} = strtoupper(
+                    (string) $airport->iata_code,
+                );
+            }
+
+            if (
+                filled($record->from_city)
+                && filled($record->to_city)
+                && filled($record->return_city)
+            ) {
+                $record->route = strtoupper(
+                    $record->from_city
+                    . '-'
+                    . $record->to_city
+                    . '-'
+                    . $record->return_city,
+                );
             }
         });
 
@@ -122,6 +166,29 @@ class UmrahGroupFlight extends Model
         });
     }
 
+    public function fromAirport(): BelongsTo
+    {
+        return $this->belongsTo(
+            Airport::class,
+            'from_airport_id',
+        );
+    }
+
+    public function toAirport(): BelongsTo
+    {
+        return $this->belongsTo(
+            Airport::class,
+            'to_airport_id',
+        );
+    }
+
+    public function returnAirport(): BelongsTo
+    {
+        return $this->belongsTo(
+            Airport::class,
+            'return_airport_id',
+        );
+    }
     public function airlineMaster(): BelongsTo
     {
         return $this->belongsTo(
@@ -129,6 +196,7 @@ class UmrahGroupFlight extends Model
             'airline_id',
         );
     }
+
     public function packages(): HasMany
     {
         return $this->hasMany(UmrahPackage::class);

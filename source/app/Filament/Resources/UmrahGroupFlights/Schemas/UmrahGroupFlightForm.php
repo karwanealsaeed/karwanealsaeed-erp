@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\UmrahGroupFlights\Schemas;
 
+use App\Models\Airport;
+
 use App\Models\Airline;
 use Carbon\Carbon;
 use Filament\Forms\Components\DatePicker;
@@ -95,32 +97,44 @@ class UmrahGroupFlightForm
                             ->dehydrated(true)
                             ->maxLength(255),
 
-                        TextInput::make('from_city')
-                            ->label('From City')
-                            ->placeholder('MUX / LHE / LYP')
+                        Select::make('from_airport_id')
+                            ->label('From Airport')
+                            ->options(fn (): array => self::airportOptions())
+                            ->searchable()
+                            ->preload()
                             ->live()
-                            ->afterStateUpdated(function (?string $state, Set $set, Get $get): void {
-                                if (blank($get('return_city'))) {
-                                    $set('return_city', strtoupper((string) $state));
+                            ->afterStateUpdated(function (?int $state, Set $set, Get $get): void {
+                                if (blank($get('return_airport_id'))) {
+                                    $set('return_airport_id', $state);
                                 }
 
                                 self::updateRoute($get, $set);
                             })
-                            ->maxLength(255),
+                            ->required(),
 
-                        TextInput::make('to_city')
-                            ->label('To City')
-                            ->placeholder('JED / MED')
+                        Select::make('to_airport_id')
+                            ->label('To Airport')
+                            ->options(fn (): array => self::airportOptions())
+                            ->searchable()
+                            ->preload()
                             ->live()
-                            ->afterStateUpdated(fn (Get $get, Set $set): mixed => self::updateRoute($get, $set))
-                            ->maxLength(255),
+                            ->afterStateUpdated(
+                                fn (Get $get, Set $set): mixed =>
+                                    self::updateRoute($get, $set),
+                            )
+                            ->required(),
 
-                        TextInput::make('return_city')
-                            ->label('Return City')
-                            ->placeholder('Auto from From City')
+                        Select::make('return_airport_id')
+                            ->label('Return Airport')
+                            ->options(fn (): array => self::airportOptions())
+                            ->searchable()
+                            ->preload()
                             ->live()
-                            ->afterStateUpdated(fn (Get $get, Set $set): mixed => self::updateRoute($get, $set))
-                            ->maxLength(255),
+                            ->afterStateUpdated(
+                                fn (Get $get, Set $set): mixed =>
+                                    self::updateRoute($get, $set),
+                            )
+                            ->nullable(),
 
                         TextInput::make('route')
                             ->label('Route')
@@ -266,12 +280,50 @@ class UmrahGroupFlightForm
                                     }
 
                                     if ($firstFrom !== '') {
-                                        $set('from_city', $firstFrom);
-                                        $set('return_city', $firstFrom);
+                                        $fromAirportId =
+                                            self::airportIdFromCode(
+                                                $firstFrom,
+                                            );
+
+                                        if ($fromAirportId !== null) {
+                                            $set(
+                                                'from_airport_id',
+                                                $fromAirportId,
+                                            );
+
+                                            $set(
+                                                'return_airport_id',
+                                                $fromAirportId,
+                                            );
+                                        }
                                     }
 
                                     if ($firstTo !== '') {
-                                        $set('to_city', $firstTo);
+                                        $toAirportId =
+                                            self::airportIdFromCode(
+                                                $firstTo,
+                                            );
+
+                                        if ($toAirportId !== null) {
+                                            $set(
+                                                'to_airport_id',
+                                                $toAirportId,
+                                            );
+                                        }
+                                    }
+
+                                    if (
+                                        $firstFrom !== ''
+                                        && $firstTo !== ''
+                                    ) {
+                                        $set(
+                                            'route',
+                                            $firstFrom
+                                            . '-'
+                                            . $firstTo
+                                            . '-'
+                                            . $firstFrom,
+                                        );
                                     }
 
                                     if (filled($segments[0]['departure_date'] ?? null)) {
@@ -306,13 +358,97 @@ class UmrahGroupFlightForm
 
     private static function updateRoute(Get $get, Set $set): void
     {
-        $from = strtoupper((string) $get('from_city'));
-        $to = strtoupper((string) $get('to_city'));
-        $return = strtoupper((string) ($get('return_city') ?: $from));
+        $from =
+            self::airportCode(
+                $get('from_airport_id'),
+            );
+
+        $to =
+            self::airportCode(
+                $get('to_airport_id'),
+            );
+
+        $return =
+            self::airportCode(
+                $get('return_airport_id'),
+            );
 
         if ($from && $to && $return) {
-            $set('route', $from . '-' . $to . '-' . $return);
+            $set(
+                'route',
+                $from . '-' . $to . '-' . $return,
+            );
+
+            return;
         }
+
+        $set('route', null);
+    }
+
+    private static function airportOptions(): array
+    {
+        return Airport::query()
+            ->where('status', true)
+            ->orderBy('iata_code')
+            ->get()
+            ->mapWithKeys(
+                fn (Airport $airport): array => [
+                    $airport->id =>
+                        strtoupper(
+                            (string) $airport->iata_code,
+                        )
+                        . ' — '
+                        . $airport->name
+                        . ' ('
+                        . $airport->city
+                        . ')',
+                ],
+            )
+            ->toArray();
+    }
+
+    private static function airportCode(
+        mixed $airportId,
+    ): string {
+        if (blank($airportId)) {
+            return '';
+        }
+
+        $code =
+            Airport::query()
+                ->where('id', $airportId)
+                ->where('status', true)
+                ->value('iata_code');
+
+        return strtoupper(
+            trim((string) $code),
+        );
+    }
+
+    private static function airportIdFromCode(
+        string $code,
+    ): ?int {
+        $normalized =
+            strtoupper(
+                trim($code),
+            );
+
+        if ($normalized === '') {
+            return null;
+        }
+
+        $id =
+            Airport::query()
+                ->where('status', true)
+                ->whereRaw(
+                    'UPPER(iata_code) = ?',
+                    [$normalized],
+                )
+                ->value('id');
+
+        return $id === null
+            ? null
+            : (int) $id;
     }
 
     private static function calculateDuration(Get $get, Set $set): void
@@ -348,16 +484,39 @@ class UmrahGroupFlightForm
         $to = strtoupper((string) ($segments[0]['to'] ?? ''));
 
         if ($from !== '') {
-            $set('../../from_city', $from);
-            $set('../../return_city', $from);
+            $fromAirportId =
+                self::airportIdFromCode($from);
+
+            if ($fromAirportId !== null) {
+                $set(
+                    '../../from_airport_id',
+                    $fromAirportId,
+                );
+
+                $set(
+                    '../../return_airport_id',
+                    $fromAirportId,
+                );
+            }
         }
 
         if ($to !== '') {
-            $set('../../to_city', $to);
+            $toAirportId =
+                self::airportIdFromCode($to);
+
+            if ($toAirportId !== null) {
+                $set(
+                    '../../to_airport_id',
+                    $toAirportId,
+                );
+            }
         }
 
         if ($from !== '' && $to !== '') {
-            $set('../../route', $from . '-' . $to . '-' . $from);
+            $set(
+                '../../route',
+                $from . '-' . $to . '-' . $from,
+            );
         }
 
         if (isset($segments[1])) {

@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\Airports\Schemas;
 
+use App\Models\City;
+
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
@@ -17,16 +19,28 @@ class AirportForm
                     ->relationship('country', 'name')
                     ->searchable()
                     ->preload()
-                    ->required(),
+                    ->required()
+                    ->live(),
 
                 TextInput::make('name')
                     ->label('Airport Name')
                     ->required()
                     ->maxLength(255),
 
-                TextInput::make('city')
+                Select::make('city_id')
+                    ->label('City')
+                    ->options(fn ($get): array => filled($get('country_id'))
+                        ? City::query()
+                            ->where('country_id', (int) $get('country_id'))
+                            ->where('status', 'Active')
+                            ->orderBy('name')
+                            ->pluck('name', 'id')
+                            ->all()
+                        : [])
+                    ->searchable()
+                    ->preload()
                     ->required()
-                    ->maxLength(255),
+                    ->helperText('Select country first; only matching active cities are shown'),
 
                 TextInput::make('iata_code')
                     ->label('IATA Code')

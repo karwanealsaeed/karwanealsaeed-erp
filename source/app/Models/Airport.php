@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
 use Illuminate\Database\Eloquent\Model;
 
 class Airport extends Model
@@ -10,6 +12,7 @@ class Airport extends Model
         'country_id',
         'name',
         'city',
+        'city_id',
         'iata_code',
         'icao_code',
         'status',
@@ -18,5 +21,13 @@ class Airport extends Model
     public function country()
     {
         return $this->belongsTo(Country::class);
+    }
+
+    public function cityMaster(): BelongsTo
+    {
+        return $this->belongsTo(
+            City::class,
+            'city_id',
+        );
     }
 }

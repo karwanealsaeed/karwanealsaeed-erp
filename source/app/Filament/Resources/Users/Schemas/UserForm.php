@@ -193,6 +193,10 @@ class UserForm
                     'airports_create' => 'Airports - Create',
                     'airports_edit' => 'Airports - Edit',
                     'airports_delete' => 'Airports - Delete',
+                    'cities_view' => 'Cities - View',
+                    'cities_create' => 'Cities - Create',
+                    'cities_edit' => 'Cities - Edit',
+                    'cities_delete' => 'Cities - Delete',
 
                     'airlines_view' => 'Airlines - View',
                     'airlines_create' => 'Airlines - Create',
@@ -415,6 +419,7 @@ class UserForm
 
                 'countries_view',
                 'airports_view',
+                'cities_view',
                 'airlines_view',
                 'visa_types_view',
                 'suppliers_view',
@@ -574,6 +579,7 @@ class UserForm
             'Sales Staff' => [
                 'countries_view',
                 'airports_view',
+                'cities_view',
                 'airlines_view',
                 'visa_types_view',
                 'suppliers_view',

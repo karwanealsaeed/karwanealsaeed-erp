@@ -757,3 +757,66 @@
     }
 }
 /* COMPACT AI VISUAL REFINEMENT END */
+
+/* PHASE 8A5R2 COMPACT LAUNCHER START */
+[data-karwan-ai-toggle],
+[data-karwan-ai-launcher],
+#karwan-ai-toggle,
+.karwan-ai-launcher,
+.karwan-ai-toggle,
+.karwan-ai__launcher {
+    width: 44px !important;
+    min-width: 44px !important;
+    height: 44px !important;
+    min-height: 44px !important;
+    padding: 10px !important;
+}
+
+[data-karwan-ai-toggle] svg,
+[data-karwan-ai-launcher] svg,
+#karwan-ai-toggle svg,
+.karwan-ai-launcher svg,
+.karwan-ai-toggle svg,
+.karwan-ai__launcher svg {
+    width: 20px !important;
+    height: 20px !important;
+}
+
+.karwan-ai-admin-host [data-karwan-ai-toggle],
+.karwan-ai-admin-host [data-karwan-ai-launcher],
+.karwan-ai-admin-host #karwan-ai-toggle,
+.karwan-ai-admin-host .karwan-ai-launcher,
+.karwan-ai-admin-host .karwan-ai-toggle,
+.karwan-ai-admin-host .karwan-ai__launcher {
+    width: 40px !important;
+    min-width: 40px !important;
+    height: 40px !important;
+    min-height: 40px !important;
+    padding: 9px !important;
+}
+
+.karwan-ai-admin-host [data-karwan-ai-toggle] svg,
+.karwan-ai-admin-host [data-karwan-ai-launcher] svg,
+.karwan-ai-admin-host #karwan-ai-toggle svg,
+.karwan-ai-admin-host .karwan-ai-launcher svg,
+.karwan-ai-admin-host .karwan-ai-toggle svg,
+.karwan-ai-admin-host .karwan-ai__launcher svg {
+    width: 18px !important;
+    height: 18px !important;
+}
+
+@media (max-width: 640px) {
+    [data-karwan-ai-toggle],
+    [data-karwan-ai-launcher],
+    #karwan-ai-toggle,
+    .karwan-ai-launcher,
+    .karwan-ai-toggle,
+    .karwan-ai__launcher {
+        width: 42px !important;
+        min-width: 42px !important;
+        height: 42px !important;
+        min-height: 42px !important;
+        padding: 9px !important;
+    }
+}
+/* PHASE 8A5R2 COMPACT LAUNCHER END */

@@ -15,10 +15,7 @@ return new class extends Migration
                     'passport_alert_fingerprint',
                     64,
                 )
-                    ->nullable()
-                    ->after(
-                        'passport_validity_checked_at',
-                    );
+                    ->nullable();
 
                 $table->timestamp(
                     'passport_alert_sent_at',

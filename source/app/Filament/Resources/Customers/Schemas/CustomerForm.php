@@ -21,6 +21,11 @@ class CustomerForm
                     ->description('B2C customers aur B2B agents ka master record.')
                     ->columns(3)
                     ->schema([
+                        TextInput::make('customer_code')
+                            ->label('Customer Code')
+                            ->disabled()
+                            ->dehydrated(false)
+                            ->placeholder('Auto-generated on save'),
                         TextInput::make('name')
                             ->label('Customer / Agent Name')
                             ->required()

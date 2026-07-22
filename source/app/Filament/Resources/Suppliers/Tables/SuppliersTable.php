@@ -15,6 +15,10 @@ class SuppliersTable
     {
         return $table
             ->columns([
+                TextColumn::make('supplier_code')
+                    ->label('Supplier Code')
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('name')
                     ->searchable(),
                 TextColumn::make('company_name')

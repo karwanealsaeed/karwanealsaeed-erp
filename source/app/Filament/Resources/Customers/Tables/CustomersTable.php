@@ -16,6 +16,10 @@ class CustomersTable
     {
         return $table
             ->columns([
+                TextColumn::make('customer_code')
+                    ->label('Customer Code')
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('name')
                     ->searchable()
                     ->sortable(),

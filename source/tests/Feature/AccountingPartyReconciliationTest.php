@@ -19,7 +19,8 @@ class AccountingPartyReconciliationTest extends TestCase
             $this->insertAccountingRow(
                 'customers',
                 [
-                    'name' => 'Regression Customer',
+                    'customer_code' => 'CUS-900001',
+                'name' => 'Regression Customer',
                     'mobile' => '03000000000',
                     'whatsapp' => '03000000000',
                     'email' =>
@@ -127,7 +128,8 @@ class AccountingPartyReconciliationTest extends TestCase
             $this->insertAccountingRow(
                 'suppliers',
                 [
-                    'name' => 'Regression Supplier',
+                    'supplier_code' => 'SUP-900001',
+                'name' => 'Regression Supplier',
                     'company_name' =>
                         'Regression Supplier Company',
                     'mobile' => '03000000001',

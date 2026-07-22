@@ -13,6 +13,11 @@ class SupplierForm
     {
         return $schema
             ->components([
+                TextInput::make('supplier_code')
+                    ->label('Supplier Code')
+                    ->disabled()
+                    ->dehydrated(false)
+                    ->placeholder('Auto-generated on save'),
                 TextInput::make('name')
                     ->required(),
                 TextInput::make('company_name'),

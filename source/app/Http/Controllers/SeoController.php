@@ -29,6 +29,11 @@ class SeoController extends Controller
             ['name' => 'website.promotions', 'changefreq' => 'daily', 'priority' => '0.8'],
             ['name' => 'website.faq', 'changefreq' => 'monthly', 'priority' => '0.7'],
             ['name' => 'website.blog', 'changefreq' => 'weekly', 'priority' => '0.7'],
+            ['name' => 'website.legal.privacy', 'changefreq' => 'yearly', 'priority' => '0.5'],
+            ['name' => 'website.legal.terms', 'changefreq' => 'yearly', 'priority' => '0.5'],
+            ['name' => 'website.legal.refund', 'changefreq' => 'yearly', 'priority' => '0.5'],
+            ['name' => 'website.legal.cancellation', 'changefreq' => 'yearly', 'priority' => '0.5'],
+            ['name' => 'website.legal.disclaimer', 'changefreq' => 'yearly', 'priority' => '0.5'],
             ['name' => 'website.contact', 'changefreq' => 'monthly', 'priority' => '0.8'],
         ];
 

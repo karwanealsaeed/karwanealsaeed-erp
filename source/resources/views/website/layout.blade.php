@@ -374,6 +374,33 @@
                 <p>
                     {{ __('website.brand_services') }}
                 </p>
+
+                @php
+                    $footerLegalParameters = app()->isLocale('ur')
+                        ? ['lang' => 'ur']
+                        : [];
+                @endphp
+
+                <nav
+                    class="kes-footer-legal"
+                    aria-label="{{ __('legal.footer_label') }}"
+                >
+                    <a href="{{ route('website.legal.privacy', $footerLegalParameters) }}">
+                        {{ __('legal.links.privacy') }}
+                    </a>
+                    <a href="{{ route('website.legal.terms', $footerLegalParameters) }}">
+                        {{ __('legal.links.terms') }}
+                    </a>
+                    <a href="{{ route('website.legal.refund', $footerLegalParameters) }}">
+                        {{ __('legal.links.refund') }}
+                    </a>
+                    <a href="{{ route('website.legal.cancellation', $footerLegalParameters) }}">
+                        {{ __('legal.links.cancellation') }}
+                    </a>
+                    <a href="{{ route('website.legal.disclaimer', $footerLegalParameters) }}">
+                        {{ __('legal.links.disclaimer') }}
+                    </a>
+                </nav>
             </div>
         </div>
     </footer>

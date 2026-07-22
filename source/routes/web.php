@@ -8,6 +8,7 @@ use App\Http\Controllers\PublicTestimonialController;
 use App\Http\Controllers\SupplierStatementPdfController;
 use App\Http\Controllers\CustomerStatementPdfController;
 use App\Http\Controllers\KarwanAiController;
+use App\Http\Controllers\LegalPageController;
 use App\Http\Controllers\CustomerDocumentDownloadController;
 use App\Http\Controllers\CustomerPortalController;
 use App\Http\Controllers\CustomerPortalTravelInsuranceController;
@@ -110,6 +111,26 @@ Route::get(
     [PublicPromotionController::class, 'show'],
 )->name('website.promotions.show');
 
+
+Route::get('/privacy-policy', [LegalPageController::class, 'show'])
+    ->defaults('slug', 'privacy-policy')
+    ->name('website.legal.privacy');
+
+Route::get('/terms-and-conditions', [LegalPageController::class, 'show'])
+    ->defaults('slug', 'terms-and-conditions')
+    ->name('website.legal.terms');
+
+Route::get('/refund-policy', [LegalPageController::class, 'show'])
+    ->defaults('slug', 'refund-policy')
+    ->name('website.legal.refund');
+
+Route::get('/cancellation-policy', [LegalPageController::class, 'show'])
+    ->defaults('slug', 'cancellation-policy')
+    ->name('website.legal.cancellation');
+
+Route::get('/disclaimer', [LegalPageController::class, 'show'])
+    ->defaults('slug', 'disclaimer')
+    ->name('website.legal.disclaimer');
 Route::get('/contact', [WebsiteController::class, 'page'])->defaults('slug', 'contact')->name('website.contact');
 
 Route::post('/support-inquiries', [SupportInquiryController::class, 'store'])

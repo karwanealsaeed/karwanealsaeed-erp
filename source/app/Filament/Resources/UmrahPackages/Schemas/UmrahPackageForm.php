@@ -319,6 +319,7 @@ class UmrahPackageForm
         $groupFlight = UmrahGroupFlight::find($groupFlightId);
 
         $set('group_code', $groupFlight?->group_code);
+        $set('airline_id', $groupFlight?->airline_id);
         $set('airline', $groupFlight?->airline);
         $set('flight_route', $groupFlight?->route);
         $set('duration_nights', $groupFlight?->duration_nights);

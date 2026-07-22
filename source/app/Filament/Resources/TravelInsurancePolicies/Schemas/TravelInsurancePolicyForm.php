@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\TravelInsurancePolicies\Schemas;
 
+use App\Models\Country;
+
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
@@ -204,13 +206,30 @@ class TravelInsurancePolicyForm
                                         100,
                                     ),
 
-                                TextInput::make(
-                                    'destination_country',
+                                Select::make(
+                                    'destination_country_id',
                                 )
-                                    ->required()
-                                    ->maxLength(
-                                        255,
-                                    ),
+                                    ->label(
+                                        'Destination Country',
+                                    )
+                                    ->options(
+                                        fn (): array => Country::query()
+                                            ->where(
+                                                'status',
+                                                true,
+                                            )
+                                            ->orderBy(
+                                                'name',
+                                            )
+                                            ->pluck(
+                                                'name',
+                                                'id',
+                                            )
+                                            ->toArray(),
+                                    )
+                                    ->searchable()
+                                    ->preload()
+                                    ->required(),
                             ],
                         )
                         ->columns(

@@ -2,6 +2,10 @@
 
 namespace App\Models;
 
+use Illuminate\Validation\ValidationException;
+
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -11,6 +15,7 @@ class UmrahGroupFlight extends Model
     protected $fillable = [
         'group_code',
         'title',
+        'airline_id',
         'airline',
         'airline_code',
         'route',
@@ -39,6 +44,25 @@ class UmrahGroupFlight extends Model
 
     protected static function booted(): void
     {
+        static::saving(function (UmrahGroupFlight $record): void {
+            if (filled($record->airline_id)) {
+                $airline = Airline::query()
+                    ->where('id', $record->airline_id)
+                    ->where('status', true)
+                    ->first();
+
+                if (! $airline) {
+                    throw ValidationException::withMessages([
+                        'airline_id' => 'Please select an active airline.',
+                    ]);
+                }
+
+                $record->airline = $airline->name;
+                $record->airline_code = $airline->code;
+            }
+        });
+
+
         static::creating(function (UmrahGroupFlight $groupFlight): void {
             if (blank($groupFlight->group_code)) {
                 $nextId = ((int) self::max('id')) + 1;
@@ -98,6 +122,13 @@ class UmrahGroupFlight extends Model
         });
     }
 
+    public function airlineMaster(): BelongsTo
+    {
+        return $this->belongsTo(
+            Airline::class,
+            'airline_id',
+        );
+    }
     public function packages(): HasMany
     {
         return $this->hasMany(UmrahPackage::class);

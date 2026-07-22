@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Validation\ValidationException;
+
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -23,6 +25,7 @@ class TravelInsurancePolicy extends Model
         'date_of_birth',
         'beneficiary_name',
         'beneficiary_relationship',
+        'destination_country_id',
         'destination_country',
         'trip_type',
         'coverage_type',
@@ -113,6 +116,24 @@ class TravelInsurancePolicy extends Model
 
     protected static function booted(): void
     {
+        static::saving(function (TravelInsurancePolicy $record): void {
+            if (filled($record->destination_country_id)) {
+                $country = Country::query()
+                    ->where('id', $record->destination_country_id)
+                    ->where('status', true)
+                    ->first();
+
+                if (! $country) {
+                    throw ValidationException::withMessages([
+                        'destination_country_id' => 'Please select an active destination country.',
+                    ]);
+                }
+
+                $record->destination_country = $country->name;
+            }
+        });
+
+
         static::creating(
             function (
                 TravelInsurancePolicy $policy,
@@ -168,6 +189,13 @@ class TravelInsurancePolicy extends Model
         );
     }
 
+    public function destinationCountry(): BelongsTo
+    {
+        return $this->belongsTo(
+            Country::class,
+            'destination_country_id',
+        );
+    }
     public function customer(): BelongsTo
     {
         return $this->belongsTo(

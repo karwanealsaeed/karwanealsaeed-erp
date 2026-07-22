@@ -65,19 +65,34 @@ class UmrahGroupFlightForm
 
                 Section::make('Airline / Route')
                     ->schema([
-                        Select::make('airline')
+                        Select::make('airline_id')
                             ->label('Airline')
                             ->options(fn (): array => Airline::query()
+                                ->where('status', true)
                                 ->orderBy('name')
-                                ->pluck('name', 'name')
+                                ->get()
+                                ->mapWithKeys(fn (Airline $record): array => [
+                                    $record->id => $record->name . ' (' . $record->code . ')',
+                                ])
                                 ->toArray())
                             ->searchable()
                             ->preload()
+                            ->live()
+                            ->afterStateUpdated(function (?int $state, Set $set): void {
+                                $airline = Airline::query()
+                                    ->where('id', $state)
+                                    ->where('status', true)
+                                    ->first();
+
+                                $set('airline_code', $airline?->code);
+                            })
                             ->required(),
 
                         TextInput::make('airline_code')
                             ->label('Airline Code')
-                            ->placeholder('PK / SV / ER')
+                            ->placeholder('Auto from airline master')
+                            ->disabled()
+                            ->dehydrated(true)
                             ->maxLength(255),
 
                         TextInput::make('from_city')

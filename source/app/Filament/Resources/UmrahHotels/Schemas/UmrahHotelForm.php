@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\UmrahHotels\Schemas;
 
+use App\Models\City;
+
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -17,12 +19,19 @@ class UmrahHotelForm
             ->components([
                 Section::make('Hotel Information')
                     ->schema([
-                        Select::make('city')
+                        Select::make('city_id')
                             ->label('City')
-                            ->options([
-                                'Makkah' => 'Makkah',
-                                'Madinah' => 'Madinah',
-                            ])
+                            ->options(fn (): array => City::query()
+                                ->where('status', 'Active')
+                                ->with('country')
+                                ->orderBy('name')
+                                ->get()
+                                ->mapWithKeys(fn (City $record): array => [
+                                    $record->id => $record->name . ' - ' . ($record->country?->name ?: '-'),
+                                ])
+                                ->toArray())
+                            ->searchable()
+                            ->preload()
                             ->required(),
 
                         TextInput::make('hotel_name')

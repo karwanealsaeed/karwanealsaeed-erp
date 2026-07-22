@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Validation\ValidationException;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
@@ -22,6 +24,7 @@ class UmrahPackage extends Model
         'departure_city',
         'departure_at',
         'arrival_at',
+        'airline_id',
         'airline',
         'flight_route',
         'seats_available',
@@ -80,6 +83,33 @@ class UmrahPackage extends Model
 
     protected static function booted(): void
     {
+        static::saving(function (UmrahPackage $record): void {
+            if (filled($record->umrah_group_flight_id)) {
+                $groupFlight = UmrahGroupFlight::query()
+                    ->find($record->umrah_group_flight_id);
+
+                if ($groupFlight?->airline_id) {
+                    $record->airline_id = $groupFlight->airline_id;
+                }
+            }
+
+            if (filled($record->airline_id)) {
+                $airline = Airline::query()
+                    ->where('id', $record->airline_id)
+                    ->where('status', true)
+                    ->first();
+
+                if (! $airline) {
+                    throw ValidationException::withMessages([
+                        'airline_id' => 'Please select an active airline.',
+                    ]);
+                }
+
+                $record->airline = $airline->name;
+            }
+        });
+
+
         static::creating(function (UmrahPackage $package): void {
             if (blank($package->package_no) || $package->package_no === 'UP-') {
                 $nextId = ((int) self::max('id')) + 1;
@@ -150,6 +180,13 @@ class UmrahPackage extends Model
         return 'slug';
     }
 
+    public function airlineMaster(): BelongsTo
+    {
+        return $this->belongsTo(
+            Airline::class,
+            'airline_id',
+        );
+    }
     public function umrahGroupFlight(): BelongsTo
     {
         return $this->belongsTo(UmrahGroupFlight::class);

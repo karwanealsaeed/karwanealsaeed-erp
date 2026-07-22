@@ -2,12 +2,17 @@
 
 namespace App\Models;
 
+use Illuminate\Validation\ValidationException;
+
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class UmrahHotel extends Model
 {
     protected $fillable = [
+        'city_id',
         'city',
         'hotel_name',
         'has_similar',
@@ -27,6 +32,24 @@ class UmrahHotel extends Model
 
     protected static function booted(): void
     {
+        static::saving(function (UmrahHotel $record): void {
+            if (filled($record->city_id)) {
+                $city = City::query()
+                    ->where('id', $record->city_id)
+                    ->where('status', 'Active')
+                    ->first();
+
+                if (! $city) {
+                    throw ValidationException::withMessages([
+                        'city_id' => 'Please select an active city.',
+                    ]);
+                }
+
+                $record->city = $city->name;
+            }
+        });
+
+
         static::saving(function (UmrahHotel $hotel): void {
             if ($hotel->has_similar) {
                 $hotel->similar_text = 'OR SIMILAR';
@@ -54,6 +77,13 @@ class UmrahHotel extends Model
         return $this->hasMany(UmrahPackage::class, 'madina_hotel_id');
     }
 
+    public function cityMaster(): BelongsTo
+    {
+        return $this->belongsTo(
+            City::class,
+            'city_id',
+        );
+    }
     public function getDisplayNameAttribute(): string
     {
         $similar = $this->has_similar ? ' OR SIMILAR' : '';

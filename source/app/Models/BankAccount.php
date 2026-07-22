@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\BankAccountMasterValidator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -27,6 +28,21 @@ class BankAccount extends Model
         'opening_date' => 'date',
         'opening_balance' => 'decimal:2',
     ];
+
+    protected static function booted(): void
+    {
+        static::saving(
+            function (
+                BankAccount $bankAccount
+            ): void {
+                app(
+                    BankAccountMasterValidator::class
+                )->assertValidAccountHead(
+                    $bankAccount->account_head_id
+                );
+            }
+        );
+    }
 
     public function accountHead(): BelongsTo
     {

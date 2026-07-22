@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\BankAccounts\Schemas;
 
 use App\Models\AccountHead;
+use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -28,6 +29,22 @@ class BankAccountForm
                                         ->where(
                                             'status',
                                             'Active'
+                                        )
+                                        ->where(
+                                            function (
+                                                Builder $query
+                                            ): void {
+                                                $query
+                                                    ->where(
+                                                        'sub_type',
+                                                        'Bank'
+                                                    )
+                                                    ->orWhere(
+                                                        'name',
+                                                        'like',
+                                                        '%Bank%'
+                                                    );
+                                            }
                                         )
                                         ->orderBy('code')
                                         ->get()

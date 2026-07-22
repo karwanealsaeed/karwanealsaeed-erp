@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature;
 
 use App\Models\Airline;
+use App\Models\Airport;
 use App\Models\City;
 use App\Models\Country;
 use App\Models\TravelInsurancePolicy;
@@ -109,11 +110,24 @@ final class SaudiTravelReferenceNormalizationTest extends TestCase
                 ->where('code', 'SV')
                 ->firstOrFail();
 
+        $jed =
+            Airport::query()
+                ->where('iata_code', 'JED')
+                ->firstOrFail();
+
+        $med =
+            Airport::query()
+                ->where('iata_code', 'MED')
+                ->firstOrFail();
+
         $group =
             UmrahGroupFlight::query()
                 ->create([
                     'title' => 'Normalization Test',
                     'airline_id' => $airline->id,
+                    'from_airport_id' => $jed->id,
+                    'to_airport_id' => $med->id,
+                    'return_airport_id' => $jed->id,
                     'seats_total' => 10,
                     'seats_left' => 10,
                     'status' => 'Available',

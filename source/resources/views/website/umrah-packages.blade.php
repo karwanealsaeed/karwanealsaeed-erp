@@ -227,9 +227,15 @@
                             <article class="kes-umrah-package-card">
                                 <div class="kes-umrah-package-top">
                                     <div>
-                                        <span class="kes-umrah-package-code">
-                                            {{ $package->package_no }}
-                                        </span>
+                                        <div class="kes-umrah-package-meta">
+                                            <span class="kes-umrah-package-code">
+                                                {{ $package->package_no }}
+                                            </span>
+
+                                            <span class="kes-umrah-package-nights">
+                                                {{ $package->duration_nights ?: '-' }} Nights
+                                            </span>
+                                        </div>
 
                                         <h2>{{ $package->title }}</h2>
 
@@ -261,12 +267,6 @@
                                         <strong>{{ $fromCode }}</strong>
                                     </div>
 
-                                    <div class="kes-umrah-route-line">
-                                        <span>
-                                            {{ $package->duration_nights ?: '-' }}
-                                            {{ __('umrah.nights') }}
-                                        </span>
-                                    </div>
 
                                     <div>
                                         <span>{{ __('umrah.destination') }}</span>

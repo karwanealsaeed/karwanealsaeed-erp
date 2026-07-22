@@ -14,6 +14,7 @@ class UmrahPackage extends Model
         'package_no',
         'group_code',
         'umrah_group_flight_id',
+        'departure_airport_id',
         'title',
         'slug',
         'subtitle',
@@ -121,6 +122,23 @@ class UmrahPackage extends Model
             if ($package->umrahGroupFlight) {
                 $group = $package->umrahGroupFlight;
 
+                $departureAirport =
+                    $group->fromAirport;
+
+                if (
+                    blank($group->from_airport_id)
+                    || ! $departureAirport instanceof Airport
+                    || ! (bool) $departureAirport->status
+                ) {
+                    throw ValidationException::withMessages([
+                        'departure_airport_id' =>
+                            'Selected group flight requires an active departure airport.',
+                    ]);
+                }
+
+                $package->departure_airport_id =
+                    $group->from_airport_id;
+
                 $package->group_code = $group->group_code;
                 $package->airline = $group->airline;
                 $package->flight_route = $group->route;
@@ -190,6 +208,13 @@ class UmrahPackage extends Model
     public function umrahGroupFlight(): BelongsTo
     {
         return $this->belongsTo(UmrahGroupFlight::class);
+    }
+    public function departureAirport(): BelongsTo
+    {
+        return $this->belongsTo(
+            Airport::class,
+            'departure_airport_id',
+        );
     }
 
     public function makkahHotel(): BelongsTo

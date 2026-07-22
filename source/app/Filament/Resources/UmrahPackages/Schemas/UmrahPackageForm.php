@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\UmrahPackages\Schemas;
 
+use App\Models\Airport;
+
 use App\Models\UmrahGroupFlight;
 use App\Models\UmrahHotel;
 use App\Models\UmrahTransportRoute;
@@ -93,6 +95,30 @@ class UmrahPackageForm
                             ->disabled()
                             ->dehydrated(true),
 
+                        Select::make('departure_airport_id')
+                            ->label('Departure Airport')
+                            ->options(fn (): array => Airport::query()
+                                ->where('status', true)
+                                ->orderBy('iata_code')
+                                ->get()
+                                ->mapWithKeys(fn (Airport $record): array => [
+                                    $record->id =>
+                                        strtoupper((string) $record->iata_code)
+                                        . ' — '
+                                        . $record->name
+                                        . ' ('
+                                        . $record->city
+                                        . ')',
+                                ])
+                                ->toArray())
+                            ->searchable()
+                            ->preload()
+                            ->disabled()
+                            ->dehydrated(true)
+                            ->helperText(
+                                'Linked group flight se auto attach hota hai. Composite standalone route ko ek airport mein force nahi kiya jata.',
+                            ),
+
                         TextInput::make('airline')
                             ->label('Airline')
                             ->disabled()
@@ -115,7 +141,6 @@ class UmrahPackageForm
                             ->dehydrated(true),
                     ])
                     ->columns(3),
-
                 Section::make('Hotels')
                     ->description('Hotels master se select karen, details auto package me save ho jayengi.')
                     ->schema([
@@ -319,6 +344,10 @@ class UmrahPackageForm
         $groupFlight = UmrahGroupFlight::find($groupFlightId);
 
         $set('group_code', $groupFlight?->group_code);
+        $set(
+            'departure_airport_id',
+            $groupFlight?->from_airport_id,
+        );
         $set('airline_id', $groupFlight?->airline_id);
         $set('airline', $groupFlight?->airline);
         $set('flight_route', $groupFlight?->route);

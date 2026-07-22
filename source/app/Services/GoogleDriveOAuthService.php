@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Exceptions\GoogleDriveReconnectRequiredException;
+
 use Google\Client;
 use Google\Service\Drive;
 use RuntimeException;
@@ -39,7 +41,7 @@ class GoogleDriveOAuthService
         $token = $client->fetchAccessTokenWithAuthCode($code);
 
         if (isset($token['error'])) {
-            throw new RuntimeException($token['error_description'] ?? $token['error']);
+            throw $this->oauthFailureException($token);
         }
 
         $this->saveToken($token);
@@ -53,26 +55,26 @@ class GoogleDriveOAuthService
         $tokenPath = $this->tokenJsonPath();
 
         if (! file_exists($tokenPath)) {
-            throw new RuntimeException('Google Drive OAuth connect nahi hua. Pehle /google-drive/oauth/redirect open karo.');
+            throw new GoogleDriveReconnectRequiredException();
         }
 
         $token = json_decode((string) file_get_contents($tokenPath), true);
 
         if (! is_array($token)) {
-            throw new RuntimeException('Google Drive OAuth token invalid hai.');
+            throw new GoogleDriveReconnectRequiredException();
         }
 
         $client->setAccessToken($token);
 
         if ($client->isAccessTokenExpired()) {
             if (! $client->getRefreshToken()) {
-                throw new RuntimeException('Google Drive refresh token missing hai. Dobara OAuth connect karo.');
+                throw new GoogleDriveReconnectRequiredException();
             }
 
             $newToken = $client->fetchAccessTokenWithRefreshToken($client->getRefreshToken());
 
             if (isset($newToken['error'])) {
-                throw new RuntimeException($newToken['error_description'] ?? $newToken['error']);
+                throw $this->oauthFailureException($newToken);
             }
 
             $newToken['refresh_token'] = $newToken['refresh_token'] ?? $token['refresh_token'] ?? null;
@@ -104,5 +106,40 @@ class GoogleDriveOAuthService
     private function tokenJsonPath(): string
     {
         return base_path(env('GOOGLE_DRIVE_OAUTH_TOKEN_JSON', 'storage/app/google-drive/oauth-token.json'));
+    }
+
+    /**
+     * @param array<string, mixed> $response
+     */
+    private function oauthFailureException(array $response): RuntimeException
+    {
+        if (
+            GoogleDriveReconnectRequiredException::responseRequiresReconnect(
+                $response,
+            )
+        ) {
+            $this->deleteStoredOAuthToken();
+
+            return new GoogleDriveReconnectRequiredException();
+        }
+
+        return new RuntimeException(
+            'Google Drive authorization failed. Reconnect Google Drive and try again.',
+        );
+    }
+
+    private function deleteStoredOAuthToken(): void
+    {
+        $tokenPath = $this->tokenJsonPath();
+
+        if (! is_file($tokenPath)) {
+            return;
+        }
+
+        if (! @unlink($tokenPath)) {
+            throw new RuntimeException(
+                'Google Drive authorization is invalid, but the stale OAuth token could not be removed safely.',
+            );
+        }
     }
 }

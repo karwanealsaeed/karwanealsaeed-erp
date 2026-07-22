@@ -820,3 +820,136 @@
     }
 }
 /* PHASE 8A5R2 COMPACT LAUNCHER END */
+
+/* PHASE 8A5R3 REAL SUMMARY LAUNCHER START */
+.karwan-ai-widget {
+    width: 44px !important;
+    max-width: calc(100vw - 24px) !important;
+}
+
+.karwan-ai-widget:has(.karwan-ai-details[open]) {
+    width: min(360px, calc(100vw - 24px)) !important;
+}
+
+.karwan-ai-details:not([open]) {
+    width: 44px !important;
+    margin-inline-start: auto !important;
+}
+
+.karwan-ai-details > summary,
+.karwan-ai-widget[dir="rtl"] .karwan-ai-details > summary {
+    position: relative !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0 !important;
+    width: 44px !important;
+    min-width: 44px !important;
+    max-width: 44px !important;
+    height: 44px !important;
+    min-height: 44px !important;
+    max-height: 44px !important;
+    margin-inline-start: auto !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    border-radius: 50% !important;
+    font-size: 0 !important;
+    line-height: 0 !important;
+    white-space: nowrap !important;
+}
+
+.karwan-ai-details > summary::-webkit-details-marker {
+    display: none !important;
+}
+
+.karwan-ai-details > summary::marker {
+    content: "" !important;
+}
+
+.karwan-ai-details > summary .karwan-ai-summary-icon {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 23px !important;
+    height: 23px !important;
+    margin: 0 !important;
+    flex: 0 0 23px !important;
+}
+
+.karwan-ai-details > summary .karwan-ai-icon-svg {
+    width: 21px !important;
+    height: 21px !important;
+}
+
+.karwan-ai-details > summary .karwan-ai-summary-status {
+    position: absolute !important;
+    right: 5px !important;
+    bottom: 5px !important;
+    width: 6px !important;
+    height: 6px !important;
+    margin: 0 !important;
+    border-width: 1px !important;
+    border-radius: 50% !important;
+}
+
+.karwan-ai-admin-host .karwan-ai-widget {
+    width: 40px !important;
+}
+
+.karwan-ai-admin-host .karwan-ai-widget:has(.karwan-ai-details[open]) {
+    width: min(360px, calc(100vw - 24px)) !important;
+}
+
+.karwan-ai-admin-host .karwan-ai-details:not([open]) {
+    width: 40px !important;
+}
+
+.karwan-ai-admin-host .karwan-ai-details > summary {
+    width: 40px !important;
+    min-width: 40px !important;
+    max-width: 40px !important;
+    height: 40px !important;
+    min-height: 40px !important;
+    max-height: 40px !important;
+}
+
+.karwan-ai-admin-host .karwan-ai-details > summary .karwan-ai-summary-icon {
+    width: 21px !important;
+    height: 21px !important;
+    flex-basis: 21px !important;
+}
+
+.karwan-ai-admin-host .karwan-ai-details > summary .karwan-ai-icon-svg {
+    width: 19px !important;
+    height: 19px !important;
+}
+
+@media (max-width: 640px) {
+    .karwan-ai-widget,
+    .karwan-ai-admin-host .karwan-ai-widget {
+        width: 42px !important;
+    }
+
+    .karwan-ai-widget:has(.karwan-ai-details[open]),
+    .karwan-ai-admin-host .karwan-ai-widget:has(.karwan-ai-details[open]) {
+        width: calc(100vw - 20px) !important;
+    }
+
+    .karwan-ai-details:not([open]),
+    .karwan-ai-admin-host .karwan-ai-details:not([open]) {
+        width: 42px !important;
+    }
+
+    .karwan-ai-details > summary,
+    .karwan-ai-widget[dir="rtl"] .karwan-ai-details > summary,
+    .karwan-ai-admin-host .karwan-ai-details > summary {
+        width: 42px !important;
+        min-width: 42px !important;
+        max-width: 42px !important;
+        height: 42px !important;
+        min-height: 42px !important;
+        max-height: 42px !important;
+    }
+}
+/* PHASE 8A5R3 REAL SUMMARY LAUNCHER END */

@@ -121,4 +121,41 @@ final class KarwanAiAdminLauncherTest extends TestCase
             $source,
         );
     }
+
+    public function test_real_details_summary_launcher_is_circular_and_compact(): void
+    {
+        $source = file_get_contents(
+            public_path('css/karwan-ai.css'),
+        );
+
+        $this->assertIsString($source);
+        $this->assertStringContainsString(
+            'PHASE 8A5R3 REAL SUMMARY LAUNCHER START',
+            $source,
+        );
+        $this->assertStringContainsString(
+            '.karwan-ai-details > summary',
+            $source,
+        );
+        $this->assertStringContainsString(
+            '.karwan-ai-widget:has(.karwan-ai-details[open])',
+            $source,
+        );
+        $this->assertStringContainsString(
+            'border-radius: 50% !important;',
+            $source,
+        );
+        $this->assertStringContainsString(
+            'font-size: 0 !important;',
+            $source,
+        );
+        $this->assertStringContainsString(
+            '.karwan-ai-admin-host .karwan-ai-details > summary',
+            $source,
+        );
+        $this->assertStringContainsString(
+            'width: 40px !important;',
+            $source,
+        );
+    }
 }

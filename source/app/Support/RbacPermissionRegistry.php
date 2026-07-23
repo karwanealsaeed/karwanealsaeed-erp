@@ -72,7 +72,17 @@ final class RbacPermissionRegistry
                 'hotel_payments_edit',
             ],
         ],
-        \App\Filament\Pages\CustomerAgingReport::class => [
+        \App\Filament\Pages\AccountLedgerReport::class => [
+            'roles' => [
+                self::ROLE_MANAGER,
+                self::ROLE_ACCOUNTANT,
+            ],
+            'permissions' => [
+                self::ACCOUNTING_MANAGE,
+                'account_vouchers_view',
+                'reports_view',
+            ],
+        ],        \App\Filament\Pages\CustomerAgingReport::class => [
             'roles' => [
                 self::ROLE_MANAGER,
                 self::ROLE_ACCOUNTANT,

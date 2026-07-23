@@ -4,6 +4,7 @@ namespace App\Filament\Pages;
 
 use App\Models\AccountHead;
 use App\Models\AccountLedger;
+use App\Support\RbacPermissionRegistry;
 use Filament\Pages\Page;
 use Illuminate\Support\Collection;
 
@@ -13,18 +14,20 @@ class AccountLedgerReport extends Page
 
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-book-open';
 
-    protected static string | \UnitEnum | null $navigationGroup = 'Reports';
+    protected static string | \UnitEnum | null $navigationGroup = 'Finance';
 
-    protected static ?string $navigationLabel = 'Account Ledger Report';
+    protected static ?string $navigationLabel = 'General Ledger';
 
     protected static ?int $navigationSort = 31;
 
-    protected static ?string $title = 'Account Ledger Report';
+    protected static ?string $title = 'General Ledger';
 
     public static function canAccess(): bool
     {
-        return (auth()->user()?->isAdmin() ?? false)
-            || (auth()->user()?->hasPermission('reports_view') ?? false);
+        return RbacPermissionRegistry::allowsPage(
+            auth()->user(),
+            static::class,
+        );
     }
 
     public function accounts(): Collection

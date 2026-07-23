@@ -398,7 +398,7 @@ class CustomRbacAuthorizationTest extends TestCase
         );
     }
 
-    public function test_all_eighteen_audited_classes_use_central_authorization_traits(): void
+    public function test_all_audited_classes_use_central_authorization_traits(): void
     {
         foreach (
             [
@@ -445,7 +445,7 @@ class CustomRbacAuthorizationTest extends TestCase
         }
 
         $this->assertCount(
-            6,
+            7,
             RbacPermissionRegistry::pageClasses(),
         );
 

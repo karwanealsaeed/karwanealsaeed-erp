@@ -659,6 +659,9 @@ class AccountingPostingAuditService
         object $voucher,
         Collection $issues,
     ): void {
+        if ($this->hasValidLinkedReversal($voucher)) {
+            return;
+        }
         if (
             blank($voucher->source_model)
             || blank($voucher->source_id)
@@ -737,6 +740,204 @@ class AccountingPostingAuditService
         } catch (Throwable) {
             // Audit ko source model failure ki wajah se stop nahi karna.
         }
+    }
+
+
+    private function hasValidLinkedReversal(
+        object $voucher,
+    ): bool {
+        if (
+            ($voucher->status ?? null) !== 'Posted'
+            || ! \Illuminate\Support\Facades\Schema::hasColumn(
+                'account_vouchers',
+                'reversal_of_voucher_id',
+            )
+        ) {
+            return false;
+        }
+
+        $reversal =
+            \Illuminate\Support\Facades\DB::table(
+                'account_vouchers',
+            )
+                ->where(
+                    'reversal_of_voucher_id',
+                    (int) $voucher->id,
+                )
+                ->where('status', 'Posted')
+                ->first();
+
+        if (! $reversal) {
+            return false;
+        }
+
+        $headerDebit =
+            round(
+                (float) ($voucher->total_debit ?? 0),
+                2,
+            );
+
+        $headerCredit =
+            round(
+                (float) ($voucher->total_credit ?? 0),
+                2,
+            );
+
+        $reversalDebit =
+            round(
+                (float) ($reversal->total_debit ?? 0),
+                2,
+            );
+
+        $reversalCredit =
+            round(
+                (float) ($reversal->total_credit ?? 0),
+                2,
+            );
+
+        if (
+            $headerDebit <= 0
+            || ! $this->amountsEqual(
+                $headerDebit,
+                $headerCredit,
+            )
+            || ! $this->amountsEqual(
+                $reversalDebit,
+                $reversalCredit,
+            )
+            || ! $this->amountsEqual(
+                $headerDebit,
+                $reversalDebit,
+            )
+        ) {
+            return false;
+        }
+
+        $originalLines =
+            \Illuminate\Support\Facades\DB::table(
+                'account_voucher_lines',
+            )
+                ->where(
+                    'account_voucher_id',
+                    (int) $voucher->id,
+                )
+                ->get([
+                    'account_head_id',
+                    'debit',
+                    'credit',
+                ]);
+
+        $reversalLines =
+            \Illuminate\Support\Facades\DB::table(
+                'account_voucher_lines',
+            )
+                ->where(
+                    'account_voucher_id',
+                    (int) $reversal->id,
+                )
+                ->get([
+                    'id',
+                    'account_head_id',
+                    'debit',
+                    'credit',
+                ]);
+
+        if (
+            $originalLines->count() < 2
+            || $originalLines->count()
+                !== $reversalLines->count()
+        ) {
+            return false;
+        }
+
+        $expected =
+            $originalLines
+                ->map(
+                    static fn (object $line): string =>
+                        sprintf(
+                            '%020d|%020.2f|%020.2f',
+                            (int) $line->account_head_id,
+                            round((float) $line->credit, 2),
+                            round((float) $line->debit, 2),
+                        ),
+                )
+                ->sort()
+                ->values()
+                ->all();
+
+        $actual =
+            $reversalLines
+                ->map(
+                    static fn (object $line): string =>
+                        sprintf(
+                            '%020d|%020.2f|%020.2f',
+                            (int) $line->account_head_id,
+                            round((float) $line->debit, 2),
+                            round((float) $line->credit, 2),
+                        ),
+                )
+                ->sort()
+                ->values()
+                ->all();
+
+        if ($expected !== $actual) {
+            return false;
+        }
+
+        $ledgerRows =
+            \Illuminate\Support\Facades\DB::table(
+                'account_ledgers',
+            )
+                ->where(
+                    'account_voucher_id',
+                    (int) $reversal->id,
+                )
+                ->get([
+                    'account_voucher_line_id',
+                    'account_head_id',
+                    'debit',
+                    'credit',
+                    'status',
+                ]);
+
+        if (
+            $ledgerRows->count()
+                !== $reversalLines->count()
+            || $ledgerRows->contains(
+                static fn (object $ledger): bool =>
+                    $ledger->status !== 'Posted',
+            )
+        ) {
+            return false;
+        }
+
+        $lineMap =
+            $reversalLines->keyBy('id');
+
+        foreach ($ledgerRows as $ledger) {
+            $line =
+                $lineMap->get(
+                    $ledger->account_voucher_line_id,
+                );
+
+            if (
+                ! $line
+                || (int) $ledger->account_head_id
+                    !== (int) $line->account_head_id
+                || ! $this->amountsEqual(
+                    (float) $ledger->debit,
+                    (float) $line->debit,
+                )
+                || ! $this->amountsEqual(
+                    (float) $ledger->credit,
+                    (float) $line->credit,
+                )
+            ) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private function auditDuplicateSourcePostings(

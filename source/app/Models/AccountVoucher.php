@@ -6,7 +6,9 @@ use App\Services\AccountingPeriodLockService;
 use App\Services\AccountVoucherPostingValidator;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Validation\ValidationException;
@@ -28,7 +30,10 @@ class AccountVoucher extends Model
         'source_id',
         'source_type',
         'source_no',
-    ];
+
+        'reversal_of_voucher_id',
+        'reversal_reason',
+];
 
     protected $casts = [
         'voucher_date' => 'date',
@@ -80,7 +85,10 @@ class AccountVoucher extends Model
                         'total_debit',
                         'total_credit',
                         'status',
-                    ]);
+
+                        'reversal_of_voucher_id',
+                        'reversal_reason',
+]);
 
                 if (! $accountingFieldsChanged) {
                     return;
@@ -152,7 +160,7 @@ class AccountVoucher extends Model
                     context:
                         'Posted Accounting Voucher Deletion',
                 );
-            
+
                 $voucher->assertNotReconciled();
             }
         );
@@ -168,6 +176,21 @@ class AccountVoucher extends Model
         });
     }
 
+    public function reversalOf(): BelongsTo
+    {
+        return $this->belongsTo(
+            self::class,
+            'reversal_of_voucher_id',
+        );
+    }
+
+    public function reversal(): HasOne
+    {
+        return $this->hasOne(
+            self::class,
+            'reversal_of_voucher_id',
+        );
+    }
     public function lines(): HasMany
     {
         return $this->hasMany(AccountVoucherLine::class);

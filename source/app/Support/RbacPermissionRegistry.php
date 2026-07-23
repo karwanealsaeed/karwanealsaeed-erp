@@ -171,195 +171,212 @@ final class RbacPermissionRegistry
                 ],
             ],
         ],
-        \App\Filament\Resources\Departments\DepartmentResource::class =>
-            [
+        \App\Filament\Resources\Departments\DepartmentResource::class => [
             'roles' => [
                 self::ROLE_MANAGER,
             ],
             'actions' => [
                 'view' => [
-                    'users_manage',
-                    'users_view',
+                    'departments_view',
                 ],
                 'create' => [
-                    'users_manage',
-                    'users_create',
+                    'departments_create',
                 ],
                 'edit' => [
-                    'users_manage',
-                    'users_edit',
+                    'departments_edit',
                 ],
                 'delete' => [
-                    'users_manage',
-                    'users_delete',
+                    'departments_delete',
                 ],
             ],
         ],
-        \App\Filament\Resources\Designations\DesignationResource::class =>
-            [
+        \App\Filament\Resources\Designations\DesignationResource::class => [
             'roles' => [
                 self::ROLE_MANAGER,
             ],
             'actions' => [
                 'view' => [
-                    'users_manage',
-                    'users_view',
+                    'designations_view',
                 ],
                 'create' => [
-                    'users_manage',
-                    'users_create',
+                    'designations_create',
                 ],
                 'edit' => [
-                    'users_manage',
-                    'users_edit',
+                    'designations_edit',
                 ],
                 'delete' => [
-                    'users_manage',
-                    'users_delete',
+                    'designations_delete',
                 ],
             ],
         ],
-        \App\Filament\Resources\LeaveTypes\LeaveTypeResource::class =>
-            [
+        \App\Filament\Resources\LeaveTypes\LeaveTypeResource::class => [
             'roles' => [
                 self::ROLE_MANAGER,
             ],
             'actions' => [
                 'view' => [
-                    'users_manage',
-                    'users_view',
+                    'leave_types_view',
                 ],
                 'create' => [
-                    'users_manage',
-                    'users_create',
+                    'leave_types_create',
                 ],
                 'edit' => [
-                    'users_manage',
-                    'users_edit',
+                    'leave_types_edit',
                 ],
                 'delete' => [
-                    'users_manage',
-                    'users_delete',
+                    'leave_types_delete',
                 ],
             ],
         ],
-        \App\Filament\Resources\Staff\StaffResource::class =>
-            [
+        \App\Filament\Resources\Staff\StaffResource::class => [
             'roles' => [
                 self::ROLE_MANAGER,
             ],
             'actions' => [
                 'view' => [
-                    'users_manage',
-                    'users_view',
+                    'staff_view',
                 ],
                 'create' => [
-                    'users_manage',
-                    'users_create',
+                    'staff_create',
                 ],
                 'edit' => [
-                    'users_manage',
-                    'users_edit',
+                    'staff_edit',
                 ],
                 'delete' => [
-                    'users_manage',
-                    'users_delete',
+                    'staff_delete',
                 ],
             ],
         ],
-        \App\Filament\Resources\StaffDocuments\StaffDocumentResource::class =>
-            [
+        \App\Filament\Resources\StaffAttendances\StaffAttendanceResource::class => [
             'roles' => [
                 self::ROLE_MANAGER,
             ],
             'actions' => [
                 'view' => [
-                    'users_manage',
-                    'users_view',
+                    'staff_attendances_view',
                 ],
                 'create' => [
-                    'users_manage',
-                    'users_create',
+                    'staff_attendances_create',
                 ],
                 'edit' => [
-                    'users_manage',
-                    'users_edit',
+                    'staff_attendances_edit',
                 ],
                 'delete' => [
-                    'users_manage',
-                    'users_delete',
+                    'staff_attendances_delete',
                 ],
             ],
         ],
-        \App\Filament\Resources\StaffLeaves\StaffLeaveResource::class =>
-            [
+        \App\Filament\Resources\StaffDocuments\StaffDocumentResource::class => [
             'roles' => [
                 self::ROLE_MANAGER,
             ],
             'actions' => [
                 'view' => [
-                    'users_manage',
-                    'users_view',
+                    'staff_documents_view',
                 ],
                 'create' => [
-                    'users_manage',
-                    'users_create',
+                    'staff_documents_create',
                 ],
                 'edit' => [
-                    'users_manage',
-                    'users_edit',
+                    'staff_documents_edit',
                 ],
                 'delete' => [
-                    'users_manage',
-                    'users_delete',
+                    'staff_documents_delete',
                 ],
             ],
         ],
-        \App\Filament\Resources\StaffLedgerEntries\StaffLedgerEntryResource::class =>
-            [
+        \App\Filament\Resources\StaffLeaves\StaffLeaveResource::class => [
             'roles' => [
                 self::ROLE_MANAGER,
             ],
             'actions' => [
                 'view' => [
-                    'users_manage',
-                    'users_view',
+                    'staff_leaves_view',
                 ],
                 'create' => [
-                    'users_manage',
-                    'users_create',
+                    'staff_leaves_create',
                 ],
                 'edit' => [
-                    'users_manage',
-                    'users_edit',
+                    'staff_leaves_edit',
                 ],
                 'delete' => [
-                    'users_manage',
-                    'users_delete',
+                    'staff_leaves_delete',
                 ],
             ],
         ],
-        \App\Filament\Resources\StaffPerformanceNotes\StaffPerformanceNoteResource::class =>
-            [
+        \App\Filament\Resources\StaffLedgerEntries\StaffLedgerEntryResource::class => [
             'roles' => [
                 self::ROLE_MANAGER,
             ],
             'actions' => [
                 'view' => [
-                    'users_manage',
-                    'users_view',
+                    'staff_ledger_entries_view',
                 ],
                 'create' => [
-                    'users_manage',
-                    'users_create',
+                    'staff_ledger_entries_create',
                 ],
                 'edit' => [
-                    'users_manage',
-                    'users_edit',
+                    'staff_ledger_entries_edit',
                 ],
                 'delete' => [
-                    'users_manage',
-                    'users_delete',
+                    'staff_ledger_entries_delete',
+                ],
+            ],
+        ],
+        \App\Filament\Resources\StaffMembers\StaffMemberResource::class => [
+            'roles' => [
+                self::ROLE_MANAGER,
+            ],
+            'actions' => [
+                'view' => [
+                    'staff_members_view',
+                ],
+                'create' => [
+                    'staff_members_create',
+                ],
+                'edit' => [
+                    'staff_members_edit',
+                ],
+                'delete' => [
+                    'staff_members_delete',
+                ],
+            ],
+        ],
+        \App\Filament\Resources\StaffPayrolls\StaffPayrollResource::class => [
+            'roles' => [
+                self::ROLE_MANAGER,
+            ],
+            'actions' => [
+                'view' => [
+                    'staff_payrolls_view',
+                ],
+                'create' => [
+                    'staff_payrolls_create',
+                ],
+                'edit' => [
+                    'staff_payrolls_edit',
+                ],
+                'delete' => [
+                    'staff_payrolls_delete',
+                ],
+            ],
+        ],
+        \App\Filament\Resources\StaffPerformanceNotes\StaffPerformanceNoteResource::class => [
+            'roles' => [
+                self::ROLE_MANAGER,
+            ],
+            'actions' => [
+                'view' => [
+                    'staff_performance_notes_view',
+                ],
+                'create' => [
+                    'staff_performance_notes_create',
+                ],
+                'edit' => [
+                    'staff_performance_notes_edit',
+                ],
+                'delete' => [
+                    'staff_performance_notes_delete',
                 ],
             ],
         ],

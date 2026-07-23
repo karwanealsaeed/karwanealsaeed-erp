@@ -18,6 +18,8 @@ use UnitEnum;
 
 class StaffMemberResource extends Resource
 {
+    use \App\Filament\Concerns\HasRbacResourceAuthorization;
+
     protected static ?string $model = StaffMember::class;
 
     protected static string | BackedEnum | null $navigationIcon = 'heroicon-o-users';
@@ -32,29 +34,6 @@ class StaffMemberResource extends Resource
 
     protected static ?int $navigationSort = 1;
 
-    public static function canViewAny(): bool
-    {
-        return (auth()->user()?->isAdmin() ?? false)
-            || (auth()->user()?->hasPermission('users_view') ?? false);
-    }
-
-    public static function canCreate(): bool
-    {
-        return (auth()->user()?->isAdmin() ?? false)
-            || (auth()->user()?->hasPermission('users_create') ?? false);
-    }
-
-    public static function canEdit($record): bool
-    {
-        return (auth()->user()?->isAdmin() ?? false)
-            || (auth()->user()?->hasPermission('users_edit') ?? false);
-    }
-
-    public static function canDelete($record): bool
-    {
-        return (auth()->user()?->isAdmin() ?? false)
-            || (auth()->user()?->hasPermission('users_delete') ?? false);
-    }
 
     public static function form(Schema $schema): Schema
     {

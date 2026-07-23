@@ -18,6 +18,8 @@ use UnitEnum;
 
 class StaffPayrollResource extends Resource
 {
+    use \App\Filament\Concerns\HasRbacResourceAuthorization;
+
     protected static ?string $model = StaffPayroll::class;
 
     protected static string | BackedEnum | null $navigationIcon = 'heroicon-o-banknotes';
@@ -32,11 +34,6 @@ class StaffPayrollResource extends Resource
 
     protected static ?int $navigationSort = 3;
 
-    public static function canViewAny(): bool
-    {
-        return (auth()->user()?->isAdmin() ?? false)
-            || (auth()->user()?->hasPermission('users_view') ?? false);
-    }
 
     public static function form(Schema $schema): Schema
     {

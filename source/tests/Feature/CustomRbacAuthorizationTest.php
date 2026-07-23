@@ -17,6 +17,9 @@ use App\Filament\Resources\Departments\DepartmentResource;
 use App\Filament\Resources\Designations\DesignationResource;
 use App\Filament\Resources\LeaveTypes\LeaveTypeResource;
 use App\Filament\Resources\Staff\StaffResource;
+use App\Filament\Resources\StaffAttendances\StaffAttendanceResource;
+use App\Filament\Resources\StaffMembers\StaffMemberResource;
+use App\Filament\Resources\StaffPayrolls\StaffPayrollResource;
 use App\Filament\Resources\StaffDocuments\StaffDocumentResource;
 use App\Filament\Resources\StaffLeaves\StaffLeaveResource;
 use App\Filament\Resources\StaffLedgerEntries\StaffLedgerEntryResource;
@@ -342,7 +345,8 @@ class CustomRbacAuthorizationTest extends TestCase
                     'is_active' =>
                         true,
                     'permissions' => [
-                        'users_manage',
+                        'staff_view',
+                        'staff_create',
                         RbacPermissionRegistry::ACCOUNTING_MANAGE,
                     ],
                 ],
@@ -426,6 +430,9 @@ class CustomRbacAuthorizationTest extends TestCase
                 DesignationResource::class,
                 LeaveTypeResource::class,
                 StaffResource::class,
+                StaffAttendanceResource::class,
+                StaffMemberResource::class,
+                StaffPayrollResource::class,
                 StaffDocumentResource::class,
                 StaffLeaveResource::class,
                 StaffLedgerEntryResource::class,
@@ -450,7 +457,7 @@ class CustomRbacAuthorizationTest extends TestCase
         );
 
         $this->assertCount(
-            13,
+            16,
             RbacPermissionRegistry::resourceClasses(),
         );
     }

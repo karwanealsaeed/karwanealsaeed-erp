@@ -17,6 +17,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class TestimonialResource extends Resource
 {
+    use \App\Filament\Concerns\HasRbacResourceAuthorization;
+
     protected static ?string $model = Testimonial::class;
 
     protected static string|\BackedEnum|null $navigationIcon =
@@ -38,56 +40,6 @@ class TestimonialResource extends Resource
 
     protected static ?string $recordTitleAttribute =
         'customer_name';
-
-    public static function canAccess(): bool
-    {
-        return (auth()->user()?->isAdmin() ?? false)
-            || (
-                auth()->user()?->hasPermission(
-                    'testimonials.view',
-                ) ?? false
-            );
-    }
-
-    public static function canCreate(): bool
-    {
-        return (auth()->user()?->isAdmin() ?? false)
-            || (
-                auth()->user()?->hasPermission(
-                    'testimonials.create',
-                ) ?? false
-            );
-    }
-
-    public static function canEdit(Model $record): bool
-    {
-        return (auth()->user()?->isAdmin() ?? false)
-            || (
-                auth()->user()?->hasPermission(
-                    'testimonials.edit',
-                ) ?? false
-            );
-    }
-
-    public static function canDelete(Model $record): bool
-    {
-        return (auth()->user()?->isAdmin() ?? false)
-            || (
-                auth()->user()?->hasPermission(
-                    'testimonials.delete',
-                ) ?? false
-            );
-    }
-
-    public static function canDeleteAny(): bool
-    {
-        return (auth()->user()?->isAdmin() ?? false)
-            || (
-                auth()->user()?->hasPermission(
-                    'testimonials.delete',
-                ) ?? false
-            );
-    }
 
     public static function form(Schema $schema): Schema
     {

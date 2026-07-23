@@ -457,7 +457,7 @@ class CustomRbacAuthorizationTest extends TestCase
         );
 
         $this->assertCount(
-            16,
+            32,
             RbacPermissionRegistry::resourceClasses(),
         );
     }

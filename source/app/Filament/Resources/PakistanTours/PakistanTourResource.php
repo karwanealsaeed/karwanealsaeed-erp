@@ -17,6 +17,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class PakistanTourResource extends Resource
 {
+    use \App\Filament\Concerns\HasRbacResourceAuthorization;
+
     protected static ?string $model = PakistanTour::class;
 
     protected static string|\BackedEnum|null $navigationIcon =
@@ -34,56 +36,6 @@ class PakistanTourResource extends Resource
     protected static ?string $pluralModelLabel = 'Pakistan Tours';
 
     protected static ?string $recordTitleAttribute = 'title';
-
-    public static function canAccess(): bool
-    {
-        return (auth()->user()?->isAdmin() ?? false)
-            || (
-                auth()->user()?->hasPermission(
-                    'pakistan_tours.view',
-                ) ?? false
-            );
-    }
-
-    public static function canCreate(): bool
-    {
-        return (auth()->user()?->isAdmin() ?? false)
-            || (
-                auth()->user()?->hasPermission(
-                    'pakistan_tours.create',
-                ) ?? false
-            );
-    }
-
-    public static function canEdit(Model $record): bool
-    {
-        return (auth()->user()?->isAdmin() ?? false)
-            || (
-                auth()->user()?->hasPermission(
-                    'pakistan_tours.edit',
-                ) ?? false
-            );
-    }
-
-    public static function canDelete(Model $record): bool
-    {
-        return (auth()->user()?->isAdmin() ?? false)
-            || (
-                auth()->user()?->hasPermission(
-                    'pakistan_tours.delete',
-                ) ?? false
-            );
-    }
-
-    public static function canDeleteAny(): bool
-    {
-        return (auth()->user()?->isAdmin() ?? false)
-            || (
-                auth()->user()?->hasPermission(
-                    'pakistan_tours.delete',
-                ) ?? false
-            );
-    }
 
     public static function form(Schema $schema): Schema
     {

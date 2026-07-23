@@ -18,12 +18,13 @@ use Filament\Tables\Table;
 
 class VisaTypeResource extends Resource
 {
+    use \App\Filament\Concerns\HasRbacResourceAuthorization;
+
 
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-identification';
 
 
     protected static ?string $model = VisaType::class;
-
 
 
     protected static string | \UnitEnum | null $navigationGroup = 'Master Data';
@@ -32,26 +33,6 @@ class VisaTypeResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
-
-    public static function canAccess(): bool
-    {
-        return auth()->user()?->hasPermission('visa_types.view') ?? false;
-    }
-
-    public static function canCreate(): bool
-    {
-        return auth()->user()?->hasPermission('visa_types.create') ?? false;
-    }
-
-    public static function canEdit($record): bool
-    {
-        return auth()->user()?->hasPermission('visa_types.edit') ?? false;
-    }
-
-    public static function canDelete($record): bool
-    {
-        return auth()->user()?->hasPermission('visa_types.delete') ?? false;
-    }
     public static function form(Schema $schema): Schema
     {
         return VisaTypeForm::configure($schema);
@@ -84,11 +65,5 @@ class VisaTypeResource extends Resource
         ];
     }
 }
-
-
-
-
-
-
 
 

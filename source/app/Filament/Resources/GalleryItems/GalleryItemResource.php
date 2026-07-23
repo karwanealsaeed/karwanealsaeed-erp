@@ -17,6 +17,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class GalleryItemResource extends Resource
 {
+    use \App\Filament\Concerns\HasRbacResourceAuthorization;
+
     protected static ?string $model = GalleryItem::class;
 
     protected static string|\BackedEnum|null $navigationIcon =
@@ -34,56 +36,6 @@ class GalleryItemResource extends Resource
     protected static ?string $pluralModelLabel = 'Gallery';
 
     protected static ?string $recordTitleAttribute = 'title';
-
-    public static function canAccess(): bool
-    {
-        return (auth()->user()?->isAdmin() ?? false)
-            || (
-                auth()->user()?->hasPermission(
-                    'gallery.view',
-                ) ?? false
-            );
-    }
-
-    public static function canCreate(): bool
-    {
-        return (auth()->user()?->isAdmin() ?? false)
-            || (
-                auth()->user()?->hasPermission(
-                    'gallery.create',
-                ) ?? false
-            );
-    }
-
-    public static function canEdit(Model $record): bool
-    {
-        return (auth()->user()?->isAdmin() ?? false)
-            || (
-                auth()->user()?->hasPermission(
-                    'gallery.edit',
-                ) ?? false
-            );
-    }
-
-    public static function canDelete(Model $record): bool
-    {
-        return (auth()->user()?->isAdmin() ?? false)
-            || (
-                auth()->user()?->hasPermission(
-                    'gallery.delete',
-                ) ?? false
-            );
-    }
-
-    public static function canDeleteAny(): bool
-    {
-        return (auth()->user()?->isAdmin() ?? false)
-            || (
-                auth()->user()?->hasPermission(
-                    'gallery.delete',
-                ) ?? false
-            );
-    }
 
     public static function form(Schema $schema): Schema
     {

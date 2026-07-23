@@ -18,12 +18,13 @@ use Filament\Tables\Table;
 
 class AirportResource extends Resource
 {
+    use \App\Filament\Concerns\HasRbacResourceAuthorization;
+
 
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-map-pin';
 
 
     protected static ?string $model = Airport::class;
-
 
 
     protected static string | \UnitEnum | null $navigationGroup = 'Master Data';
@@ -32,26 +33,6 @@ class AirportResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
-
-    public static function canAccess(): bool
-    {
-        return auth()->user()?->hasPermission('airports.view') ?? false;
-    }
-
-    public static function canCreate(): bool
-    {
-        return auth()->user()?->hasPermission('airports.create') ?? false;
-    }
-
-    public static function canEdit($record): bool
-    {
-        return auth()->user()?->hasPermission('airports.edit') ?? false;
-    }
-
-    public static function canDelete($record): bool
-    {
-        return auth()->user()?->hasPermission('airports.delete') ?? false;
-    }
     public static function form(Schema $schema): Schema
     {
         return AirportForm::configure($schema);
@@ -84,11 +65,5 @@ class AirportResource extends Resource
         ];
     }
 }
-
-
-
-
-
-
 
 

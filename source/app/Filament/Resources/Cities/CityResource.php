@@ -18,12 +18,13 @@ use Filament\Tables\Table;
 
 class CityResource extends Resource
 {
+    use \App\Filament\Concerns\HasRbacResourceAuthorization;
+
 
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-map-pin';
 
 
     protected static ?string $model = City::class;
-
 
 
     protected static string | \UnitEnum | null $navigationGroup = 'Master Data';
@@ -32,26 +33,6 @@ class CityResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
-
-    public static function canAccess(): bool
-    {
-        return auth()->user()?->hasPermission('cities.view') ?? false;
-    }
-
-    public static function canCreate(): bool
-    {
-        return auth()->user()?->hasPermission('cities.create') ?? false;
-    }
-
-    public static function canEdit($record): bool
-    {
-        return auth()->user()?->hasPermission('cities.edit') ?? false;
-    }
-
-    public static function canDelete($record): bool
-    {
-        return auth()->user()?->hasPermission('cities.delete') ?? false;
-    }
     public static function form(Schema $schema): Schema
     {
         return CityForm::configure($schema);
@@ -84,11 +65,5 @@ class CityResource extends Resource
         ];
     }
 }
-
-
-
-
-
-
 
 

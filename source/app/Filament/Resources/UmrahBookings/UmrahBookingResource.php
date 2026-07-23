@@ -18,6 +18,8 @@ use Filament\Tables\Table;
 
 class UmrahBookingResource extends Resource
 {
+    use \App\Filament\Concerns\HasRbacResourceAuthorization;
+
 
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-building-library';
 
@@ -25,32 +27,11 @@ class UmrahBookingResource extends Resource
     protected static ?string $model = UmrahBooking::class;
 
 
-
     protected static string | \UnitEnum | null $navigationGroup = 'Bookings';
 
     protected static ?int $navigationSort = 3;
 
     protected static ?string $recordTitleAttribute = 'booking_no';
-
-    public static function canAccess(): bool
-    {
-        return auth()->user()?->hasPermission('umrah_bookings.view') ?? false;
-    }
-
-    public static function canCreate(): bool
-    {
-        return auth()->user()?->hasPermission('umrah_bookings.create') ?? false;
-    }
-
-    public static function canEdit($record): bool
-    {
-        return auth()->user()?->hasPermission('umrah_bookings.edit') ?? false;
-    }
-
-    public static function canDelete($record): bool
-    {
-        return auth()->user()?->hasPermission('umrah_bookings.delete') ?? false;
-    }
 public static function form(Schema $schema): Schema
     {
         return UmrahBookingForm::configure($schema);
@@ -83,12 +64,5 @@ public static function form(Schema $schema): Schema
         ];
     }
 }
-
-
-
-
-
-
-
 
 

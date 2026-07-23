@@ -18,12 +18,13 @@ use Filament\Tables\Table;
 
 class AirlineResource extends Resource
 {
+    use \App\Filament\Concerns\HasRbacResourceAuthorization;
+
 
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-paper-airplane';
 
 
     protected static ?string $model = Airline::class;
-
 
 
     protected static string | \UnitEnum | null $navigationGroup = 'Master Data';
@@ -32,26 +33,6 @@ class AirlineResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
-
-    public static function canAccess(): bool
-    {
-        return auth()->user()?->hasPermission('airlines.view') ?? false;
-    }
-
-    public static function canCreate(): bool
-    {
-        return auth()->user()?->hasPermission('airlines.create') ?? false;
-    }
-
-    public static function canEdit($record): bool
-    {
-        return auth()->user()?->hasPermission('airlines.edit') ?? false;
-    }
-
-    public static function canDelete($record): bool
-    {
-        return auth()->user()?->hasPermission('airlines.delete') ?? false;
-    }
     public static function form(Schema $schema): Schema
     {
         return AirlineForm::configure($schema);
@@ -84,11 +65,5 @@ class AirlineResource extends Resource
         ];
     }
 }
-
-
-
-
-
-
 
 

@@ -17,6 +17,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class FaqResource extends Resource
 {
+    use \App\Filament\Concerns\HasRbacResourceAuthorization;
+
     protected static ?string $model = Faq::class;
 
     protected static string|\BackedEnum|null $navigationIcon =
@@ -38,56 +40,6 @@ class FaqResource extends Resource
 
     protected static ?string $recordTitleAttribute =
         'question';
-
-    public static function canAccess(): bool
-    {
-        return (auth()->user()?->isAdmin() ?? false)
-            || (
-                auth()->user()?->hasPermission(
-                    'faqs.view',
-                ) ?? false
-            );
-    }
-
-    public static function canCreate(): bool
-    {
-        return (auth()->user()?->isAdmin() ?? false)
-            || (
-                auth()->user()?->hasPermission(
-                    'faqs.create',
-                ) ?? false
-            );
-    }
-
-    public static function canEdit(Model $record): bool
-    {
-        return (auth()->user()?->isAdmin() ?? false)
-            || (
-                auth()->user()?->hasPermission(
-                    'faqs.edit',
-                ) ?? false
-            );
-    }
-
-    public static function canDelete(Model $record): bool
-    {
-        return (auth()->user()?->isAdmin() ?? false)
-            || (
-                auth()->user()?->hasPermission(
-                    'faqs.delete',
-                ) ?? false
-            );
-    }
-
-    public static function canDeleteAny(): bool
-    {
-        return (auth()->user()?->isAdmin() ?? false)
-            || (
-                auth()->user()?->hasPermission(
-                    'faqs.delete',
-                ) ?? false
-            );
-    }
 
     public static function form(Schema $schema): Schema
     {

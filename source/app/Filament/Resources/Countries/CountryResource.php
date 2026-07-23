@@ -18,12 +18,13 @@ use Filament\Tables\Table;
 
 class CountryResource extends Resource
 {
+    use \App\Filament\Concerns\HasRbacResourceAuthorization;
+
 
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-globe-alt';
 
 
     protected static ?string $model = Country::class;
-
 
 
     protected static string | \UnitEnum | null $navigationGroup = 'Master Data';
@@ -32,26 +33,6 @@ class CountryResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
-
-    public static function canAccess(): bool
-    {
-        return auth()->user()?->hasPermission('countries.view') ?? false;
-    }
-
-    public static function canCreate(): bool
-    {
-        return auth()->user()?->hasPermission('countries.create') ?? false;
-    }
-
-    public static function canEdit($record): bool
-    {
-        return auth()->user()?->hasPermission('countries.edit') ?? false;
-    }
-
-    public static function canDelete($record): bool
-    {
-        return auth()->user()?->hasPermission('countries.delete') ?? false;
-    }
     public static function form(Schema $schema): Schema
     {
         return CountryForm::configure($schema);
@@ -84,11 +65,5 @@ class CountryResource extends Resource
         ];
     }
 }
-
-
-
-
-
-
 
 

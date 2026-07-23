@@ -370,9 +370,9 @@ final class CityAirportMasterIntegrityTest extends TestCase
         $this->assertIsString($cityTable);
         $this->assertIsString($airportForm);
 
-        $this->assertStringContainsString(
-            "'cities.view'",
-            $cityResource,
+        $this->assertContains(
+            \App\Filament\Resources\Cities\CityResource::class,
+            \App\Support\RbacPermissionRegistry::resourceClasses(),
         );
 
         $this->assertStringContainsString(

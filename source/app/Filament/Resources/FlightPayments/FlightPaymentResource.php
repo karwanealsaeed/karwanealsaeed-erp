@@ -18,6 +18,8 @@ use Filament\Tables\Table;
 
 class FlightPaymentResource extends Resource
 {
+    use \App\Filament\Concerns\HasRbacResourceAuthorization;
+
 
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-credit-card';
 
@@ -25,32 +27,11 @@ class FlightPaymentResource extends Resource
     protected static ?string $model = FlightPayment::class;
 
 
-
     protected static string | \UnitEnum | null $navigationGroup = 'Finance';
 
     protected static ?int $navigationSort = 3;
 
     protected static ?string $recordTitleAttribute = 'reference_no';
-
-    public static function canAccess(): bool
-    {
-        return auth()->user()?->hasPermission('flight_payments.view') ?? false;
-    }
-
-    public static function canCreate(): bool
-    {
-        return auth()->user()?->hasPermission('flight_payments.create') ?? false;
-    }
-
-    public static function canEdit($record): bool
-    {
-        return auth()->user()?->hasPermission('flight_payments.edit') ?? false;
-    }
-
-    public static function canDelete($record): bool
-    {
-        return auth()->user()?->hasPermission('flight_payments.delete') ?? false;
-    }
 public static function form(Schema $schema): Schema
     {
         return FlightPaymentForm::configure($schema);
@@ -83,13 +64,5 @@ public static function form(Schema $schema): Schema
         ];
     }
 }
-
-
-
-
-
-
-
-
 
 

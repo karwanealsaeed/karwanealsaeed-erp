@@ -17,6 +17,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class PromotionResource extends Resource
 {
+    use \App\Filament\Concerns\HasRbacResourceAuthorization;
+
     protected static ?string $model = Promotion::class;
 
     protected static string|\BackedEnum|null $navigationIcon =
@@ -38,56 +40,6 @@ class PromotionResource extends Resource
 
     protected static ?string $recordTitleAttribute =
         'title';
-
-    public static function canAccess(): bool
-    {
-        return (auth()->user()?->isAdmin() ?? false)
-            || (
-                auth()->user()?->hasPermission(
-                    'promotions.view',
-                ) ?? false
-            );
-    }
-
-    public static function canCreate(): bool
-    {
-        return (auth()->user()?->isAdmin() ?? false)
-            || (
-                auth()->user()?->hasPermission(
-                    'promotions.create',
-                ) ?? false
-            );
-    }
-
-    public static function canEdit(Model $record): bool
-    {
-        return (auth()->user()?->isAdmin() ?? false)
-            || (
-                auth()->user()?->hasPermission(
-                    'promotions.edit',
-                ) ?? false
-            );
-    }
-
-    public static function canDelete(Model $record): bool
-    {
-        return (auth()->user()?->isAdmin() ?? false)
-            || (
-                auth()->user()?->hasPermission(
-                    'promotions.delete',
-                ) ?? false
-            );
-    }
-
-    public static function canDeleteAny(): bool
-    {
-        return (auth()->user()?->isAdmin() ?? false)
-            || (
-                auth()->user()?->hasPermission(
-                    'promotions.delete',
-                ) ?? false
-            );
-    }
 
     public static function form(Schema $schema): Schema
     {

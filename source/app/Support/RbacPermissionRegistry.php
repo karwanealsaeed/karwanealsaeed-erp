@@ -113,6 +113,325 @@ final class RbacPermissionRegistry
     ];
 
     private const RESOURCE_RULES = [
+        \App\Filament\Resources\Airlines\AirlineResource::class => [
+            'roles' => [
+                self::ROLE_MANAGER,
+                self::ROLE_SALES_STAFF,
+            ],
+            'actions' => [
+                'view' => [
+                    'airlines_view',
+                ],
+                'create' => [
+                    'airlines_create',
+                ],
+                'edit' => [
+                    'airlines_edit',
+                ],
+                'delete' => [
+                    'airlines_delete',
+                ],
+            ],
+        ],
+        \App\Filament\Resources\Airports\AirportResource::class => [
+            'roles' => [
+                self::ROLE_MANAGER,
+                self::ROLE_SALES_STAFF,
+            ],
+            'actions' => [
+                'view' => [
+                    'airports_view',
+                ],
+                'create' => [
+                    'airports_create',
+                ],
+                'edit' => [
+                    'airports_edit',
+                ],
+                'delete' => [
+                    'airports_delete',
+                ],
+            ],
+        ],
+        \App\Filament\Resources\Cities\CityResource::class => [
+            'roles' => [
+                self::ROLE_MANAGER,
+                self::ROLE_SALES_STAFF,
+            ],
+            'actions' => [
+                'view' => [
+                    'cities_view',
+                ],
+                'create' => [
+                    'cities_create',
+                ],
+                'edit' => [
+                    'cities_edit',
+                ],
+                'delete' => [
+                    'cities_delete',
+                ],
+            ],
+        ],
+        \App\Filament\Resources\Countries\CountryResource::class => [
+            'roles' => [
+                self::ROLE_MANAGER,
+                self::ROLE_SALES_STAFF,
+            ],
+            'actions' => [
+                'view' => [
+                    'countries_view',
+                ],
+                'create' => [
+                    'countries_create',
+                ],
+                'edit' => [
+                    'countries_edit',
+                ],
+                'delete' => [
+                    'countries_delete',
+                ],
+            ],
+        ],
+        \App\Filament\Resources\FlightBookings\FlightBookingResource::class => [
+            'roles' => [
+                self::ROLE_MANAGER,
+                self::ROLE_ACCOUNTANT,
+                self::ROLE_SALES_STAFF,
+            ],
+            'actions' => [
+                'view' => [
+                    'flight_bookings_view',
+                ],
+                'create' => [
+                    'flight_bookings_create',
+                ],
+                'edit' => [
+                    'flight_bookings_edit',
+                ],
+                'delete' => [
+                    'flight_bookings_delete',
+                ],
+            ],
+        ],
+        \App\Filament\Resources\FlightPayments\FlightPaymentResource::class => [
+            'roles' => [
+                self::ROLE_MANAGER,
+                self::ROLE_ACCOUNTANT,
+                self::ROLE_SALES_STAFF,
+            ],
+            'actions' => [
+                'view' => [
+                    'flight_payments_view',
+                ],
+                'create' => [
+                    'flight_payments_create',
+                ],
+                'edit' => [
+                    'flight_payments_edit',
+                ],
+                'delete' => [
+                    'flight_payments_delete',
+                ],
+            ],
+        ],
+        \App\Filament\Resources\VisaApplications\VisaApplicationResource::class => [
+            'roles' => [
+                self::ROLE_MANAGER,
+                self::ROLE_ACCOUNTANT,
+                self::ROLE_SALES_STAFF,
+            ],
+            'actions' => [
+                'view' => [
+                    'visa_applications_view',
+                ],
+                'create' => [
+                    'visa_applications_create',
+                ],
+                'edit' => [
+                    'visa_applications_edit',
+                ],
+                'delete' => [
+                    'visa_applications_delete',
+                ],
+            ],
+        ],
+        \App\Filament\Resources\VisaTypes\VisaTypeResource::class => [
+            'roles' => [
+                self::ROLE_MANAGER,
+                self::ROLE_SALES_STAFF,
+            ],
+            'actions' => [
+                'view' => [
+                    'visa_types_view',
+                ],
+                'create' => [
+                    'visa_types_create',
+                ],
+                'edit' => [
+                    'visa_types_edit',
+                ],
+                'delete' => [
+                    'visa_types_delete',
+                ],
+            ],
+        ],
+        \App\Filament\Resources\UmrahBookings\UmrahBookingResource::class => [
+            'roles' => [
+                self::ROLE_MANAGER,
+                self::ROLE_ACCOUNTANT,
+                self::ROLE_SALES_STAFF,
+            ],
+            'actions' => [
+                'view' => [
+                    'umrah_bookings_view',
+                ],
+                'create' => [
+                    'umrah_bookings_create',
+                ],
+                'edit' => [
+                    'umrah_bookings_edit',
+                ],
+                'delete' => [
+                    'umrah_bookings_delete',
+                ],
+            ],
+        ],
+        \App\Filament\Resources\UmrahPayments\UmrahPaymentResource::class => [
+            'roles' => [
+                self::ROLE_MANAGER,
+                self::ROLE_ACCOUNTANT,
+                self::ROLE_SALES_STAFF,
+            ],
+            'actions' => [
+                'view' => [
+                    'umrah_payments_view',
+                ],
+                'create' => [
+                    'umrah_payments_create',
+                ],
+                'edit' => [
+                    'umrah_payments_edit',
+                ],
+                'delete' => [
+                    'umrah_payments_delete',
+                ],
+            ],
+        ],
+        \App\Filament\Resources\BlogPosts\BlogPostResource::class => [
+            'roles' => [
+                self::ROLE_MANAGER,
+            ],
+            'actions' => [
+                'view' => [
+                    'blog_posts_view',
+                ],
+                'create' => [
+                    'blog_posts_create',
+                ],
+                'edit' => [
+                    'blog_posts_edit',
+                ],
+                'delete' => [
+                    'blog_posts_delete',
+                ],
+            ],
+        ],
+        \App\Filament\Resources\Faqs\FaqResource::class => [
+            'roles' => [
+                self::ROLE_MANAGER,
+            ],
+            'actions' => [
+                'view' => [
+                    'faqs_view',
+                ],
+                'create' => [
+                    'faqs_create',
+                ],
+                'edit' => [
+                    'faqs_edit',
+                ],
+                'delete' => [
+                    'faqs_delete',
+                ],
+            ],
+        ],
+        \App\Filament\Resources\GalleryItems\GalleryItemResource::class => [
+            'roles' => [
+                self::ROLE_MANAGER,
+            ],
+            'actions' => [
+                'view' => [
+                    'gallery_view',
+                ],
+                'create' => [
+                    'gallery_create',
+                ],
+                'edit' => [
+                    'gallery_edit',
+                ],
+                'delete' => [
+                    'gallery_delete',
+                ],
+            ],
+        ],
+        \App\Filament\Resources\PakistanTours\PakistanTourResource::class => [
+            'roles' => [
+                self::ROLE_MANAGER,
+            ],
+            'actions' => [
+                'view' => [
+                    'pakistan_tours_view',
+                ],
+                'create' => [
+                    'pakistan_tours_create',
+                ],
+                'edit' => [
+                    'pakistan_tours_edit',
+                ],
+                'delete' => [
+                    'pakistan_tours_delete',
+                ],
+            ],
+        ],
+        \App\Filament\Resources\Promotions\PromotionResource::class => [
+            'roles' => [
+                self::ROLE_MANAGER,
+            ],
+            'actions' => [
+                'view' => [
+                    'promotions_view',
+                ],
+                'create' => [
+                    'promotions_create',
+                ],
+                'edit' => [
+                    'promotions_edit',
+                ],
+                'delete' => [
+                    'promotions_delete',
+                ],
+            ],
+        ],
+        \App\Filament\Resources\Testimonials\TestimonialResource::class => [
+            'roles' => [
+                self::ROLE_MANAGER,
+            ],
+            'actions' => [
+                'view' => [
+                    'testimonials_view',
+                ],
+                'create' => [
+                    'testimonials_create',
+                ],
+                'edit' => [
+                    'testimonials_edit',
+                ],
+                'delete' => [
+                    'testimonials_delete',
+                ],
+            ],
+        ],
         \App\Filament\Resources\Hotels\HotelResource::class => [
             'roles' => [
                 self::ROLE_MANAGER,

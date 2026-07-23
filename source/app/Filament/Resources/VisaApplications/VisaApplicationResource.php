@@ -18,6 +18,8 @@ use Filament\Tables\Table;
 
 class VisaApplicationResource extends Resource
 {
+    use \App\Filament\Concerns\HasRbacResourceAuthorization;
+
 
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-clipboard-document-check';
 
@@ -25,32 +27,11 @@ class VisaApplicationResource extends Resource
     protected static ?string $model = VisaApplication::class;
 
 
-
     protected static string | \UnitEnum | null $navigationGroup = 'Bookings';
 
     protected static ?int $navigationSort = 1;
 
     protected static ?string $recordTitleAttribute = 'application_no';
-
-    public static function canAccess(): bool
-    {
-        return auth()->user()?->hasPermission('visa_applications.view') ?? false;
-    }
-
-    public static function canCreate(): bool
-    {
-        return auth()->user()?->hasPermission('visa_applications.create') ?? false;
-    }
-
-    public static function canEdit($record): bool
-    {
-        return auth()->user()?->hasPermission('visa_applications.edit') ?? false;
-    }
-
-    public static function canDelete($record): bool
-    {
-        return auth()->user()?->hasPermission('visa_applications.delete') ?? false;
-    }
 public static function form(Schema $schema): Schema
     {
         return VisaApplicationForm::configure($schema);
@@ -83,12 +64,5 @@ public static function form(Schema $schema): Schema
         ];
     }
 }
-
-
-
-
-
-
-
 
 

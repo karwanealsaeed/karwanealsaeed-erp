@@ -22,6 +22,9 @@ class Customer extends Model
         'customer_type',
         'status',
         'notes',
+        'agency_name',
+        'commission_rate',
+        'credit_limit',
         'portal_password',
         'portal_registered_at',
         'last_portal_login_at',
@@ -32,6 +35,8 @@ class Customer extends Model
     ];
 
     protected $casts = [
+        'commission_rate' => 'decimal:2',
+        'credit_limit' => 'decimal:2',
         'date_of_birth' => 'date',
         'portal_registered_at' => 'datetime',
         'last_portal_login_at' => 'datetime',

@@ -285,6 +285,11 @@ class UserForm
                     'customers_edit' => 'Customers - Edit',
                     'customers_delete' => 'Customers - Delete',
 
+                    'agents_view' => 'Agents - View',
+                    'agents_create' => 'Agents - Create',
+                    'agents_edit' => 'Agents - Edit',
+                    'agents_delete' => 'Agents - Delete',
+
                     'customer_documents_view' => 'Customer Documents - View',
                     'customer_documents_create' => 'Customer Documents - Create',
                     'customer_documents_edit' => 'Customer Documents - Edit',
@@ -453,8 +458,11 @@ class UserForm
                 'tasks_edit',
                 'tasks_delete',
                 'customers_view',
+                'agents_view',
                 'customers_create',
+                'agents_create',
                 'customers_edit',
+                'agents_edit',
 
                 'customer_documents_view',
                 'customer_documents_create',
@@ -525,6 +533,7 @@ class UserForm
             'Accountant' => [
                 RbacPermissionRegistry::ACCOUNTING_MANAGE,
                 'customers_view',
+                'agents_view',
                 'customer_documents_view',
                 'customer_documents_download',
 
@@ -588,8 +597,11 @@ class UserForm
                 'tasks_create',
                 'tasks_edit',
                 'customers_view',
+                'agents_view',
                 'customers_create',
+                'agents_create',
                 'customers_edit',
+                'agents_edit',
 
                 'customer_documents_view',
                 'customer_documents_create',

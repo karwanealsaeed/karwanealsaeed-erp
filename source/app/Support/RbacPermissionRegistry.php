@@ -96,9 +96,8 @@ final class RbacPermissionRegistry
                 self::ROLE_MANAGER,
             ],
             'permissions' => [
+                'staff_view',
                 'reports_view',
-                'users_view',
-                'users_manage',
             ],
         ],
         \App\Filament\Pages\SupplierAgingReport::class => [

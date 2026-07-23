@@ -101,6 +101,17 @@ class BankAccountForm
                             ->label('Branch')
                             ->maxLength(255),
 
+                        TextInput::make('branch_code')
+                            ->label('Branch Code')
+                            ->maxLength(50),
+
+                        TextInput::make('swift_code')
+                            ->label('SWIFT / BIC')
+                            ->maxLength(20)
+                            ->helperText(
+                                'International transfers ke liye bank ka official SWIFT/BIC code.'
+                            ),
+
                         TextInput::make('currency')
                             ->default('PKR')
                             ->required()

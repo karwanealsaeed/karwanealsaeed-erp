@@ -37,6 +37,14 @@ class BankAccountInfolist
                         TextEntry::make('branch')
                             ->placeholder('-'),
 
+                        TextEntry::make('branch_code')
+                            ->label('Branch Code')
+                            ->placeholder('-'),
+
+                        TextEntry::make('swift_code')
+                            ->label('SWIFT / BIC')
+                            ->placeholder('-'),
+
                         TextEntry::make(
                             'accountHead.code'
                         )

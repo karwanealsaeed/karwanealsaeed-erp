@@ -37,6 +37,18 @@ class BankAccountsTable
                     ->searchable()
                     ->toggleable(),
 
+                TextColumn::make('branch_code')
+                    ->label('Branch Code')
+                    ->placeholder('-')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('swift_code')
+                    ->label('SWIFT / BIC')
+                    ->placeholder('-')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
                 TextColumn::make('accountHead.code')
                     ->label('GL Code')
                     ->badge()

@@ -25,6 +25,10 @@ class AppServiceProvider extends ServiceProvider
         VisaApplication::observe(
             VisaApplicationObserver::class,
         );
+        \App\Models\Hotel::observe(
+            \App\Observers\HotelObserver::class,
+        );
+
         date_default_timezone_set('Asia/Karachi');
 
         foreach ([

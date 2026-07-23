@@ -103,6 +103,27 @@ final class RbacPermissionRegistry
     ];
 
     private const RESOURCE_RULES = [
+        \App\Filament\Resources\Hotels\HotelResource::class => [
+            'roles' => [
+                self::ROLE_MANAGER,
+                self::ROLE_ACCOUNTANT,
+                self::ROLE_SALES_STAFF,
+            ],
+            'actions' => [
+                'view' => [
+                    'hotels_view',
+                ],
+                'create' => [
+                    'hotels_create',
+                ],
+                'edit' => [
+                    'hotels_edit',
+                ],
+                'delete' => [
+                    'hotels_delete',
+                ],
+            ],
+        ],
         \App\Filament\Resources\BankAccounts\BankAccountResource::class => [
             'roles' => [
                 self::ROLE_MANAGER,

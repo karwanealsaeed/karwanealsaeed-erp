@@ -17,6 +17,10 @@ class HotelBookingInfolist
                 TextEntry::make('customer.name')
                     ->label('Customer'),
 
+                TextEntry::make('hotel.hotel_code')
+                    ->label('Hotel Code')
+                    ->placeholder('-'),
+
                 TextEntry::make('country.name')
                     ->label('Country'),
 

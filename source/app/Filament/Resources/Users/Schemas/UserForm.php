@@ -319,6 +319,11 @@ class UserForm
                     'hotel_bookings_create' => 'Hotel Bookings - Create',
                     'hotel_bookings_edit' => 'Hotel Bookings - Edit',
                     'hotel_bookings_delete' => 'Hotel Bookings - Delete',
+
+                    'hotels_view' => 'Hotels - View',
+                    'hotels_create' => 'Hotels - Create',
+                    'hotels_edit' => 'Hotels - Edit',
+                    'hotels_delete' => 'Hotels - Delete',
                 ],
             ],
 
@@ -482,8 +487,11 @@ class UserForm
                 'umrah_bookings_edit',
 
                 'hotel_bookings_view',
+                'hotels_view',
                 'hotel_bookings_create',
+                'hotels_create',
                 'hotel_bookings_edit',
+                'hotels_edit',
 
                 'visa_payments_view',
                 'visa_payments_create',
@@ -541,6 +549,7 @@ class UserForm
                 'flight_bookings_view',
                 'umrah_bookings_view',
                 'hotel_bookings_view',
+                'hotels_view',
 
                 'visa_payments_view',
                 'visa_payments_create',
@@ -621,8 +630,11 @@ class UserForm
                 'umrah_bookings_edit',
 
                 'hotel_bookings_view',
+                'hotels_view',
                 'hotel_bookings_create',
+                'hotels_create',
                 'hotel_bookings_edit',
+                'hotels_edit',
 
                 'visa_payments_view',
                 'visa_payments_create',

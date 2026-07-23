@@ -29,6 +29,16 @@ final class MasterCodeGenerator
         );
     }
 
+    public function nextHotelCode(): string
+    {
+        return $this->next(
+            sequenceKey: 'hotel',
+            prefix: 'HTL',
+            table: 'hotels',
+            column: 'hotel_code',
+        );
+    }
+
     private function next(
         string $sequenceKey,
         string $prefix,

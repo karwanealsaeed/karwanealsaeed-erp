@@ -2,6 +2,9 @@
 
 namespace App\Filament\Resources\HotelBookings\Schemas;
 
+use App\Models\City;
+use App\Models\Hotel;
+
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -28,22 +31,74 @@ class HotelBookingForm
                     ->preload()
                     ->required(),
 
+                Select::make('hotel_id')
+                    ->label('Hotel Master')
+                    ->options(fn (): array => Hotel::query()
+                        ->where('status', 'Active')
+                        ->with('city.country')
+                        ->orderBy('hotel_name')
+                        ->get()
+                        ->mapWithKeys(
+                            fn (Hotel $hotel): array => [
+                                $hotel->id =>
+                                    $hotel->hotel_code
+                                    .' - '
+                                    .$hotel->hotel_name
+                                    .' - '
+                                    .($hotel->city?->name ?: '-'),
+                            ],
+                        )
+                        ->toArray())
+                    ->searchable()
+                    ->preload()
+                    ->helperText(
+                        'Optional. Select karne par Hotel, City aur Country snapshots save ke waqt master se sync honge.',
+                    ),
+
+                Select::make('city_id')
+                    ->label('City Master')
+                    ->options(fn (): array => City::query()
+                        ->where('status', 'Active')
+                        ->with('country')
+                        ->orderBy('name')
+                        ->get()
+                        ->mapWithKeys(
+                            fn (City $city): array => [
+                                $city->id =>
+                                    $city->name
+                                    .' - '
+                                    .($city->country?->name ?: '-'),
+                            ],
+                        )
+                        ->toArray())
+                    ->searchable()
+                    ->preload()
+                    ->helperText(
+                        'Hotel Master select na ho to optional normalized City choose karein.',
+                    ),
+
                 Select::make('country_id')
-                    ->label('Country')
+                    ->label('Country Snapshot')
                     ->relationship('country', 'name')
                     ->searchable()
                     ->preload()
-                    ->required(),
+                    ->helperText(
+                        'Selected Hotel/City se save ke waqt automatically sync hota hai.',
+                    ),
 
                 TextInput::make('city')
-                    ->label('City')
-                    ->required()
-                    ->maxLength(255),
+                    ->label('City Snapshot')
+                    ->maxLength(255)
+                    ->helperText(
+                        'Legacy/manual booking ke liye available; selected master isay overwrite karega.',
+                    ),
 
                 TextInput::make('hotel_name')
-                    ->label('Hotel Name')
-                    ->required()
-                    ->maxLength(255),
+                    ->label('Hotel Name Snapshot')
+                    ->maxLength(255)
+                    ->helperText(
+                        'Legacy/manual booking ke liye available; selected Hotel Master isay overwrite karega.',
+                    ),
 
                 DatePicker::make('check_in_date')
                     ->label('Check-in Date')

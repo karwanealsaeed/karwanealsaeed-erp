@@ -25,6 +25,12 @@ class HotelBookingsTable
                     ->searchable()
                     ->sortable(),
 
+                TextColumn::make('hotel.hotel_code')
+                    ->label('Hotel Code')
+                    ->placeholder('-')
+                    ->searchable()
+                    ->sortable(),
+
                 TextColumn::make('country.name')
                     ->label('Country')
                     ->searchable()

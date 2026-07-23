@@ -94,7 +94,7 @@
                         <p>{{ __('legal.contact_text') }}</p>
 
                         <address>
-                            <strong>{{ $company->company_name }}</strong>
+                            <strong>{{ $company->legal_name ?: $company->company_name }}</strong>
                             <span>{{ $company->address }}</span>
 
                             <a

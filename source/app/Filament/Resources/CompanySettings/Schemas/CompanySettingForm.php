@@ -13,6 +13,12 @@ class CompanySettingForm
     {
         return $schema
             ->components([
+                TextInput::make('legal_name')
+                    ->label('Legal / Registered Name')
+                    ->required()
+                    ->maxLength(255)
+                    ->helperText('Official registered company name used on legal pages and formal records.'),
+
                 TextInput::make('company_name')
                     ->label('Company Name')
                     ->required()

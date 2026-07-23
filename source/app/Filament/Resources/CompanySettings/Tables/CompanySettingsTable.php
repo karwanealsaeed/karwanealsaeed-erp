@@ -18,6 +18,12 @@ class CompanySettingsTable
                     ->disk('public')
                     ->circular(),
 
+                Tables\Columns\TextColumn::make('legal_name')
+                    ->label('Legal Name')
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(),
+
                 Tables\Columns\TextColumn::make('company_name')
                     ->label('Company Name')
                     ->searchable()

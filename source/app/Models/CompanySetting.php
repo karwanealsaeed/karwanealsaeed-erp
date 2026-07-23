@@ -8,6 +8,7 @@ class CompanySetting extends Model
 {
     protected $fillable = [
         'company_name',
+        'legal_name',
         'short_name',
         'logo',
         'phone',
@@ -33,6 +34,7 @@ class CompanySetting extends Model
             ['id' => 1],
             [
                 'company_name' => 'Karwan E Al Saeed Travel & Tours',
+            'legal_name' => 'Karwan E Al Saeed Travel & Tours',
                 'short_name' => 'KES Travel',
                 'mobile' => '+92 301 2592342',
                 'whatsapp' => '+92 301 2592342',

@@ -318,6 +318,153 @@ final class RbacPermissionRegistry
                 ],
             ],
         ],
+        \App\Filament\Resources\UmrahGroupFlights\UmrahGroupFlightResource::class => [
+            'roles' => [
+                self::ROLE_MANAGER,
+                self::ROLE_ACCOUNTANT,
+                self::ROLE_SALES_STAFF,
+            ],
+            'actions' => [
+                'view' => [
+                    'umrah_group_flights_view',
+                ],
+                'create' => [
+                    'umrah_group_flights_create',
+                ],
+                'edit' => [
+                    'umrah_group_flights_edit',
+                ],
+                'delete' => [
+                    'umrah_group_flights_delete',
+                ],
+            ],
+        ],
+        \App\Filament\Resources\UmrahHotels\UmrahHotelResource::class => [
+            'roles' => [
+                self::ROLE_MANAGER,
+                self::ROLE_ACCOUNTANT,
+                self::ROLE_SALES_STAFF,
+            ],
+            'actions' => [
+                'view' => [
+                    'umrah_hotels_view',
+                ],
+                'create' => [
+                    'umrah_hotels_create',
+                ],
+                'edit' => [
+                    'umrah_hotels_edit',
+                ],
+                'delete' => [
+                    'umrah_hotels_delete',
+                ],
+            ],
+        ],
+        \App\Filament\Resources\UmrahPackages\UmrahPackageResource::class => [
+            'roles' => [
+                self::ROLE_MANAGER,
+                self::ROLE_ACCOUNTANT,
+                self::ROLE_SALES_STAFF,
+            ],
+            'actions' => [
+                'view' => [
+                    'umrah_packages_view',
+                ],
+                'create' => [
+                    'umrah_packages_create',
+                ],
+                'edit' => [
+                    'umrah_packages_edit',
+                ],
+                'delete' => [
+                    'umrah_packages_delete',
+                ],
+            ],
+        ],
+        \App\Filament\Resources\UmrahTransportRoutes\UmrahTransportRouteResource::class => [
+            'roles' => [
+                self::ROLE_MANAGER,
+                self::ROLE_ACCOUNTANT,
+                self::ROLE_SALES_STAFF,
+            ],
+            'actions' => [
+                'view' => [
+                    'umrah_transport_routes_view',
+                ],
+                'create' => [
+                    'umrah_transport_routes_create',
+                ],
+                'edit' => [
+                    'umrah_transport_routes_edit',
+                ],
+                'delete' => [
+                    'umrah_transport_routes_delete',
+                ],
+            ],
+        ],
+        \App\Filament\Resources\UmrahVouchers\UmrahVoucherResource::class => [
+            'roles' => [
+                self::ROLE_MANAGER,
+                self::ROLE_ACCOUNTANT,
+                self::ROLE_SALES_STAFF,
+            ],
+            'actions' => [
+                'view' => [
+                    'umrah_vouchers_view',
+                ],
+                'create' => [
+                    'umrah_vouchers_create',
+                ],
+                'edit' => [
+                    'umrah_vouchers_edit',
+                ],
+                'delete' => [
+                    'umrah_vouchers_delete',
+                ],
+            ],
+        ],
+        \App\Filament\Resources\SupportInquiries\SupportInquiryResource::class => [
+            'roles' => [
+                self::ROLE_MANAGER,
+                self::ROLE_ACCOUNTANT,
+                self::ROLE_SALES_STAFF,
+            ],
+            'actions' => [
+                'view' => [
+                    'support_inquiries_view',
+                ],
+                'create' => [
+                    'support_inquiries_create',
+                ],
+                'edit' => [
+                    'support_inquiries_edit',
+                ],
+                'delete' => [
+                    'support_inquiries_delete',
+                ],
+            ],
+        ],
+        \App\Filament\Resources\SupportTickets\SupportTicketResource::class => [
+            'roles' => [
+                self::ROLE_MANAGER,
+                self::ROLE_ACCOUNTANT,
+                self::ROLE_SALES_STAFF,
+            ],
+            'actions' => [
+                'view' => [
+                    'support_tickets_view',
+                ],
+                'create' => [
+                    'support_tickets_create',
+                ],
+                'edit' => [
+                    'support_tickets_edit',
+                ],
+                'delete' => [
+                    'support_tickets_delete',
+                ],
+            ],
+        ],
         \App\Filament\Resources\BlogPosts\BlogPostResource::class => [
             'roles' => [
                 self::ROLE_MANAGER,

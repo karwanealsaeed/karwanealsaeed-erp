@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\SupportInquiries\Tables;
 
+use App\Filament\Resources\SupportInquiries\SupportInquiryResource;
+
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -84,6 +86,10 @@ class SupportInquiriesTable
                     ->label('Mark Contacted')
                     ->icon('heroicon-o-phone')
                     ->color('warning')
+                    ->visible(
+                        fn ($record): bool =>
+                            SupportInquiryResource::canEdit($record),
+                    )
                     ->requiresConfirmation()
                     ->action(function ($record): void {
                         $record->update([

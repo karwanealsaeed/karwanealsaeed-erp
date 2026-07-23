@@ -51,7 +51,7 @@ final class MatureDepartmentalRbacAuthorizationTest extends TestCase
         }
 
         $this->assertCount(
-            32,
+            39,
             $registered,
         );
     }

@@ -16,6 +16,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class UmrahPackageResource extends Resource
 {
+    use \App\Filament\Concerns\HasRbacResourceAuthorization;
+
     protected static ?string $model = UmrahPackage::class;
 
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-building-library';
@@ -29,30 +31,6 @@ class UmrahPackageResource extends Resource
     protected static ?string $modelLabel = 'Umrah Package';
 
     protected static ?string $pluralModelLabel = 'Umrah Packages';
-
-    public static function canAccess(): bool
-    {
-        return (auth()->user()?->isAdmin() ?? false)
-            || (auth()->user()?->hasPermission('umrah_bookings.view') ?? false);
-    }
-
-    public static function canCreate(): bool
-    {
-        return (auth()->user()?->isAdmin() ?? false)
-            || (auth()->user()?->hasPermission('umrah_bookings.create') ?? false);
-    }
-
-    public static function canEdit(Model $record): bool
-    {
-        return (auth()->user()?->isAdmin() ?? false)
-            || (auth()->user()?->hasPermission('umrah_bookings.edit') ?? false);
-    }
-
-    public static function canDelete(Model $record): bool
-    {
-        return (auth()->user()?->isAdmin() ?? false)
-            || (auth()->user()?->hasPermission('umrah_bookings.delete') ?? false);
-    }
 
     public static function form(Schema $schema): Schema
     {

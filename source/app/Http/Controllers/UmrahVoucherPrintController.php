@@ -12,7 +12,7 @@ class UmrahVoucherPrintController extends Controller
     {
         abort_unless(
             (auth()->user()?->isAdmin() ?? false)
-            || (auth()->user()?->hasPermission('umrah_bookings.view') ?? false),
+            || (auth()->user()?->hasPermission('umrah_vouchers.print') ?? false),
             403
         );
 

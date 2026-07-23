@@ -18,6 +18,8 @@ use UnitEnum;
 
 class SupportTicketResource extends Resource
 {
+    use \App\Filament\Concerns\HasRbacResourceAuthorization;
+
     protected static ?string $model = SupportTicket::class;
 
     protected static string | BackedEnum | null $navigationIcon = 'heroicon-o-chat-bubble-left-right';
@@ -27,12 +29,6 @@ class SupportTicketResource extends Resource
     protected static ?string $navigationLabel = 'Support Tickets';
 
     protected static ?int $navigationSort = 7;
-
-    public static function canViewAny(): bool
-    {
-        return (auth()->user()?->isAdmin() ?? false)
-            || (auth()->user()?->hasPermission('customers_view') ?? false);
-    }
 
     public static function form(Schema $schema): Schema
     {

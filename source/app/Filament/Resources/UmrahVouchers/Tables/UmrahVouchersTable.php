@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\UmrahVouchers\Tables;
 
+use App\Filament\Resources\UmrahVouchers\UmrahVoucherResource;
+
 use App\Models\UmrahVoucher;
 use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
@@ -75,19 +77,23 @@ class UmrahVouchersTable
                     ->icon('heroicon-o-printer')
                     ->color('info')
                     ->url(fn (UmrahVoucher $record): string => route('umrah-vouchers.print', $record))
+                    ->visible(fn (): bool => (
+                        (auth()->user()?->isAdmin() ?? false)
+                        || (auth()->user()?->hasPermission('umrah_vouchers.print') ?? false)
+                    ))
                     ->openUrlInNewTab(),
 
                 EditAction::make()
-                    ->hidden(fn (UmrahVoucher $record): bool => ! (
-                        (auth()->user()?->isAdmin() ?? false)
-                        || (auth()->user()?->hasPermission('umrah_bookings.edit') ?? false)
-                    )),
+                    ->hidden(
+                        fn (UmrahVoucher $record): bool =>
+                            ! UmrahVoucherResource::canEdit($record),
+                    ),
 
                 DeleteAction::make()
-                    ->hidden(fn (UmrahVoucher $record): bool => ! (
-                        (auth()->user()?->isAdmin() ?? false)
-                        || (auth()->user()?->hasPermission('umrah_bookings.delete') ?? false)
-                    )),
+                    ->hidden(
+                        fn (UmrahVoucher $record): bool =>
+                            ! UmrahVoucherResource::canDelete($record),
+                    ),
             ])
             ->defaultSort('id', 'desc');
     }

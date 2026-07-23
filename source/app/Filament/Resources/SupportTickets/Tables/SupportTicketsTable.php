@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\SupportTickets\Tables;
 
+use App\Filament\Resources\SupportTickets\SupportTicketResource;
+
 use App\Models\SupportTicketReply;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
@@ -67,6 +69,10 @@ class SupportTicketsTable
                     ->label('Reply')
                     ->icon('heroicon-o-chat-bubble-bottom-center-text')
                     ->color('warning')
+                    ->visible(
+                        fn ($record): bool =>
+                            SupportTicketResource::canEdit($record),
+                    )
                     ->schema([
                         Textarea::make('message')
                             ->label('Reply Message')
@@ -91,7 +97,11 @@ class SupportTicketsTable
                     ->icon('heroicon-o-check-circle')
                     ->color('success')
                     ->requiresConfirmation()
-                    ->visible(fn ($record): bool => $record->status !== 'Closed')
+                    ->visible(
+                        fn ($record): bool =>
+                            $record->status !== 'Closed'
+                            && SupportTicketResource::canEdit($record),
+                    )
                     ->action(fn ($record) => $record->update([
                         'status' => 'Closed',
                         'closed_at' => now(),

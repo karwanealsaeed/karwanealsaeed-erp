@@ -19,6 +19,8 @@ use UnitEnum;
 
 class SupportInquiryResource extends Resource
 {
+    use \App\Filament\Concerns\HasRbacResourceAuthorization;
+
     protected static ?string $model = SupportInquiry::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedChatBubbleLeftRight;
@@ -32,30 +34,6 @@ class SupportInquiryResource extends Resource
     protected static ?string $pluralModelLabel = 'Support Inquiries';
 
     protected static ?int $navigationSort = 3;
-
-    public static function canViewAny(): bool
-    {
-        return (auth()->user()?->isAdmin() ?? false)
-            || (auth()->user()?->hasPermission('customers.view') ?? false);
-    }
-
-    public static function canCreate(): bool
-    {
-        return (auth()->user()?->isAdmin() ?? false)
-            || (auth()->user()?->hasPermission('customers.create') ?? false);
-    }
-
-    public static function canEdit($record): bool
-    {
-        return (auth()->user()?->isAdmin() ?? false)
-            || (auth()->user()?->hasPermission('customers.edit') ?? false);
-    }
-
-    public static function canDelete($record): bool
-    {
-        return (auth()->user()?->isAdmin() ?? false)
-            || (auth()->user()?->hasPermission('customers.delete') ?? false);
-    }
 
     public static function form(Schema $schema): Schema
     {

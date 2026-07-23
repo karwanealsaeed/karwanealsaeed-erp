@@ -251,6 +251,24 @@ class ActivityLogger
             unset($values[$field]);
         }
 
+        foreach (
+            [
+                'account_number',
+                'iban',
+            ]
+            as $field
+        ) {
+            if (
+                array_key_exists($field, $values)
+                && filled($values[$field])
+            ) {
+                $values[$field] =
+                    $this->redactSensitiveIdentifier(
+                        $values[$field],
+                    );
+            }
+        }
+
         foreach ($values as $key => $value) {
             if (is_array($value)) {
                 $values[$key] = json_encode($value, JSON_UNESCAPED_UNICODE);
@@ -258,5 +276,27 @@ class ActivityLogger
         }
 
         return $values;
+    }
+
+    private function redactSensitiveIdentifier(
+        mixed $value,
+    ): string {
+        $normalized =
+            trim(
+                (string) $value,
+            );
+
+        if ($normalized === '') {
+            return '[REDACTED]';
+        }
+
+        $lastFour =
+            strlen($normalized) > 4
+                ? substr($normalized, -4)
+                : '';
+
+        return $lastFour === ''
+            ? '[REDACTED]'
+            : '[REDACTED:'.$lastFour.']';
     }
 }

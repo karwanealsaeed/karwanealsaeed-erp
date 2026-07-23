@@ -36,6 +36,7 @@ class ActivityLogServiceProvider extends ServiceProvider
             \App\Models\Invoice::class,
 
             \App\Models\CompanySetting::class,
+            \App\Models\AccountHead::class,
             \App\Models\BankAccount::class,
             \App\Models\DatabaseBackup::class,
         ];

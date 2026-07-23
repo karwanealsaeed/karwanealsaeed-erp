@@ -203,6 +203,8 @@ class ActivityLogger
             \App\Models\Invoice::class => 'Invoice',
 
             \App\Models\CompanySetting::class => 'Company Setting',
+            \App\Models\AccountHead::class => 'Chart of Accounts',
+            \App\Models\BankAccount::class => 'Bank Account',
             \App\Models\DatabaseBackup::class => 'Database Backup',
 
             default => class_basename($model),

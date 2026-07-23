@@ -4,10 +4,12 @@ namespace App\Filament\Resources\AccountVouchers\Pages;
 
 use App\Filament\Resources\AccountVouchers\AccountVoucherResource;
 use App\Services\AccountVoucherPostingValidator;
-use Illuminate\Contracts\Support\Arrayable;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\ViewAction;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Validation\ValidationException;
 
 class EditAccountVoucher extends EditRecord
 {
@@ -29,13 +31,38 @@ class EditAccountVoucher extends EditRecord
             return;
         }
 
-        app(
-            AccountVoucherPostingValidator::class
-        )->assertCanPost(
-            is_array($state['lines'] ?? null)
-                ? $state['lines']
-                : []
-        );
+        try {
+            app(
+                AccountVoucherPostingValidator::class
+            )->assertCanPost(
+                is_array($state['lines'] ?? null)
+                    ? $state['lines']
+                    : []
+            );
+        } catch (ValidationException $exception) {
+            $message = collect(
+                $exception->errors()
+            )
+                ->flatten()
+                ->first();
+
+            $message = is_string($message)
+                && $message !== ''
+                    ? $message
+                    : 'Voucher posting validation failed.';
+
+            Notification::make()
+                ->title('Voucher post nahi ho saka')
+                ->body($message)
+                ->danger()
+                ->persistent()
+                ->send();
+
+            throw ValidationException::withMessages([
+                $this->form->getStatePath().'.lines' =>
+                    $message,
+            ]);
+        }
     }
 
     protected function getHeaderActions(): array

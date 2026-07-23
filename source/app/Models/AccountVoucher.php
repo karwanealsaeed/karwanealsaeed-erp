@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Services\AccountingPeriodLockService;
 use App\Services\AccountVoucherPostingValidator;
+use App\Services\MasterCodeGenerator;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -45,8 +46,10 @@ class AccountVoucher extends Model
     {
         static::creating(function (AccountVoucher $voucher): void {
             if (blank($voucher->voucher_no)) {
-                $nextId = ((int) self::max('id')) + 1;
-                $voucher->voucher_no = 'AV-' . str_pad((string) $nextId, 5, '0', STR_PAD_LEFT);
+                $voucher->voucher_no =
+                    app(
+                        MasterCodeGenerator::class
+                    )->nextAccountVoucherNumber();
             }
 
             if (blank($voucher->voucher_date)) {

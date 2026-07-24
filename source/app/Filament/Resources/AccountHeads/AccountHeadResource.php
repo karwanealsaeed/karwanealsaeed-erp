@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\AccountHeads;
 
+use App\Filament\Concerns\HasRbacResourceAuthorization;
 use App\Filament\Resources\AccountHeads\Pages\CreateAccountHead;
 use App\Filament\Resources\AccountHeads\Pages\EditAccountHead;
 use App\Filament\Resources\AccountHeads\Pages\ListAccountHeads;
@@ -19,6 +20,8 @@ use UnitEnum;
 
 class AccountHeadResource extends Resource
 {
+    use HasRbacResourceAuthorization;
+
     protected static ?string $model = AccountHead::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
@@ -32,12 +35,6 @@ class AccountHeadResource extends Resource
     protected static ?string $pluralModelLabel = 'Chart of Accounts';
 
     protected static ?int $navigationSort = 20;
-
-    public static function canViewAny(): bool
-    {
-        return (auth()->user()?->isAdmin() ?? false)
-            || (auth()->user()?->hasPermission('reports_view') ?? false);
-    }
 
     public static function form(Schema $schema): Schema
     {

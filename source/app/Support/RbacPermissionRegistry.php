@@ -112,6 +112,27 @@ final class RbacPermissionRegistry
     ];
 
     private const RESOURCE_RULES = [
+        \App\Filament\Resources\AccountHeads\AccountHeadResource::class => [
+            'roles' => [
+                self::ROLE_MANAGER,
+                self::ROLE_ACCOUNTANT,
+            ],
+            'actions' => [
+                'view' => [
+                    self::ACCOUNTING_MANAGE,
+                    'reports_view',
+                ],
+                'create' => [
+                    self::ACCOUNTING_MANAGE,
+                ],
+                'edit' => [
+                    self::ACCOUNTING_MANAGE,
+                ],
+                'delete' => [
+                    self::ACCOUNTING_MANAGE,
+                ],
+            ],
+        ],
         \App\Filament\Resources\Airlines\AirlineResource::class => [
             'roles' => [
                 self::ROLE_MANAGER,

@@ -175,7 +175,7 @@ final class BatchBDepartmentalRbacAuthorizationTest extends TestCase
         }
 
         $this->assertCount(
-            39,
+            40,
             $registered,
         );
     }

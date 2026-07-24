@@ -27,19 +27,10 @@ class AdminPassportDashboard extends Component
         }
 
         $this->canView =
-            in_array(
-                $user->role,
-                [
-                    'Admin',
-                    'Manager',
-                ],
-                true,
-            )
-            || $user->hasPermission(
-                'visa_applications.view',
-            )
-            || $user->hasPermission(
-                'reports.view',
+            (bool) $user->is_active
+            && (
+                $user->isAdmin()
+                || $user->hasPermission('visa_applications_view')
             );
 
         if (! $this->canView) {

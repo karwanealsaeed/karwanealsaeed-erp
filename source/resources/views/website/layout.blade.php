@@ -322,6 +322,9 @@
                     <a href="{{ route('website.services') }}">{{ __('website.our_services') }}</a>
                     <a href="{{ route('website.gallery') }}">{{ __('gallery.title') }}</a>
                     <a href="{{ route('website.promotions') }}" class="{{ request()->routeIs('website.promotions*') ? 'is-active' : '' }}">{{ __('promotions.title') }}</a>
+                    <a href="{{ route('website.faq') }}" class="{{ request()->routeIs('website.faq*') ? 'is-active' : '' }}">{{ __('faq.title') }}</a>
+                    <a href="{{ route('website.blog') }}" class="{{ request()->routeIs('website.blog*') ? 'is-active' : '' }}">{{ __('blog.title') }}</a>
+                    <a href="{{ route('website.testimonials') }}" class="{{ request()->routeIs('website.testimonials*') ? 'is-active' : '' }}">{{ __('testimonials.title') }}</a>
                     <a href="{{ route('website.contact') }}">{{ __('website.contact_us') }}</a>
                     <a href="{{ route('customer.portal.login') }}">{{ __('website.customer_portal') }}</a>
                 </div>

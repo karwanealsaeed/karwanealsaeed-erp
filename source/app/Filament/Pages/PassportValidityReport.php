@@ -42,24 +42,12 @@ class PassportValidityReport extends Page
     {
         $user = auth()->user();
 
-        if (! $user) {
+        if ($user === null || ! (bool) $user->is_active) {
             return false;
         }
 
-        return in_array(
-            $user->role,
-            [
-                'Admin',
-                'Manager',
-            ],
-            true,
-        )
-        || $user->hasPermission(
-            'visa_applications.view',
-        )
-        || $user->hasPermission(
-            'reports.view',
-        );
+        return $user->isAdmin()
+            || $user->hasPermission('visa_applications_view');
     }
 
     protected function getViewData(): array

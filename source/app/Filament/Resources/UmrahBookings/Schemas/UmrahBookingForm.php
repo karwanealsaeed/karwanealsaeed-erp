@@ -40,6 +40,7 @@ class UmrahBookingForm
                         Select::make('status')
                             ->label('Status')
                             ->options([
+                                'Draft' => 'Draft',
                                 'Pending' => 'Pending',
                                 'Confirmed' => 'Confirmed',
                                 'Completed' => 'Completed',
@@ -61,8 +62,8 @@ class UmrahBookingForm
                                 ->orderByDesc('id')
                                 ->get()
                                 ->mapWithKeys(fn (UmrahPackage $package): array => [
-                                    $package->id => $package->package_no . ' - ' . $package->title . ' - ' . ($package->flight_route ?: '-')
-                                        . ' - Seats: ' . $package->seats_left,
+                                    $package->id => $package->package_no.' - '.$package->title.' - '.($package->flight_route ?: '-')
+                                        .' - Seats: '.$package->seats_left,
                                 ])
                                 ->toArray())
                             ->searchable()
@@ -85,7 +86,9 @@ class UmrahBookingForm
                             ])
                             ->default('Sharing')
                             ->live()
-                            ->required()
+                            ->required(
+                                fn (string $operation): bool => $operation === 'create',
+                            )
                             ->afterStateUpdated(function (?string $state, Set $set, Get $get): void {
                                 self::setPackagePrice((int) $get('umrah_package_id'), $state ?: 'Sharing', $set, $get);
                             }),
@@ -156,7 +159,7 @@ class UmrahBookingForm
 
                 Section::make('Travel / Hotel Details')
                     ->schema([
-                        DatePicker::make('departure_date')
+                        DatePicker::make('travel_date')
                             ->label('Departure Date')
                             ->native(false),
 
@@ -168,7 +171,7 @@ class UmrahBookingForm
                             ->label('Makkah Hotel')
                             ->maxLength(255),
 
-                        TextInput::make('madina_hotel')
+                        TextInput::make('madinah_hotel')
                             ->label('Madinah Hotel')
                             ->maxLength(255),
                     ])
@@ -195,10 +198,10 @@ class UmrahBookingForm
         }
 
         $set('package_name', $package->title);
-        $set('departure_date', $package->start_date?->toDateString());
+        $set('travel_date', $package->start_date?->toDateString());
         $set('return_date', $package->end_date?->toDateString());
         $set('makkah_hotel', $package->makkah_hotel);
-        $set('madina_hotel', $package->madina_hotel);
+        $set('madinah_hotel', $package->madina_hotel);
         $set('flight_route', $package->flight_route);
         $set('airline', $package->airline);
         $set('available_seats', $package->seats_left);

@@ -26,7 +26,12 @@ class EditUmrahBooking extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            DeleteAction::make(),
+            DeleteAction::make()
+                ->hidden(
+                    fn (): bool => ! UmrahBookingResource::canDelete(
+                        $this->record,
+                    ),
+                ),
         ];
     }
 }

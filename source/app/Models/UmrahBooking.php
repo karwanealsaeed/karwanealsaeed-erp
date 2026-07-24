@@ -12,7 +12,7 @@ class UmrahBooking extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'departure_date' => 'date',
+        'travel_date' => 'date',
         'return_date' => 'date',
         'package_price_per_person' => 'decimal:2',
         'package_amount' => 'decimal:2',
@@ -25,7 +25,7 @@ class UmrahBooking extends Model
         static::creating(function (UmrahBooking $booking): void {
             if (blank($booking->booking_no)) {
                 $nextId = ((int) self::max('id')) + 1;
-                $booking->booking_no = 'UB-' . str_pad((string) $nextId, 5, '0', STR_PAD_LEFT);
+                $booking->booking_no = 'UB-'.str_pad((string) $nextId, 5, '0', STR_PAD_LEFT);
             }
 
             self::calculateAmounts($booking);
@@ -146,7 +146,7 @@ class UmrahBooking extends Model
         DB::table('umrah_group_flights')
             ->where('id', $groupFlight->id)
             ->update([
-                'seats_left' => DB::raw('GREATEST(seats_left - ' . $seats . ', 0)'),
+                'seats_left' => DB::raw('GREATEST(seats_left - '.$seats.', 0)'),
             ]);
 
         self::syncPackageSeats($packageId);
@@ -171,7 +171,7 @@ class UmrahBooking extends Model
         DB::table('umrah_group_flights')
             ->where('id', $groupFlight->id)
             ->update([
-                'seats_left' => DB::raw('LEAST(seats_left + ' . $seats . ', seats_total)'),
+                'seats_left' => DB::raw('LEAST(seats_left + '.$seats.', seats_total)'),
             ]);
 
         self::syncPackageSeats($packageId);

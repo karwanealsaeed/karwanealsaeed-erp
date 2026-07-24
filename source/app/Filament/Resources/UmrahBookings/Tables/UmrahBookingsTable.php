@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\UmrahBookings\Tables;
 
+use App\Filament\Resources\UmrahBookings\UmrahBookingResource;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -83,7 +84,10 @@ class UmrahBookingsTable
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()
+                        ->hidden(
+                            fn (): bool => ! UmrahBookingResource::canDeleteAny(),
+                        ),
                 ]),
             ]);
     }

@@ -15,7 +15,12 @@ class EditVisaApplication extends EditRecord
     {
         return [
             ViewAction::make(),
-            DeleteAction::make(),
+            DeleteAction::make()
+                ->hidden(
+                    fn (): bool => ! VisaApplicationResource::canDelete(
+                        $this->record,
+                    ),
+                ),
         ];
     }
 }

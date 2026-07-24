@@ -19,7 +19,7 @@ class PublicUmrahPackageController extends Controller
                 'madinaHotel',
                 'transportRoute',
             ])
-            ->where('status', 'Available');
+            ->publiclyAvailable();
 
         $packagesQuery
             ->when($request->filled('search'), function ($query) use ($request): void {
@@ -81,14 +81,14 @@ class PublicUmrahPackageController extends Controller
         $packages = $packagesQuery->get();
 
         $airlines = UmrahPackage::query()
-            ->where('status', 'Available')
+            ->publiclyAvailable()
             ->whereNotNull('airline')
             ->distinct()
             ->orderBy('airline')
             ->pluck('airline');
 
         $routes = UmrahPackage::query()
-            ->where('status', 'Available')
+            ->publiclyAvailable()
             ->whereNotNull('flight_route')
             ->distinct()
             ->orderBy('flight_route')
@@ -143,7 +143,7 @@ class PublicUmrahPackageController extends Controller
             'transportRoute',
         ]);
 
-        abort_unless($umrahPackage->status === 'Available', 404);
+        abort_unless($umrahPackage->isPubliclyAvailable(), 404);
 
         $company = CompanySetting::current();
         $canonical = route('website.umrah.show', [

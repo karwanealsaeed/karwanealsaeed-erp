@@ -252,6 +252,7 @@
                         <a href="{{ route('website.visas') }}">{{ __('website.visit_visas') }}</a>
                         <a href="{{ route('website.tickets') }}">{{ __('website.air_ticketing') }}</a>
                         <a href="{{ route('website.hotels') }}">{{ __('website.hotel_booking') }}</a>
+                        <a href="{{ route('website.insurance') }}">{{ __('website.travel_insurance') }}</a>
                         <a href="{{ route('website.tours') }}">{{ __('website.pakistan_tours') }}</a>
                         <a href="{{ route('website.gallery') }}">{{ __('gallery.title') }}</a>
                         <a href="{{ route('website.contact') }}">{{ __('website.contact_us') }}</a>
@@ -332,6 +333,7 @@
                     <a href="{{ route('website.visas') }}">{{ __('website.visit_visas') }}</a>
                     <a href="{{ route('website.tickets') }}">{{ __('website.air_ticketing') }}</a>
                     <a href="{{ route('website.hotels') }}">{{ __('website.hotel_booking') }}</a>
+                    <a href="{{ route('website.insurance') }}">{{ __('website.travel_insurance') }}</a>
                     <a href="{{ route('website.tours') }}">{{ __('website.pakistan_tours') }}</a>
                 </div>
 

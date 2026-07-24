@@ -2,11 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Validation\ValidationException;
-
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 
 class UmrahPackage extends Model
 {
@@ -110,11 +110,10 @@ class UmrahPackage extends Model
             }
         });
 
-
         static::creating(function (UmrahPackage $package): void {
             if (blank($package->package_no) || $package->package_no === 'UP-') {
                 $nextId = ((int) self::max('id')) + 1;
-                $package->package_no = 'UP-' . str_pad((string) $nextId, 5, '0', STR_PAD_LEFT);
+                $package->package_no = 'UP-'.str_pad((string) $nextId, 5, '0', STR_PAD_LEFT);
             }
         });
 
@@ -131,8 +130,7 @@ class UmrahPackage extends Model
                     || ! (bool) $departureAirport->status
                 ) {
                     throw ValidationException::withMessages([
-                        'departure_airport_id' =>
-                            'Selected group flight requires an active departure airport.',
+                        'departure_airport_id' => 'Selected group flight requires an active departure airport.',
                     ]);
                 }
 
@@ -154,7 +152,7 @@ class UmrahPackage extends Model
             if ($package->makkahHotel) {
                 $hotel = $package->makkahHotel;
 
-                $package->makkah_hotel = trim($hotel->hotel_name . ' ' . ($hotel->similar_text ?: ''));
+                $package->makkah_hotel = trim($hotel->hotel_name.' '.($hotel->similar_text ?: ''));
                 $package->makkah_distance = $hotel->distance;
                 $package->makkah_location = $hotel->location;
             }
@@ -162,7 +160,7 @@ class UmrahPackage extends Model
             if ($package->madinaHotel) {
                 $hotel = $package->madinaHotel;
 
-                $package->madina_hotel = trim($hotel->hotel_name . ' ' . ($hotel->similar_text ?: ''));
+                $package->madina_hotel = trim($hotel->hotel_name.' '.($hotel->similar_text ?: ''));
                 $package->madina_distance = $hotel->distance;
                 $package->madina_location = $hotel->location;
             }
@@ -174,7 +172,7 @@ class UmrahPackage extends Model
             $package->price = $package->sharing_price ?: 0;
 
             if (blank($package->slug)) {
-                $baseSlug = Str::slug($package->title . '-' . $package->package_no);
+                $baseSlug = Str::slug($package->title.'-'.$package->package_no);
                 $slug = $baseSlug;
                 $counter = 1;
 
@@ -184,13 +182,48 @@ class UmrahPackage extends Model
                         ->when($package->exists, fn ($query) => $query->where('id', '!=', $package->id))
                         ->exists()
                 ) {
-                    $slug = $baseSlug . '-' . $counter;
+                    $slug = $baseSlug.'-'.$counter;
                     $counter++;
                 }
 
                 $package->slug = $slug;
             }
         });
+    }
+
+    public function scopePubliclyAvailable(Builder $query): Builder
+    {
+        return $query
+            ->where('status', 'Available')
+            ->whereDate('start_date', '>=', today()->toDateString());
+    }
+
+    public function isPubliclyAvailable(): bool
+    {
+        return $this->status === 'Available'
+            && $this->start_date !== null
+            && ! $this->start_date->lt(today());
+    }
+
+    public function getMakkahDistanceDisplayAttribute(): ?string
+    {
+        return self::publicDistance($this->makkah_distance);
+    }
+
+    public function getMadinaDistanceDisplayAttribute(): ?string
+    {
+        return self::publicDistance($this->madina_distance);
+    }
+
+    private static function publicDistance(?string $distance): ?string
+    {
+        $distance = trim((string) $distance);
+
+        if ($distance === '' || preg_match('/\\d/u', $distance) !== 1) {
+            return null;
+        }
+
+        return $distance;
     }
 
     public function getRouteKeyName(): string
@@ -205,10 +238,12 @@ class UmrahPackage extends Model
             'airline_id',
         );
     }
+
     public function umrahGroupFlight(): BelongsTo
     {
         return $this->belongsTo(UmrahGroupFlight::class);
     }
+
     public function departureAirport(): BelongsTo
     {
         return $this->belongsTo(
@@ -234,13 +269,13 @@ class UmrahPackage extends Model
 
     public function getFormattedPriceAttribute(): string
     {
-        return 'PKR ' . number_format((float) ($this->sharing_price ?: $this->price), 0);
+        return 'PKR '.number_format((float) ($this->sharing_price ?: $this->price), 0);
     }
 
     public function getNightsTextAttribute(): string
     {
         if ($this->duration_nights) {
-            return $this->duration_nights . ' Night(s)';
+            return $this->duration_nights.' Night(s)';
         }
 
         return '-';

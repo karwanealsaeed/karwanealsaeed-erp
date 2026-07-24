@@ -50,7 +50,7 @@ class SeoController extends Controller
             ]);
 
         $packageUrls = UmrahPackage::query()
-            ->where('status', 'Available')
+            ->publiclyAvailable()
             ->whereNotNull('slug')
             ->orderByDesc('updated_at')
             ->get(['slug', 'updated_at'])

@@ -16,7 +16,7 @@ class CustomerPromotionController extends Controller
         if (! $customer instanceof Customer) {
             $customer = Customer::query()->findOrFail(
                 (int) $request->session()->get(
-                    'customer_id',
+                    'customer_portal_id',
                 ),
             );
         }

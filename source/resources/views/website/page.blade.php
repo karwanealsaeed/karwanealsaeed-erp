@@ -189,6 +189,11 @@
                                 <span>{{ app()->isLocale('ur') ? '←' : '→' }}</span>
                             </a>
 
+                            <a href="{{ route('website.insurance') }}">
+                                {{ __('website.travel_insurance') }}
+                                <span>{{ app()->isLocale('ur') ? '←' : '→' }}</span>
+                            </a>
+
                             <a href="{{ route('website.tours') }}">
                                 {{ __('website.pakistan_tours') }}
                                 <span>{{ app()->isLocale('ur') ? '←' : '→' }}</span>

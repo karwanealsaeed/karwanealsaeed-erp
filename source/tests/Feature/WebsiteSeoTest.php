@@ -75,6 +75,28 @@ class WebsiteSeoTest extends TestCase
             );
     }
 
+    public function test_sitemap_excludes_expired_available_packages(): void
+    {
+        $package = $this->createPackage([
+            'package_no' => 'SEO-EXPIRED-AVAILABLE-001',
+            'title' => 'Expired Available SEO Package',
+            'status' => 'Available',
+            'start_date' => today()->subDays(10)->toDateString(),
+            'end_date' => today()->subDay()->toDateString(),
+        ]);
+
+        $response = $this->get(route('website.sitemap'));
+
+        $response
+            ->assertOk()
+            ->assertDontSee(
+                route('website.umrah.show', [
+                    'umrahPackage' => $package,
+                ]),
+                false,
+            );
+    }
+
     public function test_umrah_listing_contains_item_list_schema(): void
     {
         $package = $this->createPackage();
@@ -246,6 +268,8 @@ class WebsiteSeoTest extends TestCase
             'subtitle' => 'Complete Umrah package for SEO testing.',
             'description' => 'Flights, hotels and transport are included.',
             'status' => 'Available',
+            'start_date' => today()->addMonth()->toDateString(),
+            'end_date' => today()->addMonth()->addDays(10)->toDateString(),
             'price' => 125000,
             'is_featured' => true,
             'sort_order' => 1,

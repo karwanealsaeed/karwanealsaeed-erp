@@ -346,7 +346,7 @@
 
                                     <p>
                                         <small>{{ __('umrah.distance') }}</small>
-                                        <strong>{{ $package->makkah_distance ?: '-' }}</strong>
+                                        <strong>{{ $package->makkah_distance_display ?: __('umrah.distance_on_request') }}</strong>
                                     </p>
 
                                     <p>
@@ -372,7 +372,7 @@
 
                                     <p>
                                         <small>{{ __('umrah.distance') }}</small>
-                                        <strong>{{ $package->madina_distance ?: '-' }}</strong>
+                                        <strong>{{ $package->madina_distance_display ?: __('umrah.distance_on_request') }}</strong>
                                     </p>
 
                                     <p>

@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\AccountVouchers\Tables;
 
+use App\Filament\Resources\AccountVouchers\AccountVoucherResource;
+use App\Models\AccountVoucher;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -83,11 +85,19 @@ class AccountVouchersTable
             ])
             ->recordActions([
                 ViewAction::make(),
-                EditAction::make(),
+                EditAction::make()
+                    ->hidden(
+                        fn (AccountVoucher $record): bool => ! AccountVoucherResource::canEdit(
+                            $record,
+                        ),
+                    ),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()
+                        ->hidden(
+                            fn (): bool => ! AccountVoucherResource::canDeleteAny(),
+                        ),
                 ]),
             ]);
     }

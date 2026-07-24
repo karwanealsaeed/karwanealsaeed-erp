@@ -10,48 +10,79 @@ use App\Filament\Resources\Customers\Schemas\CustomerForm;
 use App\Filament\Resources\Customers\Schemas\CustomerInfolist;
 use App\Filament\Resources\Customers\Tables\CustomersTable;
 use App\Models\Customer;
-use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
 class CustomerResource extends Resource
 {
-
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-user-group';
-
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-user-group';
 
     protected static ?string $model = Customer::class;
 
-
-
-    protected static string | \UnitEnum | null $navigationGroup = 'Customers';
+    protected static string|\UnitEnum|null $navigationGroup = 'Customers';
 
     protected static ?int $navigationSort = 1;
 
     protected static ?string $recordTitleAttribute = 'name';
 
+    private static function allowsCustomerAction(string $action): bool
+    {
+        $user = auth()->user();
+
+        if ($user === null || ! (bool) $user->is_active) {
+            return false;
+        }
+
+        if ($user->isAdmin()) {
+            return true;
+        }
+
+        return $user->hasPermission(
+            "customers_{$action}",
+        );
+    }
 
     public static function canAccess(): bool
     {
-        return auth()->user()?->hasPermission('customers.view') ?? false;
+        return static::canViewAny();
+    }
+
+    public static function shouldRegisterNavigation(): bool
+    {
+        return static::canViewAny();
+    }
+
+    public static function canViewAny(): bool
+    {
+        return static::allowsCustomerAction('view');
+    }
+
+    public static function canView($record): bool
+    {
+        return static::canViewAny();
     }
 
     public static function canCreate(): bool
     {
-        return auth()->user()?->hasPermission('customers.create') ?? false;
+        return static::allowsCustomerAction('create');
     }
 
     public static function canEdit($record): bool
     {
-        return auth()->user()?->hasPermission('customers.edit') ?? false;
+        return static::allowsCustomerAction('edit');
     }
 
     public static function canDelete($record): bool
     {
-        return auth()->user()?->hasPermission('customers.delete') ?? false;
+        return static::allowsCustomerAction('delete');
     }
+
+    public static function canDeleteAny(): bool
+    {
+        return static::allowsCustomerAction('delete');
+    }
+
     public static function form(Schema $schema): Schema
     {
         return CustomerForm::configure($schema);
@@ -84,11 +115,3 @@ class CustomerResource extends Resource
         ];
     }
 }
-
-
-
-
-
-
-
-

@@ -15,7 +15,11 @@ class EditCustomerDocument extends EditRecord
     {
         return [
             DeleteAction::make()
-                ->hidden(fn (): bool => ! (auth()->user()?->hasPermission('customer_documents.delete') ?? false)),
+                ->hidden(
+                    fn (): bool => ! CustomerDocumentResource::canDelete(
+                        $this->record,
+                    ),
+                ),
         ];
     }
 

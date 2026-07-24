@@ -20,9 +20,9 @@ class CustomerNotificationResource extends Resource
 {
     protected static ?string $model = CustomerNotification::class;
 
-    protected static string | BackedEnum | null $navigationIcon = 'heroicon-o-bell-alert';
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-bell-alert';
 
-    protected static string | UnitEnum | null $navigationGroup = 'Customers';
+    protected static string|UnitEnum|null $navigationGroup = 'Customers';
 
     protected static ?string $navigationLabel = 'Notifications & Offers';
 
@@ -32,10 +32,61 @@ class CustomerNotificationResource extends Resource
 
     protected static ?int $navigationSort = 6;
 
+    private static function allowsNotificationAction(string $action): bool
+    {
+        $user = auth()->user();
+
+        if ($user === null || ! (bool) $user->is_active) {
+            return false;
+        }
+
+        if ($user->isAdmin()) {
+            return true;
+        }
+
+        return $user->hasPermission(
+            "customers_{$action}",
+        );
+    }
+
+    public static function canAccess(): bool
+    {
+        return static::canViewAny();
+    }
+
+    public static function shouldRegisterNavigation(): bool
+    {
+        return static::canViewAny();
+    }
+
     public static function canViewAny(): bool
     {
-        return (auth()->user()?->isAdmin() ?? false)
-            || (auth()->user()?->hasPermission('customers_view') ?? false);
+        return static::allowsNotificationAction('view');
+    }
+
+    public static function canView($record): bool
+    {
+        return static::canViewAny();
+    }
+
+    public static function canCreate(): bool
+    {
+        return static::allowsNotificationAction('create');
+    }
+
+    public static function canEdit($record): bool
+    {
+        return static::allowsNotificationAction('edit');
+    }
+
+    public static function canDelete($record): bool
+    {
+        return static::allowsNotificationAction('delete');
+    }
+
+    public static function canDeleteAny(): bool
+    {
+        return static::allowsNotificationAction('delete');
     }
 
     public static function form(Schema $schema): Schema

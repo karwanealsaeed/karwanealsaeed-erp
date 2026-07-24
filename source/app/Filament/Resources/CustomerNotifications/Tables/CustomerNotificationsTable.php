@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\CustomerNotifications\Tables;
 
+use App\Filament\Resources\CustomerNotifications\CustomerNotificationResource;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -50,7 +51,10 @@ class CustomerNotificationsTable
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()
+                        ->hidden(
+                            fn (): bool => ! CustomerNotificationResource::canDeleteAny(),
+                        ),
                 ]),
             ]);
     }

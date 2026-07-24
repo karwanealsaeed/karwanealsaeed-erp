@@ -15,7 +15,12 @@ class EditCustomerNotification extends EditRecord
     {
         return [
             ViewAction::make(),
-            DeleteAction::make(),
+            DeleteAction::make()
+                ->hidden(
+                    fn (): bool => ! CustomerNotificationResource::canDelete(
+                        $this->record,
+                    ),
+                ),
         ];
     }
 }

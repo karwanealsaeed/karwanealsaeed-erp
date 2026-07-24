@@ -20,9 +20,9 @@ class CustomerPaymentUploadResource extends Resource
 {
     protected static ?string $model = CustomerPaymentUpload::class;
 
-    protected static string | BackedEnum | null $navigationIcon = 'heroicon-o-banknotes';
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-banknotes';
 
-    protected static string | UnitEnum | null $navigationGroup = 'Customers';
+    protected static string|UnitEnum|null $navigationGroup = 'Customers';
 
     protected static ?string $navigationLabel = 'Payment Uploads';
 
@@ -32,25 +32,59 @@ class CustomerPaymentUploadResource extends Resource
 
     protected static ?int $navigationSort = 5;
 
+    private static function allowsCustomerAction(string $action): bool
+    {
+        $user = auth()->user();
+
+        if ($user === null || ! (bool) $user->is_active) {
+            return false;
+        }
+
+        if ($user->isAdmin()) {
+            return true;
+        }
+
+        return $user->hasPermission(
+            "customers_{$action}",
+        );
+    }
+
+    public static function canAccess(): bool
+    {
+        return static::canViewAny();
+    }
+
+    public static function shouldRegisterNavigation(): bool
+    {
+        return static::canViewAny();
+    }
+
     public static function canViewAny(): bool
     {
-        return (auth()->user()?->isAdmin() ?? false)
-            || (auth()->user()?->hasPermission('customers_view') ?? false);
+        return static::allowsCustomerAction('view');
+    }
+
+    public static function canView($record): bool
+    {
+        return static::canViewAny();
     }
 
     public static function canCreate(): bool
     {
-        return (auth()->user()?->isAdmin() ?? false)
-            || (auth()->user()?->hasPermission('customers_create') ?? false);
+        return static::allowsCustomerAction('create');
     }
 
     public static function canEdit($record): bool
     {
-        return (auth()->user()?->isAdmin() ?? false)
-            || (auth()->user()?->hasPermission('customers_edit') ?? false);
+        return static::allowsCustomerAction('edit');
     }
 
     public static function canDelete($record): bool
+    {
+        return auth()->user()?->isAdmin() ?? false;
+    }
+
+    public static function canDeleteAny(): bool
     {
         return auth()->user()?->isAdmin() ?? false;
     }

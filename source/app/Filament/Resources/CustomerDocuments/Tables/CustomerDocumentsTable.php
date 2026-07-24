@@ -97,7 +97,11 @@ class CustomerDocumentsTable
                     ->hidden(fn (): bool => ! (auth()->user()?->hasPermission('customer_documents.edit') ?? false)),
 
                 DeleteAction::make()
-                    ->hidden(fn (): bool => ! (auth()->user()?->hasPermission('customer_documents.delete') ?? false)),
+                    ->hidden(
+                        fn (CustomerDocument $record): bool => ! CustomerDocumentResource::canDelete(
+                            $record,
+                        ),
+                    ),
             ])
             ->defaultSort('id', 'desc');
     }

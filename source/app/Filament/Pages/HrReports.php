@@ -2,9 +2,11 @@
 
 namespace App\Filament\Pages;
 
+use App\Filament\Concerns\HasRbacPageAuthorization;
 use App\Models\Department;
 use App\Models\Staff;
 use App\Services\HrReportService;
+use App\Support\RbacPermissionRegistry;
 use BackedEnum;
 use Filament\Pages\Page;
 use Filament\Support\Enums\Width;
@@ -12,9 +14,26 @@ use UnitEnum;
 
 class HrReports extends Page
 {
+    use HasRbacPageAuthorization;
 
-    use \App\Filament\Concerns\HasRbacPageAuthorization;
-protected static string|BackedEnum|null $navigationIcon =
+    public static function canAccess(): bool
+    {
+        $user = auth()->user();
+
+        if ($user === null || ! (bool) $user->is_active) {
+            return false;
+        }
+
+        if ($user->isAdmin()) {
+            return true;
+        }
+
+        return $user->role === RbacPermissionRegistry::ROLE_MANAGER
+            && $user->hasPermission('staff_view')
+            && $user->hasPermission('reports_view');
+    }
+
+    protected static string|BackedEnum|null $navigationIcon =
         'heroicon-o-chart-bar-square';
 
     protected static string|UnitEnum|null $navigationGroup =
@@ -99,8 +118,8 @@ protected static string|BackedEnum|null $navigationIcon =
                         $staff->staff_code
                     )
                         ? $staff->staff_code
-                            . ' - '
-                            . $staff->name
+                            .' - '
+                            .$staff->name
                         : $staff->name,
                 ]
             )

@@ -15,7 +15,12 @@ class EditCustomerFamilyMember extends EditRecord
     {
         return [
             ViewAction::make(),
-            DeleteAction::make(),
+            DeleteAction::make()
+                ->hidden(
+                    fn (): bool => ! CustomerFamilyMemberResource::canDelete(
+                        $this->record,
+                    ),
+                ),
         ];
     }
 }

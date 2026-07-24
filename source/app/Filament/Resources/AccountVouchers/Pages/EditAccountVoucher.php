@@ -59,8 +59,7 @@ class EditAccountVoucher extends EditRecord
                 ->send();
 
             throw ValidationException::withMessages([
-                $this->form->getStatePath().'.lines' =>
-                    $message,
+                $this->form->getStatePath().'.lines' => $message,
             ]);
         }
     }
@@ -69,7 +68,12 @@ class EditAccountVoucher extends EditRecord
     {
         return [
             ViewAction::make(),
-            DeleteAction::make(),
+            DeleteAction::make()
+                ->hidden(
+                    fn (): bool => ! AccountVoucherResource::canDelete(
+                        $this->record,
+                    ),
+                ),
         ];
     }
 }

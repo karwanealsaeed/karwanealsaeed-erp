@@ -15,7 +15,12 @@ class EditCustomerPaymentUpload extends EditRecord
     {
         return [
             ViewAction::make(),
-            DeleteAction::make(),
+            DeleteAction::make()
+                ->hidden(
+                    fn (): bool => ! CustomerPaymentUploadResource::canDelete(
+                        $this->record,
+                    ),
+                ),
         ];
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\CustomerFamilyMembers\Tables;
 
+use App\Filament\Resources\CustomerFamilyMembers\CustomerFamilyMemberResource;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -39,7 +40,10 @@ class CustomerFamilyMembersTable
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()
+                        ->hidden(
+                            fn (): bool => ! CustomerFamilyMemberResource::canDeleteAny(),
+                        ),
                 ]),
             ]);
     }

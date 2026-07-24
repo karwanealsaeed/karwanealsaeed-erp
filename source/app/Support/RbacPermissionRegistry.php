@@ -112,6 +112,69 @@ final class RbacPermissionRegistry
     ];
 
     private const RESOURCE_RULES = [
+        \App\Filament\Resources\AccountingPeriodLocks\AccountingPeriodLockResource::class => [
+            'roles' => [
+                self::ROLE_MANAGER,
+                self::ROLE_ACCOUNTANT,
+            ],
+            'actions' => [
+                'view' => [
+                    self::ACCOUNTING_MANAGE,
+                    'account_vouchers_view',
+                    'reports_view',
+                    'visa_payments_view',
+                    'flight_payments_view',
+                    'umrah_payments_view',
+                    'hotel_payments_view',
+                ],
+                'create' => [
+                    self::ACCOUNTING_MANAGE,
+                ],
+                'edit' => [
+                    self::ACCOUNTING_MANAGE,
+                ],
+                'delete' => [
+                    self::ACCOUNTING_MANAGE,
+                ],
+            ],
+        ],
+        \App\Filament\Resources\BankStatementEntries\BankStatementEntryResource::class => [
+            'roles' => [
+                self::ROLE_MANAGER,
+                self::ROLE_ACCOUNTANT,
+            ],
+            'actions' => [
+                'view' => [
+                    self::ACCOUNTING_MANAGE,
+                    'reports_view',
+                    'visa_payments_view',
+                    'flight_payments_view',
+                    'umrah_payments_view',
+                    'hotel_payments_view',
+                ],
+                'create' => [
+                    self::ACCOUNTING_MANAGE,
+                    'visa_payments_create',
+                    'flight_payments_create',
+                    'umrah_payments_create',
+                    'hotel_payments_create',
+                ],
+                'edit' => [
+                    self::ACCOUNTING_MANAGE,
+                    'visa_payments_edit',
+                    'flight_payments_edit',
+                    'umrah_payments_edit',
+                    'hotel_payments_edit',
+                ],
+                'delete' => [
+                    self::ACCOUNTING_MANAGE,
+                    'visa_payments_delete',
+                    'flight_payments_delete',
+                    'umrah_payments_delete',
+                    'hotel_payments_delete',
+                ],
+            ],
+        ],
         \App\Filament\Resources\AccountHeads\AccountHeadResource::class => [
             'roles' => [
                 self::ROLE_MANAGER,

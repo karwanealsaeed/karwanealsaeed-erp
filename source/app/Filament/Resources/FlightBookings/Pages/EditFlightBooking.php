@@ -15,7 +15,7 @@ class EditFlightBooking extends EditRecord
     {
         return [
             ViewAction::make(),
-            DeleteAction::make(),
+            DeleteAction::make()->hidden(fn (): bool => ! FlightBookingResource::canDelete($this->record)),
         ];
     }
 }

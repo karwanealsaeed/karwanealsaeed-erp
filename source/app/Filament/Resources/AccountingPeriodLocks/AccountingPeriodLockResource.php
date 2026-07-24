@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\AccountingPeriodLocks;
 
+use App\Filament\Concerns\HasRbacResourceAuthorization;
 use App\Filament\Resources\AccountingPeriodLocks\Pages\CreateAccountingPeriodLock;
 use App\Filament\Resources\AccountingPeriodLocks\Pages\EditAccountingPeriodLock;
 use App\Filament\Resources\AccountingPeriodLocks\Pages\ListAccountingPeriodLocks;
@@ -18,6 +19,18 @@ use UnitEnum;
 
 class AccountingPeriodLockResource extends Resource
 {
+    use HasRbacResourceAuthorization;
+
+    public static function canAccess(): bool
+    {
+        return static::canViewAny();
+    }
+
+    public static function shouldRegisterNavigation(): bool
+    {
+        return static::canViewAny();
+    }
+
     protected static ?string $model =
         AccountingPeriodLock::class;
 
@@ -40,28 +53,6 @@ class AccountingPeriodLockResource extends Resource
         'name';
 
     protected static ?int $navigationSort = 30;
-
-    public static function canAccess(): bool
-    {
-        return static::canViewPeriods();
-    }
-
-    public static function canCreate(): bool
-    {
-        return static::canManagePeriods();
-    }
-
-    public static function canEdit($record): bool
-    {
-        return static::canManagePeriods()
-            && $record->status !== 'Locked';
-    }
-
-    public static function canDelete($record): bool
-    {
-        return static::canManagePeriods()
-            && $record->status !== 'Locked';
-    }
 
     public static function canViewPeriods(): bool
     {
@@ -141,23 +132,19 @@ class AccountingPeriodLockResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' =>
-                ListAccountingPeriodLocks::route('/'),
+            'index' => ListAccountingPeriodLocks::route('/'),
 
-            'create' =>
-                CreateAccountingPeriodLock::route(
-                    '/create'
-                ),
+            'create' => CreateAccountingPeriodLock::route(
+                '/create'
+            ),
 
-            'view' =>
-                ViewAccountingPeriodLock::route(
-                    '/{record}'
-                ),
+            'view' => ViewAccountingPeriodLock::route(
+                '/{record}'
+            ),
 
-            'edit' =>
-                EditAccountingPeriodLock::route(
-                    '/{record}/edit'
-                ),
+            'edit' => EditAccountingPeriodLock::route(
+                '/{record}/edit'
+            ),
         ];
     }
 

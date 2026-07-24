@@ -15,6 +15,9 @@ class ListAccountingPeriodLocks extends ListRecords
     {
         return [
             CreateAction::make()
+                ->hidden(
+                    fn (): bool => ! AccountingPeriodLockResource::canCreate()
+                )
                 ->label(
                     'Create Accounting Period'
                 ),

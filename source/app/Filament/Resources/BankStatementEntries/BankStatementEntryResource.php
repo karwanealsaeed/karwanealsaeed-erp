@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\BankStatementEntries;
 
+use App\Filament\Concerns\HasRbacResourceAuthorization;
 use App\Filament\Resources\BankStatementEntries\Pages\CreateBankStatementEntry;
 use App\Filament\Resources\BankStatementEntries\Pages\EditBankStatementEntry;
 use App\Filament\Resources\BankStatementEntries\Pages\ListBankStatementEntries;
@@ -18,6 +19,8 @@ use UnitEnum;
 
 class BankStatementEntryResource extends Resource
 {
+    use HasRbacResourceAuthorization;
+
     protected static ?string $model =
         BankStatementEntry::class;
 
@@ -42,19 +45,6 @@ class BankStatementEntryResource extends Resource
 
     protected static ?int $navigationSort = 41;
 
-    public static function canEdit($record): bool
-    {
-        return $record->reconciliation_status
-            !== 'Matched'
-            && ! $record->isPeriodLocked();
-    }
-
-    public static function canDelete($record): bool
-    {
-        return $record->reconciliation_status
-            !== 'Matched'
-            && ! $record->isPeriodLocked();
-    }
     public static function form(
         Schema $schema
     ): Schema {

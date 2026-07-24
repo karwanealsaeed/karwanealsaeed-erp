@@ -111,7 +111,11 @@ class SupportTicketsTable
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()
+                        ->visible(
+                            fn (): bool =>
+                                SupportTicketResource::canDeleteAny(),
+                        ),
                 ]),
             ]);
     }

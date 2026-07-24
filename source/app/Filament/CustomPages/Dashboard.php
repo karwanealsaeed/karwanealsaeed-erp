@@ -3,6 +3,7 @@
 namespace App\Filament\CustomPages;
 
 use App\Models\User;
+use App\Support\ProposalRoleMapping;
 use Carbon\Carbon;
 use Carbon\CarbonInterface;
 use Filament\Pages\Dashboard as BaseDashboard;
@@ -241,7 +242,7 @@ class Dashboard extends BaseDashboard
                 $currentUserName,
 
             'currentUserRole' =>
-                $user?->role ?: 'Staff',
+                $this->dashboardRoleLabel($user),
 
             'currentUserInitial' =>
                 strtoupper(
@@ -315,6 +316,62 @@ class Dashboard extends BaseDashboard
             || $user->canViewReports();
     }
 
+    private function dashboardRoleLabel(?User $user): string
+    {
+        if ($user === null) {
+            return 'Staff';
+        }
+
+        $actualPermissions = collect($user->permissions ?? [])
+            ->map(
+                static fn (mixed $permission): string =>
+                    str_replace(
+                        '.',
+                        '_',
+                        trim((string) $permission),
+                    ),
+            )
+            ->filter()
+            ->unique()
+            ->sort()
+            ->values()
+            ->all();
+
+        foreach (
+            ProposalRoleMapping::mappings()
+            as $label => $mapping
+        ) {
+            if (
+                ($mapping['identity'] ?? null) !== 'staff'
+                || ($mapping['base_role'] ?? null) !== $user->role
+            ) {
+                continue;
+            }
+
+            $mappedPermissions = collect(
+                $mapping['permissions'] ?? [],
+            )
+                ->map(
+                    static fn (mixed $permission): string =>
+                        str_replace(
+                            '.',
+                            '_',
+                            trim((string) $permission),
+                        ),
+                )
+                ->filter()
+                ->unique()
+                ->sort()
+                ->values()
+                ->all();
+
+            if ($actualPermissions === $mappedPermissions) {
+                return (string) $label;
+            }
+        }
+
+        return $user->role ?: 'Staff';
+    }
     private function hasPermission(
         ?User $user,
         string $permission,

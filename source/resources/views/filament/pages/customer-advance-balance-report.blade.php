@@ -491,7 +491,7 @@
                     <button
                         type="button"
                         class="advance-button advance-button-primary"
-                        onclick="window.print()"
+                        data-kes-final-four-print
                     >
                         Print
                     </button>
@@ -770,4 +770,166 @@
             </div>
         </section>
     </div>
+
+    {{-- PHASE 16F-3D6 V2 CUSTOMER ADVANCE RESPONSIVE SIZE FIX START --}}
+    <style>
+        /*
+         * Keep this wide financial report inside the available Filament
+         * content area. Only the table itself may scroll horizontally.
+         */
+        .advance-report {
+            width: 100% !important;
+            min-width: 0 !important;
+            max-width: 100% !important;
+            overflow-x: clip !important;
+        }
+
+        .advance-report > *,
+        .advance-panel,
+        .advance-filters,
+        .advance-cards,
+        .advance-table-wrap {
+            min-width: 0 !important;
+            max-width: 100% !important;
+        }
+
+        /*
+         * The previous filter grid could become wider than the available
+         * content area after the admin sidebar was deducted.
+         */
+        .advance-filters {
+            display: grid !important;
+            width: 100% !important;
+            grid-template-columns:
+                repeat(3, minmax(0, 1fr)) !important;
+            align-items: end !important;
+            gap: 1rem !important;
+            overflow: visible !important;
+        }
+
+        .advance-field,
+        .advance-field > *,
+        .advance-field input,
+        .advance-field select {
+            width: 100% !important;
+            min-width: 0 !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+        }
+
+        /*
+         * Print/PDF/Excel actions are enhanced beside the existing Print
+         * control. Give the complete action group its own full-width row.
+         */
+        .advance-buttons {
+            grid-column: 1 / -1 !important;
+            display: flex !important;
+            width: 100% !important;
+            min-width: 0 !important;
+            max-width: 100% !important;
+            align-items: center !important;
+            justify-content: flex-end !important;
+            flex-wrap: wrap !important;
+            gap: .65rem !important;
+            overflow: visible !important;
+        }
+
+        .advance-buttons > *,
+        .advance-buttons button,
+        .advance-buttons a,
+        .advance-buttons [data-karwan-export-actions],
+        .advance-buttons .kes-report-export-actions {
+            position: static !important;
+            inset: auto !important;
+            max-width: 100% !important;
+            transform: none !important;
+        }
+
+        .advance-buttons [data-karwan-export-actions],
+        .advance-buttons .kes-report-export-actions {
+            display: inline-flex !important;
+            align-items: center !important;
+            flex-wrap: wrap !important;
+            gap: .65rem !important;
+            margin: 0 !important;
+            overflow: visible !important;
+        }
+
+        /*
+         * Preserve the detailed columns while preventing page-level
+         * horizontal overflow.
+         */
+        .advance-table-wrap {
+            display: block !important;
+            width: 100% !important;
+            overflow-x: auto !important;
+            overflow-y: visible !important;
+            overscroll-behavior-inline: contain;
+        }
+
+        .advance-table {
+            width: 100% !important;
+            min-width: 1180px !important;
+            max-width: none !important;
+        }
+
+        @media (max-width: 1280px) {
+            .advance-filters {
+                grid-template-columns:
+                    repeat(2, minmax(0, 1fr)) !important;
+            }
+
+            .advance-buttons {
+                justify-content: flex-start !important;
+            }
+        }
+
+        @media (max-width: 760px) {
+            .advance-report {
+                overflow-x: hidden !important;
+            }
+
+            .advance-filters {
+                grid-template-columns:
+                    minmax(0, 1fr) !important;
+            }
+
+            .advance-buttons {
+                grid-column: 1 !important;
+                align-items: stretch !important;
+            }
+
+            .advance-buttons > *,
+            .advance-buttons button,
+            .advance-buttons a,
+            .advance-buttons [data-karwan-export-actions],
+            .advance-buttons .kes-report-export-actions {
+                width: 100% !important;
+            }
+
+            .advance-buttons [data-karwan-export-actions],
+            .advance-buttons .kes-report-export-actions {
+                display: flex !important;
+            }
+        }
+
+        @media print {
+            .advance-report {
+                width: 100% !important;
+                max-width: none !important;
+                overflow: visible !important;
+            }
+
+            .advance-table-wrap {
+                overflow: visible !important;
+            }
+
+            .advance-table {
+                width: 100% !important;
+                min-width: 0 !important;
+                max-width: 100% !important;
+            }
+        }
+    </style>
+    {{-- PHASE 16F-3D6 V2 CUSTOMER ADVANCE RESPONSIVE SIZE FIX END --}}
 </x-filament-panels::page>

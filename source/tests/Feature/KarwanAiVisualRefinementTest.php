@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Models\AiKnowledgeBase;
+use App\Services\KarwanAiKnowledgeService;
+use App\Services\KarwanAiService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 class KarwanAiVisualRefinementTest extends TestCase
@@ -36,7 +40,7 @@ class KarwanAiVisualRefinementTest extends TestCase
             );
 
         $document =
-            new \DOMDocument();
+            new \DOMDocument;
 
         $loaded =
             $document->loadHTML(
@@ -92,8 +96,8 @@ class KarwanAiVisualRefinementTest extends TestCase
             $html,
         );
 
-        $this->assertGreaterThanOrEqual(
-            3,
+        $this->assertSame(
+            2,
             substr_count(
                 $html,
                 'https://wa.me/',
@@ -110,7 +114,7 @@ class KarwanAiVisualRefinementTest extends TestCase
                 ),
             );
 
-        $this->assertStringNotContainsString(
+        $this->assertStringContainsString(
             'href="tel:',
             $source,
         );
@@ -159,8 +163,7 @@ class KarwanAiVisualRefinementTest extends TestCase
                 'class="karwan-ai-button-icon"',
                 'class="karwan-ai-whatsapp-icon"',
                 'viewBox="0 0 24 24"',
-            ]
-            as $marker
+            ] as $marker
         ) {
             $this->assertStringContainsString(
                 $marker,
@@ -196,8 +199,7 @@ class KarwanAiVisualRefinementTest extends TestCase
                 '@media (max-width: 640px)',
                 'bottom: calc(10px + env(safe-area-inset-bottom, 0px));',
                 '/* COMPACT AI VISUAL REFINEMENT END */',
-            ]
-            as $marker
+            ] as $marker
         ) {
             $this->assertStringContainsString(
                 $marker,
@@ -208,36 +210,28 @@ class KarwanAiVisualRefinementTest extends TestCase
 
     public function test_knowledge_priority_does_not_match_without_semantic_terms(): void
     {
-        \App\Models\AiKnowledgeBase::query()
+        AiKnowledgeBase::query()
             ->create([
-                'title' =>
-                    'Agent Portal Balance',
+                'title' => 'Agent Portal Balance',
 
-                'category' =>
-                    'Agent Ledger',
+                'category' => 'Agent Ledger',
 
-                'keywords' =>
-                    'balance, ledger, account statement, mera balance, agent balance',
+                'keywords' => 'balance, ledger, account statement, mera balance, agent balance',
 
-                'answer_english' =>
-                    'Registered agents can view their own balance and ledger.',
+                'answer_english' => 'Registered agents can view their own balance and ledger.',
 
-                'answer_urdu' =>
-                    'رجسٹرڈ ایجنٹ اپنا بیلنس اور لیجر دیکھ سکتے ہیں۔',
+                'answer_urdu' => 'رجسٹرڈ ایجنٹ اپنا بیلنس اور لیجر دیکھ سکتے ہیں۔',
 
-                'answer_roman_urdu' =>
-                    'Registered agent apna balance aur ledger check kar sakta hai.',
+                'answer_roman_urdu' => 'Registered agent apna balance aur ledger check kar sakta hai.',
 
-                'priority' =>
-                    10,
+                'priority' => 10,
 
-                'status' =>
-                    'Active',
+                'status' => 'Active',
             ]);
 
         $answer =
             app(
-                \App\Services\KarwanAiKnowledgeService::class,
+                KarwanAiKnowledgeService::class,
             )->answer(
                 'kai kia services hn',
             );
@@ -251,43 +245,33 @@ class KarwanAiVisualRefinementTest extends TestCase
     {
         $service =
             app(
-                \App\Services\KarwanAiService::class,
+                KarwanAiService::class,
             );
 
         foreach (
             [
                 [
-                    'question' =>
-                        'kai kia services hn',
+                    'question' => 'kai kia services hn',
 
-                    'umrah_term' =>
-                        'Umrah',
+                    'umrah_term' => 'Umrah',
 
-                    'visa_term' =>
-                        'visa',
+                    'visa_term' => 'visa',
                 ],
                 [
-                    'question' =>
-                        'what services do you offer',
+                    'question' => 'what services do you offer',
 
-                    'umrah_term' =>
-                        'Umrah',
+                    'umrah_term' => 'Umrah',
 
-                    'visa_term' =>
-                        'visa',
+                    'visa_term' => 'visa',
                 ],
                 [
-                    'question' =>
-                        'آپ کون سی سروسز دیتے ہیں',
+                    'question' => 'آپ کون سی سروسز دیتے ہیں',
 
-                    'umrah_term' =>
-                        'عمرہ',
+                    'umrah_term' => 'عمرہ',
 
-                    'visa_term' =>
-                        'ویزا',
+                    'visa_term' => 'ویزا',
                 ],
-            ]
-            as $case
+            ] as $case
         ) {
             $answer =
                 $service->answer(
@@ -316,7 +300,7 @@ class KarwanAiVisualRefinementTest extends TestCase
                 $case[
                     'visa_term'
                 ],
-                \Illuminate\Support\Str::lower(
+                Str::lower(
                     $answer[
                         'reply'
                     ],
@@ -327,31 +311,23 @@ class KarwanAiVisualRefinementTest extends TestCase
 
     public function test_public_chat_services_question_never_returns_agent_ledger(): void
     {
-        \App\Models\AiKnowledgeBase::query()
+        AiKnowledgeBase::query()
             ->create([
-                'title' =>
-                    'Agent Portal Balance',
+                'title' => 'Agent Portal Balance',
 
-                'category' =>
-                    'Agent Ledger',
+                'category' => 'Agent Ledger',
 
-                'keywords' =>
-                    'balance, ledger, account statement, mera balance, agent balance',
+                'keywords' => 'balance, ledger, account statement, mera balance, agent balance',
 
-                'answer_english' =>
-                    'Registered agents can view their own balance and ledger.',
+                'answer_english' => 'Registered agents can view their own balance and ledger.',
 
-                'answer_urdu' =>
-                    'رجسٹرڈ ایجنٹ اپنا بیلنس اور لیجر دیکھ سکتے ہیں۔',
+                'answer_urdu' => 'رجسٹرڈ ایجنٹ اپنا بیلنس اور لیجر دیکھ سکتے ہیں۔',
 
-                'answer_roman_urdu' =>
-                    'Registered agent apna balance aur ledger Agent Portal se check kar sakta hai.',
+                'answer_roman_urdu' => 'Registered agent apna balance aur ledger Agent Portal se check kar sakta hai.',
 
-                'priority' =>
-                    10,
+                'priority' => 10,
 
-                'status' =>
-                    'Active',
+                'status' => 'Active',
             ]);
 
         $response =
@@ -360,8 +336,7 @@ class KarwanAiVisualRefinementTest extends TestCase
                     'karwan-ai.chat',
                 ),
                 [
-                    'message' =>
-                        'kai kia services hn',
+                    'message' => 'kai kia services hn',
                 ],
             );
 
@@ -392,11 +367,12 @@ class KarwanAiVisualRefinementTest extends TestCase
 
         $this->assertStringNotContainsString(
             'ledger',
-            \Illuminate\Support\Str::lower(
+            Str::lower(
                 $reply,
             ),
         );
     }
+
     public function test_widget_renders_without_company_context(): void
     {
         config()->set(

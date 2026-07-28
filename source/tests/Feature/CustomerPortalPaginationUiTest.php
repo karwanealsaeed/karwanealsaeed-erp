@@ -80,7 +80,8 @@ class CustomerPortalPaginationUiTest extends TestCase
                         && $visaApplications->getPageName()
                             === 'visa_page';
                 },
-            );    }
+            );
+    }
 
     public function test_booking_tracking_uses_unique_paginator_names(): void
     {
@@ -105,8 +106,7 @@ class CustomerPortalPaginationUiTest extends TestCase
                 'visaApplications',
                 fn (
                     mixed $records,
-                ): bool =>
-                    $records
+                ): bool => $records
                     instanceof LengthAwarePaginator
                     && $records->getPageName()
                     === 'visa_page',
@@ -115,8 +115,7 @@ class CustomerPortalPaginationUiTest extends TestCase
                 'flightBookings',
                 fn (
                     mixed $records,
-                ): bool =>
-                    $records
+                ): bool => $records
                     instanceof LengthAwarePaginator
                     && $records->getPageName()
                     === 'flight_page',
@@ -125,8 +124,7 @@ class CustomerPortalPaginationUiTest extends TestCase
                 'umrahBookings',
                 fn (
                     mixed $records,
-                ): bool =>
-                    $records
+                ): bool => $records
                     instanceof LengthAwarePaginator
                     && $records->getPageName()
                     === 'umrah_page',
@@ -135,8 +133,7 @@ class CustomerPortalPaginationUiTest extends TestCase
                 'hotelBookings',
                 fn (
                     mixed $records,
-                ): bool =>
-                    $records
+                ): bool => $records
                     instanceof LengthAwarePaginator
                     && $records->getPageName()
                     === 'hotel_page',
@@ -150,58 +147,43 @@ class CustomerPortalPaginationUiTest extends TestCase
 
         $cases = [
             [
-                'route' =>
-                    'customer.portal.documents',
+                'route' => 'customer.portal.documents',
 
-                'variable' =>
-                    'documents',
+                'variable' => 'documents',
 
-                'per_page' =>
-                    15,
+                'per_page' => 15,
             ],
 
             [
-                'route' =>
-                    'customer.portal.payment_uploads',
+                'route' => 'customer.portal.payment_uploads',
 
-                'variable' =>
-                    'uploads',
+                'variable' => 'uploads',
 
-                'per_page' =>
-                    15,
+                'per_page' => 15,
             ],
 
             [
-                'route' =>
-                    'customer.portal.family',
+                'route' => 'customer.portal.family',
 
-                'variable' =>
-                    'members',
+                'variable' => 'members',
 
-                'per_page' =>
-                    15,
+                'per_page' => 15,
             ],
 
             [
-                'route' =>
-                    'customer.portal.notifications',
+                'route' => 'customer.portal.notifications',
 
-                'variable' =>
-                    'notifications',
+                'variable' => 'notifications',
 
-                'per_page' =>
-                    12,
+                'per_page' => 12,
             ],
 
             [
-                'route' =>
-                    'customer.portal.support',
+                'route' => 'customer.portal.support',
 
-                'variable' =>
-                    'tickets',
+                'variable' => 'tickets',
 
-                'per_page' =>
-                    15,
+                'per_page' => 15,
             ],
         ];
 
@@ -221,8 +203,7 @@ class CustomerPortalPaginationUiTest extends TestCase
                     $case['variable'],
                     fn (
                         mixed $records,
-                    ): bool =>
-                        $records
+                    ): bool => $records
                         instanceof LengthAwarePaginator
                         && $records->perPage()
                         === $case['per_page'],
@@ -240,40 +221,31 @@ class CustomerPortalPaginationUiTest extends TestCase
 
         CustomerFamilyMember::query()
             ->create([
-                'customer_id' =>
-                    $otherCustomer->id,
+                'customer_id' => $otherCustomer->id,
 
-                'name' =>
-                    'Other Customer Secret Member',
+                'name' => 'Other Customer Secret Member',
 
-                'relationship' =>
-                    'Sibling',
+                'relationship' => 'Sibling',
 
-                'status' =>
-                    'Active',
+                'status' => 'Active',
             ]);
 
         foreach (
             range(
                 1,
                 18,
-            )
-            as $index
+            ) as $index
         ) {
             CustomerFamilyMember::query()
                 ->create([
-                    'customer_id' =>
-                        $customer->id,
+                    'customer_id' => $customer->id,
 
-                    'name' =>
-                        'Portal Family Member '
+                    'name' => 'Portal Family Member '
                         .$index,
 
-                    'relationship' =>
-                        'Relative',
+                    'relationship' => 'Relative',
 
-                    'status' =>
-                        'Active',
+                    'status' => 'Active',
                 ]);
         }
 
@@ -286,8 +258,7 @@ class CustomerPortalPaginationUiTest extends TestCase
                 route(
                     'customer.portal.family',
                     [
-                        'page' =>
-                            2,
+                        'page' => 2,
                     ],
                 ),
             )
@@ -299,8 +270,7 @@ class CustomerPortalPaginationUiTest extends TestCase
                 'members',
                 fn (
                     mixed $members,
-                ): bool =>
-                    $members
+                ): bool => $members
                     instanceof LengthAwarePaginator
                     && $members->total()
                     === 18
@@ -319,35 +289,25 @@ class CustomerPortalPaginationUiTest extends TestCase
         DB::table(
             'customer_notifications',
         )->insert([
-            'customer_id' =>
-                $customer->id,
+            'customer_id' => $customer->id,
 
-            'title' =>
-                'Unsafe Action Test',
+            'title' => 'Unsafe Action Test',
 
-            'type' =>
-                'Alert',
+            'type' => 'Alert',
 
-            'message' =>
-                'Unsafe URL must never become a link.',
+            'message' => 'Unsafe URL must never become a link.',
 
-            'action_label' =>
-                'Unsafe Link',
+            'action_label' => 'Unsafe Link',
 
-            'action_url' =>
-                'javascript:alert(1)',
+            'action_url' => 'javascript:alert(1)',
 
-            'is_read' =>
-                false,
+            'is_read' => false,
 
-            'status' =>
-                'Active',
+            'status' => 'Active',
 
-            'created_at' =>
-                now(),
+            'created_at' => now(),
 
-            'updated_at' =>
-                now(),
+            'updated_at' => now(),
         ]);
 
         $this->withSession(
@@ -434,7 +394,7 @@ class CustomerPortalPaginationUiTest extends TestCase
         );
 
         $this->assertStringContainsString(
-            'aria-label="Customer portal navigation"',
+            'aria-label="Agent portal navigation"',
             $layout,
         );
 
@@ -521,32 +481,25 @@ class CustomerPortalPaginationUiTest extends TestCase
 
         return Customer::query()
             ->create([
-                'name' =>
-                    'Pagination Agent '
+                'name' => 'Pagination Agent '
                     .$sequence,
 
-                'mobile' =>
-                    '0350000'
+                'mobile' => '0350000'
                     .$sequence,
 
-                'email' =>
-                    'pagination-agent-'
+                'email' => 'pagination-agent-'
                     .$sequence
                     .'@example.test',
 
-                'customer_type' =>
-                    'Agent',
+                'customer_type' => 'Agent',
 
-                'status' =>
-                    'Active',
+                'status' => 'Active',
 
-                'portal_password' =>
-                    Hash::make(
-                        'PortalPassword123!',
-                    ),
+                'portal_password' => Hash::make(
+                    'PortalPassword123!',
+                ),
 
-                'portal_registered_at' =>
-                    now(),
+                'portal_registered_at' => now(),
             ]);
     }
 
@@ -554,21 +507,17 @@ class CustomerPortalPaginationUiTest extends TestCase
         Customer $customer,
     ): array {
         return [
-            'customer_portal_id' =>
-                $customer->id,
+            'customer_portal_id' => $customer->id,
 
-            'customer_portal_name' =>
-                $customer->name,
+            'customer_portal_name' => $customer->name,
 
-            'customer_portal_last_activity' =>
-                time(),
+            'customer_portal_last_activity' => time(),
 
-            'customer_portal_password_fingerprint' =>
-                hash(
-                    'sha256',
-                    (string) $customer
-                        ->portal_password,
-                ),
+            'customer_portal_password_fingerprint' => hash(
+                'sha256',
+                (string) $customer
+                    ->portal_password,
+            ),
         ];
     }
 }

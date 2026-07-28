@@ -1,23 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ app()->isLocale('ur') ? 'rtl' : 'ltr' }}">
 <head>
     <meta charset="UTF-8">
-    <title>Customer Portal | Karwan E Al Saeed</title>
+    <title>Agent Portal | Karwan E Al Saeed</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link rel="stylesheet" href="{{ asset('css/customer-portal.css') }}?v={{ file_exists(public_path('css/customer-portal.css')) ? filemtime(public_path('css/customer-portal.css')) : time() }}">
 <link rel="stylesheet" href="{{ asset('css/karwan-ai.css') }}?v={{ file_exists(public_path('css/karwan-ai.css')) ? filemtime(public_path('css/karwan-ai.css')) : time() }}">
+    {{-- KES PREMIUM UI FOUNDATION START --}}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700&family=Noto+Naskh+Arabic:wght@400;600;700&display=swap"
+        rel="stylesheet"
+    >
+    <link rel="stylesheet" href="{{ asset('css/karwan-premium-ui.css') }}">
+    {{-- KES PREMIUM UI FOUNDATION END --}}
+    {{-- PHASE 16E-2A AGENT PORTAL SHARED SHELL START --}}
+    <link rel="stylesheet" href="{{ asset('css/agent-portal-v3.css') }}">
+{{-- PHASE 16E-3F4 SHARED PUBLIC V3 PORTAL FOUNDATION START --}}
+<link
+    rel="stylesheet"
+    href="{{ asset('css/karwan-portal-premium-studio-v3.css') }}?v={{ filemtime(public_path('css/karwan-portal-premium-studio-v3.css')) }}"
+>
+{{-- PHASE 16E-3F4 SHARED PUBLIC V3 PORTAL FOUNDATION END --}}
+    {{-- PHASE 16E-2A AGENT PORTAL SHARED SHELL END --}}
 </head>
-<body class="cp-body">
+<body class="cp-body kes-agent-portal" data-kes-agent-portal="v3">
+    <a class="kes-agent-skip-link" href="#agent-portal-main">{{ app()->isLocale('ur') ? 'مرکزی مواد پر جائیں' : 'Skip to main content' }}</a>
     <div class="cp-mobile-top">
         <button
             id="customerPortalMenuButton"
             type="button"
-            aria-label="Open customer portal navigation"
-            aria-controls="customerPortalSidebar"
-            aria-expanded="false"
-            onclick="document.body.classList.toggle('cp-menu-open'); this.setAttribute('aria-expanded', document.body.classList.contains('cp-menu-open') ? 'true' : 'false');"
-        >☰</button>
+            aria-label="Open agent portal navigation"
+         data-agent-nav-toggle aria-controls="customerPortalSidebar" aria-expanded="false">☰</button>
         <strong>Agent Portal</strong>
         <a href="{{ route('website.home') }}">Website</a>
     </div>
@@ -37,7 +53,7 @@
                 <strong>{{ session('customer_portal_name', 'Customer') }}</strong>
             </div>
 
-            <nav class="cp-nav" aria-label="Customer portal navigation">
+            <nav id="agent-portal-navigation" class="cp-nav" aria-label="Agent portal navigation" data-agent-nav>
                 <a href="{{ route('customer.portal.dashboard') }}" class="{{ request()->routeIs('customer.portal.dashboard') ? 'active' : '' }}">
                     <span>🏠</span> Dashboard
                 </a>
@@ -110,7 +126,7 @@
             </form>
         </aside>
 
-        <main class="cp-main">
+        <main class="cp-main" id="agent-portal-main" tabindex="-1">
             <div class="cp-topbar">
                 <div>
                     <span>Karwan E Al Saeed Travel & Tours</span>
@@ -129,7 +145,7 @@
         </main>
     </div>
 
-    <div class="cp-backdrop" onclick="document.body.classList.remove('cp-menu-open'); document.getElementById('customerPortalMenuButton')?.setAttribute('aria-expanded', 'false')"></div>
+    <button class="cp-backdrop kes-agent-nav-backdrop" type="button" data-agent-nav-close aria-label="Close agent portal navigation" tabindex="-1"></button>
 
     <script>
         let customerPortalTimer;
@@ -152,5 +168,10 @@
         resetCustomerPortalTimer();
     </script>
 @include('components.karwan-ai-widget')
+    {{-- KES PREMIUM UI SCRIPT START --}}
+    <script src="{{ asset('js/karwan-premium-ui.js') }}" defer></script>
+    {{-- KES PREMIUM UI SCRIPT END --}}
+
+    <script defer src="{{ asset('js/agent-portal-v3.js') }}"></script>
 </body>
 </html>

@@ -1,35 +1,39 @@
 <?php
+
+use App\Http\Controllers\CustomerDocumentDownloadController;
+use App\Http\Controllers\CustomerPaymentReceiptDownloadController;
+use App\Http\Controllers\CustomerPortalController;
+use App\Http\Controllers\CustomerPortalTravelInsuranceController;
+use App\Http\Controllers\CustomerPortalTravelInsuranceDownloadController;
+use App\Http\Controllers\CustomerPromotionController;
+use App\Http\Controllers\CustomerStatementPdfController;
+use App\Http\Controllers\DatabaseBackupDownloadController;
+use App\Http\Controllers\GoogleDriveOAuthController;
+use App\Http\Controllers\InvoicePrintController;
+use App\Http\Controllers\KarwanAiController;
+use App\Http\Controllers\LegalPageController;
+use App\Http\Controllers\PaymentReceiptController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PublicBlogPostController;
 use App\Http\Controllers\PublicFaqController;
 use App\Http\Controllers\PublicGalleryController;
 use App\Http\Controllers\PublicPakistanTourController;
 use App\Http\Controllers\PublicPromotionController;
 use App\Http\Controllers\PublicTestimonialController;
-use App\Http\Controllers\SupplierStatementPdfController;
-use App\Http\Controllers\CustomerStatementPdfController;
-use App\Http\Controllers\KarwanAiController;
-use App\Http\Controllers\LegalPageController;
-use App\Http\Controllers\CustomerDocumentDownloadController;
-use App\Http\Controllers\CustomerPortalController;
-use App\Http\Controllers\CustomerPortalTravelInsuranceController;
-use App\Http\Controllers\CustomerPortalTravelInsuranceDownloadController;
-use App\Http\Controllers\CustomerPaymentReceiptDownloadController;
-use App\Http\Controllers\CustomerPromotionController;
-use App\Http\Controllers\DatabaseBackupDownloadController;
-use App\Http\Controllers\GoogleDriveOAuthController;
-use App\Http\Controllers\InvoicePrintController;
-use App\Http\Controllers\PaymentReceiptController;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PublicUmrahPackageController;
-use App\Http\Controllers\SeoController;
 use App\Http\Controllers\RefundPrintController;
 use App\Http\Controllers\ReportExportController;
-use App\Http\Controllers\TravelInsuranceReportExportController;
+use App\Http\Controllers\SeoController;
 use App\Http\Controllers\StaffPayrollPrintController;
+use App\Http\Controllers\SupplierStatementPdfController;
 use App\Http\Controllers\SupportInquiryController;
+use App\Http\Controllers\TravelInsurancePaymentReceiptDownloadController;
+use App\Http\Controllers\TravelInsurancePolicyDocumentDownloadController;
+use App\Http\Controllers\TravelInsuranceReportExportController;
 use App\Http\Controllers\UmrahPackagePosterPrintController;
 use App\Http\Controllers\UmrahVoucherPrintController;
 use App\Http\Controllers\WebsiteController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -40,7 +44,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [WebsiteController::class, 'home'])->name('website.home');
 Route::get('/sitemap.xml', [SeoController::class, 'sitemap'])->name('website.sitemap');
-Route::get('/language/{locale}', function (\Illuminate\Http\Request $request, string $locale) {
+Route::get('/language/{locale}', function (Request $request, string $locale) {
     abort_unless(in_array($locale, ['en', 'ur'], true), 404);
 
     session(['locale' => $locale]);
@@ -54,7 +58,6 @@ Route::get('/language/{locale}', function (\Illuminate\Http\Request $request, st
 
     return redirect()->to($previousUrl);
 })->name('website.language');
-
 
 Route::get('/about-us', [WebsiteController::class, 'page'])->defaults('slug', 'about-us')->name('website.about');
 Route::get('/our-services', [WebsiteController::class, 'page'])->defaults('slug', 'our-services')->name('website.services');
@@ -110,7 +113,6 @@ Route::get(
     '/promotions/{promotion}',
     [PublicPromotionController::class, 'show'],
 )->name('website.promotions.show');
-
 
 Route::get('/privacy-policy', [LegalPageController::class, 'show'])
     ->defaults('slug', 'privacy-policy')
@@ -295,11 +297,11 @@ Route::middleware([
 
     Route::get('/customer/notifications', [CustomerPortalController::class, 'notifications'])
         ->name('customer.portal.notifications');
-Route::post('/customer/notifications/{customerNotification}/read', [CustomerPortalController::class, 'markNotificationRead'])
-    ->name('customer.portal.notifications.read');
+    Route::post('/customer/notifications/{customerNotification}/read', [CustomerPortalController::class, 'markNotificationRead'])
+        ->name('customer.portal.notifications.read');
 
-Route::post('/customer/notifications/mark-all-read', [CustomerPortalController::class, 'markAllNotificationsRead'])
-    ->name('customer.portal.notifications.mark_all_read');
+    Route::post('/customer/notifications/mark-all-read', [CustomerPortalController::class, 'markAllNotificationsRead'])
+        ->name('customer.portal.notifications.mark_all_read');
 
     Route::get('/customer/support-tickets', [CustomerPortalController::class, 'supportTickets'])
         ->name('customer.portal.support');
@@ -352,7 +354,7 @@ Route::get('/refunds/{refund}/print', RefundPrintController::class)
     ->name('refunds.print')
     ->middleware('auth');
 
-Route::get('/reports/{report}/{format}', ReportExportController::class)
+Route::match(['GET', 'POST'], '/reports/{report}/{format}', ReportExportController::class)
     ->where('format', 'print|pdf|excel')
     ->name('reports.export')
     ->middleware('auth');
@@ -392,7 +394,7 @@ Route::middleware('auth')->group(function (): void {
         ->name('profile.destroy');
 });
 
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';
 Route::get(
     '/shared/customer-statement/pdf',
     CustomerStatementPdfController::class
@@ -419,14 +421,14 @@ Route::middleware(
     function (): void {
         Route::get(
             '/travel-insurance-policies/{travelInsurancePolicy}/document',
-            \App\Http\Controllers\TravelInsurancePolicyDocumentDownloadController::class,
+            TravelInsurancePolicyDocumentDownloadController::class,
         )->name(
             'travel-insurance-policies.document.download',
         );
 
         Route::get(
             '/travel-insurance-payments/{travelInsurancePayment}/receipt',
-            \App\Http\Controllers\TravelInsurancePaymentReceiptDownloadController::class,
+            TravelInsurancePaymentReceiptDownloadController::class,
         )->name(
             'travel-insurance-payments.receipt.download',
         );

@@ -1,9 +1,11 @@
 <x-filament-panels::page>
-    <div class="kes-admin-dashboard">
-        <x-admin-scheduler-health />
-        <x-admin-error-health />
+    {{-- PHASE 16F-2A3 ADMIN CUSTOM DASHBOARD PUBLIC V3 CORRECTION START --}}
+    <div class="kes-admin-dashboard kes-admin-dashboard-v3" data-kes-admin-dashboard="premium-studio-v3">
         <div class="kes-dashboard-title-row">
             <div>
+                <span class="kes-admin-dashboard-eyebrow">
+                    Premium Studio V3 · Admin Control Centre
+                </span>
                 <h1>Dashboard</h1>
                 <p>Welcome to Karwan E Al Saeed Travel & Tours</p>
             </div>
@@ -82,7 +84,7 @@
 
         <div class="kes-dashboard-panels">
             @if ($showExecutiveFinance)
-                <div class="kes-panel kes-chart-panel">
+                <div class="kes-panel kes-chart-panel kes-insight-panel kes-insight-panel--revenue">
                     <div class="kes-panel-header">
                         <div>
                             <h3>Revenue Overview</h3>
@@ -181,7 +183,7 @@
             @endif
 
             @if ($showRecentBookings)
-                <div class="kes-panel">
+                <div class="kes-panel kes-insight-panel kes-insight-panel--bookings">
                     <div class="kes-panel-header">
                         <div>
                             <h3>Recent Bookings</h3>
@@ -250,7 +252,7 @@
             @endif
 
             @if ($showRecentPayments)
-                <div class="kes-panel">
+                <div class="kes-panel kes-insight-panel kes-insight-panel--payments">
                     <div class="kes-panel-header">
                         <div>
                             <h3>Recent Payments</h3>
@@ -329,6 +331,31 @@
         <x-admin-task-dashboard />
         <x-admin-passport-dashboard />
 
+        <details
+            class="kes-admin-dashboard-health"
+            data-kes-admin-dashboard-health="technical-diagnostics"
+        >
+            <summary>
+                <span class="kes-admin-dashboard-health__summary-copy">
+                    <strong>System Health & Unresolved Incidents</strong>
+                    <small>
+                        Technical details collapsed by default so daily work
+                        remains clear. Open only when diagnostics are required.
+                    </small>
+                </span>
+
+                <span class="kes-admin-dashboard-health__status">
+                    Diagnostics
+                </span>
+            </summary>
+
+            <div class="kes-admin-dashboard-health__content">
+                <x-admin-scheduler-health />
+                <x-admin-error-health />
+            </div>
+        </details>
+
+        {{-- PHASE 16F-2A3 ADMIN CUSTOM DASHBOARD PUBLIC V3 CORRECTION END --}}
         <div class="kes-dashboard-footer">
             <span>
                 © {{ date('Y') }}

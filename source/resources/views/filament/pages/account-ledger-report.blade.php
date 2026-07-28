@@ -12,7 +12,7 @@
                 <p>Select account and date range to view ledger.</p>
             </div>
 
-            <button onclick="window.print()">Print</button>
+            <x-report-actions />
         </div>
 
         <form method="GET" class="kes-report-filters">

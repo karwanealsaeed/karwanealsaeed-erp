@@ -24,7 +24,7 @@ return [
     'blog_news' => 'بلاگ اور خبریں',
     'contact' => 'رابطہ کریں',
 
-    'customer_login' => 'کسٹمر لاگ اِن',
+    'customer_login' => 'ایجنٹ لاگ اِن',
     'admin_login' => 'ایڈمن لاگ اِن',
     'login' => 'لاگ اِن',
     'menu' => 'مینو',
@@ -55,7 +55,7 @@ return [
     'hotels' => 'ہوٹلز',
     'tours' => 'ٹورز',
     'contact_us' => 'رابطہ کریں',
-    'customer_portal' => 'کسٹمر پورٹل',
+    'customer_portal' => 'ایجنٹ پورٹل',
     'brand_services' => 'عمرہ • ویزے • ٹکٹس • ٹورز',
     'trusted_partner' => 'آپ کا قابلِ اعتماد سفری ساتھی',
     'chat_whatsapp' => 'واٹس ایپ پر رابطہ کریں',

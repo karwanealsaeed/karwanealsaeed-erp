@@ -1,4 +1,4 @@
-@extends('website.layout')
+@extends('website.inner-v3-layout')
 
 @section('content')
     <main class="kes-umrah-list-v2">

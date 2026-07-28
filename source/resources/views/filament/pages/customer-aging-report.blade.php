@@ -399,7 +399,7 @@
                     <button
                         type="button"
                         class="aging-button aging-button-primary"
-                        onclick="window.print()"
+                        data-kes-final-four-print
                     >
                         Print Report
                     </button>
@@ -774,4 +774,223 @@
             </div>
         </section>
     </div>
+
+    {{-- PHASE 16F-3D7 CUSTOMER AGING LANDSCAPE PRINT FIX START --}}
+    <style>
+        /*
+         * Screen containment: only report tables may scroll horizontally.
+         */
+        .aging-page {
+            width: 100% !important;
+            min-width: 0 !important;
+            max-width: 100% !important;
+            overflow-x: clip !important;
+        }
+
+        .aging-page > *,
+        .aging-panel,
+        .aging-filters,
+        .aging-stats,
+        .aging-table-wrap {
+            min-width: 0 !important;
+            max-width: 100% !important;
+        }
+
+        .aging-table-wrap {
+            display: block !important;
+            width: 100% !important;
+            overflow-x: auto !important;
+            overflow-y: visible !important;
+            overscroll-behavior-inline: contain;
+        }
+
+        .aging-table {
+            width: 100% !important;
+            max-width: none !important;
+        }
+
+        /*
+         * This report contains wide aging columns and two detail tables.
+         * Force a compact A4 landscape print contract after its older local
+         * print styles, so the browser preview no longer defaults to Portrait.
+         */
+        @page {
+            size: A4 landscape;
+            margin: 7mm;
+        }
+
+        @media print {
+            @page {
+                size: A4 landscape;
+                margin: 7mm;
+            }
+
+            html,
+            body,
+            body.fi-body,
+            .fi-body {
+                width: 100% !important;
+                min-width: 0 !important;
+                max-width: none !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                overflow: visible !important;
+                background: #fff !important;
+            }
+
+            .aging-page {
+                width: 100% !important;
+                min-width: 0 !important;
+                max-width: none !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                overflow: visible !important;
+                color: #111 !important;
+                background: #fff !important;
+            }
+
+            .aging-page :where(
+                .aging-no-print,
+                .aging-filters,
+                .aging-buttons,
+                [data-karwan-report-primary-actions],
+                [data-karwan-export-actions],
+                .kes-report-export-actions,
+                .kes-print-action,
+                button
+            ) {
+                display: none !important;
+            }
+
+            .aging-panel {
+                width: 100% !important;
+                min-width: 0 !important;
+                max-width: none !important;
+                margin: 0 0 3mm !important;
+                padding: 3mm !important;
+                overflow: visible !important;
+                border: 1px solid #d7ddd9 !important;
+                border-radius: 3mm !important;
+                box-shadow: none !important;
+                background: #fff !important;
+            }
+
+            .aging-title {
+                margin: 0 0 1.5mm !important;
+                font-size: 14pt !important;
+                line-height: 1.15 !important;
+            }
+
+            .aging-description {
+                margin: 0 !important;
+                font-size: 8pt !important;
+                line-height: 1.25 !important;
+            }
+
+            /*
+             * Six summary cards use four compact columns in landscape.
+             * This prevents the cards from consuming a full portrait page.
+             */
+            .aging-stats {
+                display: grid !important;
+                width: 100% !important;
+                grid-template-columns:
+                    repeat(4, minmax(0, 1fr)) !important;
+                gap: 2.5mm !important;
+                margin: 0 0 3mm !important;
+                break-inside: avoid !important;
+                page-break-inside: avoid !important;
+            }
+
+            .aging-card {
+                min-width: 0 !important;
+                min-height: 0 !important;
+                margin: 0 !important;
+                padding: 2.5mm 3mm !important;
+                border-radius: 2.5mm !important;
+                box-shadow: none !important;
+                break-inside: avoid !important;
+                page-break-inside: avoid !important;
+            }
+
+            .aging-stat-label {
+                margin: 0 0 1mm !important;
+                font-size: 6.8pt !important;
+                line-height: 1.15 !important;
+            }
+
+            .aging-stat-value {
+                margin: 0 !important;
+                font-size: 11pt !important;
+                line-height: 1.1 !important;
+            }
+
+            .aging-table-wrap {
+                display: block !important;
+                width: 100% !important;
+                min-width: 0 !important;
+                max-width: none !important;
+                height: auto !important;
+                max-height: none !important;
+                margin: 0 !important;
+                overflow: visible !important;
+                border-radius: 0 !important;
+                box-shadow: none !important;
+            }
+
+            .aging-table {
+                display: table !important;
+                width: 100% !important;
+                min-width: 0 !important;
+                max-width: 100% !important;
+                table-layout: auto !important;
+                border-collapse: collapse !important;
+                font-size: 7pt !important;
+            }
+
+            .aging-table thead {
+                display: table-header-group !important;
+            }
+
+            .aging-table tfoot {
+                display: table-footer-group !important;
+            }
+
+            .aging-table tr {
+                break-inside: avoid !important;
+                page-break-inside: avoid !important;
+            }
+
+            .aging-table th,
+            .aging-table td {
+                min-width: 0 !important;
+                max-width: none !important;
+                padding: 1.5mm 1.7mm !important;
+                white-space: normal !important;
+                overflow: visible !important;
+                overflow-wrap: anywhere !important;
+                word-break: normal !important;
+                text-overflow: clip !important;
+                vertical-align: top !important;
+            }
+
+            .aging-badge {
+                display: inline-block !important;
+                max-width: 100% !important;
+                padding: .6mm 1.2mm !important;
+                font-size: 6.5pt !important;
+                white-space: normal !important;
+            }
+
+            .aging-money {
+                white-space: nowrap !important;
+            }
+
+            .aging-empty {
+                padding: 3mm !important;
+                font-size: 8pt !important;
+            }
+        }
+    </style>
+    {{-- PHASE 16F-3D7 CUSTOMER AGING LANDSCAPE PRINT FIX END --}}
 </x-filament-panels::page>

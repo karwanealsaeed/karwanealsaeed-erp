@@ -386,9 +386,9 @@
                     <button
                         type="button"
                         class="hr-button hr-button-primary"
-                        onclick="window.print()"
+                        data-kes-hr-print-preview
                     >
-                        Print Report
+                        Print Preview
                     </button>
                 </div>
             </div>
@@ -824,4 +824,277 @@
             </div>
         </section>
     </div>
+
+    {{-- PHASE 16F-3D8 HR LANDSCAPE COMPACT PRINT FIX START --}}
+    <style>
+        /*
+         * Screen containment remains unchanged except that only the report
+         * table wrapper may scroll horizontally.
+         */
+        .hr-report-page {
+            width: 100% !important;
+            min-width: 0 !important;
+            max-width: 100% !important;
+            overflow-x: clip !important;
+        }
+
+        .hr-report-page > *,
+        .hr-report-panel,
+        .hr-report-filters,
+        .hr-table-wrap {
+            min-width: 0 !important;
+            max-width: 100% !important;
+        }
+
+        .hr-table-wrap {
+            display: block !important;
+            width: 100% !important;
+            overflow-x: auto !important;
+            overflow-y: visible !important;
+            overscroll-behavior-inline: contain;
+        }
+
+        /*
+         * HR contains wide staff/department tables, so its final local print
+         * contract must override older Portrait and one-column card rules.
+         */
+        @page {
+            size: A4 landscape;
+            margin: 6mm;
+        }
+
+        @media print {
+            @page {
+                size: A4 landscape;
+                margin: 6mm;
+            }
+
+            html,
+            body,
+            body.fi-body,
+            .fi-body {
+                width: 100% !important;
+                min-width: 0 !important;
+                max-width: none !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                overflow: visible !important;
+                color: #111 !important;
+                background: #fff !important;
+            }
+
+            .hr-report-page {
+                width: 100% !important;
+                min-width: 0 !important;
+                max-width: none !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                overflow: visible !important;
+                color: #111 !important;
+                background: #fff !important;
+            }
+
+            .hr-report-page :where(
+                .hr-report-filters,
+                .hr-no-print,
+                [data-karwan-report-primary-actions],
+                [data-karwan-export-actions],
+                .kes-report-export-actions,
+                .kes-print-action,
+                button
+            ) {
+                display: none !important;
+            }
+
+            /*
+             * Universal CSS previously kept whole HR panels together. That
+             * wastes pages when a panel contains a long table, so panels may
+             * now split while individual KPI cards and table rows stay intact.
+             */
+            .hr-report-panel {
+                width: 100% !important;
+                min-width: 0 !important;
+                max-width: none !important;
+                margin: 0 0 2.5mm !important;
+                padding: 3mm !important;
+                overflow: visible !important;
+                border: 1px solid #d8dfdb !important;
+                border-radius: 2.5mm !important;
+                box-shadow: none !important;
+                break-inside: auto !important;
+                page-break-inside: auto !important;
+                background: #fff !important;
+            }
+
+            .hr-report-panel h2,
+            .hr-report-panel h3 {
+                margin: 0 0 1mm !important;
+                font-size: 11.5pt !important;
+                line-height: 1.15 !important;
+            }
+
+            .hr-report-panel p {
+                margin: 0 0 1.5mm !important;
+                font-size: 7.5pt !important;
+                line-height: 1.25 !important;
+            }
+
+            /*
+             * Support the current HR card classes plus safe generic fallbacks.
+             * :has() targets the direct parent even when the grid class name
+             * changes, while the named selectors support print/PDF engines.
+             */
+            .hr-report-page :where(
+                .hr-stats,
+                .hr-stat-grid,
+                .hr-stats-grid,
+                .hr-summary-grid,
+                .hr-kpi-grid,
+                .hr-metrics-grid,
+                [class*="hr-stats-grid"],
+                [class*="hr-summary-grid"],
+                [class*="hr-kpi-grid"],
+                [class*="hr-metrics-grid"]
+            ),
+            .hr-report-page :has(> .hr-stat-card),
+            .hr-report-page :has(> [class*="hr-stat-card"]),
+            .hr-report-page :has(> [class*="hr-kpi-card"]),
+            .hr-report-page :has(> [class*="hr-summary-card"]) {
+                display: grid !important;
+                width: 100% !important;
+                grid-template-columns:
+                    repeat(3, minmax(0, 1fr)) !important;
+                gap: 2.2mm !important;
+                margin: 0 0 2.5mm !important;
+                align-items: stretch !important;
+            }
+
+            .hr-report-page :where(
+                .hr-stat-card,
+                .hr-kpi-card,
+                .hr-summary-card,
+                .hr-metric-card,
+                [class*="hr-stat-card"],
+                [class*="hr-kpi-card"],
+                [class*="hr-summary-card"],
+                [class*="hr-metric-card"]
+            ) {
+                width: auto !important;
+                min-width: 0 !important;
+                min-height: 0 !important;
+                max-width: 100% !important;
+                margin: 0 !important;
+                padding: 2.3mm 2.7mm !important;
+                border-radius: 2.2mm !important;
+                box-shadow: none !important;
+                break-inside: avoid !important;
+                page-break-inside: avoid !important;
+            }
+
+            .hr-report-page :where(
+                .hr-stat-card,
+                .hr-kpi-card,
+                .hr-summary-card,
+                .hr-metric-card,
+                [class*="hr-stat-card"],
+                [class*="hr-kpi-card"],
+                [class*="hr-summary-card"],
+                [class*="hr-metric-card"]
+            ) :where(
+                span,
+                small,
+                p,
+                .label,
+                [class*="label"]
+            ) {
+                margin: 0 0 .7mm !important;
+                font-size: 6.8pt !important;
+                line-height: 1.12 !important;
+            }
+
+            .hr-report-page :where(
+                .hr-stat-card,
+                .hr-kpi-card,
+                .hr-summary-card,
+                .hr-metric-card,
+                [class*="hr-stat-card"],
+                [class*="hr-kpi-card"],
+                [class*="hr-summary-card"],
+                [class*="hr-metric-card"]
+            ) :where(
+                strong,
+                b,
+                .value,
+                [class*="value"]
+            ) {
+                margin: 0 !important;
+                font-size: 11pt !important;
+                line-height: 1.05 !important;
+            }
+
+            .hr-table-wrap {
+                display: block !important;
+                width: 100% !important;
+                min-width: 0 !important;
+                max-width: none !important;
+                height: auto !important;
+                max-height: none !important;
+                margin: 1.5mm 0 0 !important;
+                overflow: visible !important;
+                border-radius: 0 !important;
+                box-shadow: none !important;
+            }
+
+            .hr-table {
+                display: table !important;
+                width: 100% !important;
+                min-width: 0 !important;
+                max-width: 100% !important;
+                table-layout: auto !important;
+                border-collapse: collapse !important;
+                font-size: 6.8pt !important;
+            }
+
+            .hr-table thead {
+                display: table-header-group !important;
+            }
+
+            .hr-table tfoot {
+                display: table-footer-group !important;
+            }
+
+            .hr-table tr {
+                break-inside: avoid !important;
+                page-break-inside: avoid !important;
+            }
+
+            .hr-table th,
+            .hr-table td {
+                min-width: 0 !important;
+                max-width: none !important;
+                padding: 1.3mm 1.5mm !important;
+                white-space: normal !important;
+                overflow: visible !important;
+                overflow-wrap: anywhere !important;
+                word-break: normal !important;
+                text-overflow: clip !important;
+                vertical-align: top !important;
+            }
+
+            .hr-badge {
+                display: inline-block !important;
+                max-width: 100% !important;
+                padding: .5mm 1mm !important;
+                font-size: 6.2pt !important;
+                line-height: 1.1 !important;
+                white-space: normal !important;
+            }
+
+            .hr-empty {
+                padding: 2.5mm !important;
+                font-size: 7.5pt !important;
+            }
+        }
+    </style>
+    {{-- PHASE 16F-3D8 HR LANDSCAPE COMPACT PRINT FIX END --}}
 </x-filament-panels::page>

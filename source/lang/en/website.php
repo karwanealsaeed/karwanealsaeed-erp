@@ -24,7 +24,7 @@ return [
     'blog_news' => 'Blog & News',
     'contact' => 'Contact',
 
-    'customer_login' => 'Customer Login',
+    'customer_login' => 'Agent Login',
     'admin_login' => 'Admin Login',
     'login' => 'Login',
     'menu' => 'Menu',
@@ -55,7 +55,7 @@ return [
     'hotels' => 'Hotels',
     'tours' => 'Tours',
     'contact_us' => 'Contact Us',
-    'customer_portal' => 'Customer Portal',
+    'customer_portal' => 'Agent Portal',
     'brand_services' => 'Umrah • Visas • Tickets • Tours',
     'trusted_partner' => 'Your Trusted Travel Partner',
     'chat_whatsapp' => 'Chat With Us on WhatsApp',

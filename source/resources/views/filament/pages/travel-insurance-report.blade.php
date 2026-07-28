@@ -158,38 +158,7 @@
             </div>
         </form>
 
-        <div class="flex flex-wrap gap-3">
-            @if (auth()->user()?->canPrintReports())
-                <a
-                    href="{{ $this->exportUrl('print') }}"
-                    target="_blank"
-                    rel="noopener"
-                    class="rounded-lg bg-gray-800 px-4 py-2 text-sm font-semibold text-white"
-                >
-                    Print Report
-                </a>
-            @endif
-
-            @if (auth()->user()?->canDownloadReportPdf())
-                <a
-                    href="{{ $this->exportUrl('pdf') }}"
-                    target="_blank"
-                    rel="noopener"
-                    class="rounded-lg bg-red-700 px-4 py-2 text-sm font-semibold text-white"
-                >
-                    Download PDF
-                </a>
-            @endif
-
-            @if (auth()->user()?->canDownloadReportExcel())
-                <a
-                    href="{{ $this->exportUrl('excel') }}"
-                    class="rounded-lg bg-green-700 px-4 py-2 text-sm font-semibold text-white"
-                >
-                    Download Excel CSV
-                </a>
-            @endif
-        </div>
+        <x-report-actions />
 
         <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
             @foreach ([

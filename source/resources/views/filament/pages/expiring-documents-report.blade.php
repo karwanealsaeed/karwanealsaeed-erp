@@ -1,4 +1,6 @@
 <x-filament-panels::page>
+    <x-report-actions />
+
     @php
         $rows = $this->getRows();
 
@@ -6,7 +8,7 @@
         $activeCount = $rows->count() - $expiredCount;
     @endphp
 
-    <div class="space-y-6">
+    <div class="kes-expiring-documents-report space-y-6">
         <form wire:submit.prevent>
             {{ $this->form }}
         </form>
@@ -103,4 +105,51 @@
             @endif
         </div>
     </div>
+
+    {{-- PHASE 16F-3D13 EXPIRING DOCUMENTS RESPONSIVE CONTAINMENT START --}}
+    <style>
+        .kes-expiring-documents-report {
+            width: 100% !important;
+            min-width: 0 !important;
+            max-width: 100% !important;
+            overflow-x: clip !important;
+        }
+
+        .kes-expiring-documents-report > *,
+        .kes-expiring-documents-report > * > *,
+        .kes-expiring-documents-report .overflow-x-auto {
+            min-width: 0 !important;
+            max-width: 100% !important;
+        }
+
+        .kes-expiring-documents-report .overflow-x-auto {
+            display: block !important;
+            width: 100% !important;
+            overflow-x: auto !important;
+            overflow-y: visible !important;
+            overscroll-behavior-inline: contain;
+        }
+
+        .kes-expiring-documents-report table {
+            width: 100% !important;
+            min-width: 760px !important;
+        }
+
+        .kes-expiring-documents-report th,
+        .kes-expiring-documents-report td {
+            overflow-wrap: anywhere !important;
+        }
+
+        @media (max-width: 760px) {
+            .kes-expiring-documents-report {
+                gap: .8rem !important;
+            }
+
+            .kes-expiring-documents-report table {
+                min-width: 700px !important;
+                font-size: .72rem !important;
+            }
+        }
+    </style>
+    {{-- PHASE 16F-3D13 EXPIRING DOCUMENTS RESPONSIVE CONTAINMENT END --}}
 </x-filament-panels::page>

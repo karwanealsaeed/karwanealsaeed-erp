@@ -1,0 +1,340 @@
+/*
+ * Premium Studio V3 reusable inner-page shell.
+ *
+ * The approved V3 header, footer, typography, brand tokens, SEO, PWA and AI
+ * integrations are inherited from the primary V3 shell. These rules only
+ * provide a stable content boundary for existing public-page bodies.
+ */
+
+[data-kes-v3-page="inner"] .kes-v3-inner-content {
+    min-height: 58vh;
+    position: relative;
+    isolation: isolate;
+}
+
+[data-kes-v3-page="inner"] .kes-v3-inner-content > :first-child {
+    margin-top: 0;
+}
+
+[data-kes-v3-page="inner"] .kes-v3-inner-content > :last-child {
+    margin-bottom: 0;
+}
+
+[data-kes-v3-page="inner"] .kes-v3-inner-content :where(
+    section,
+    article,
+    [id]
+) {
+    scroll-margin-top: 7rem;
+}
+
+[data-kes-v3-page="inner"] .kes-v3-inner-content :where(
+    img,
+    video,
+    iframe
+) {
+    max-width: 100%;
+}
+
+[data-kes-v3-page="inner"] .kes-v3-inner-content :where(
+    table
+) {
+    width: 100%;
+}
+
+@media (max-width: 767px) {
+    [data-kes-v3-page="inner"] .kes-v3-inner-content :where(
+        section,
+        article,
+        [id]
+    ) {
+        scroll-margin-top: 5.5rem;
+    }
+}
+
+@media print {
+    [data-kes-v3-page="inner"] .kes-v3-inner-content {
+        min-height: 0;
+    }
+}
+/* KES V3 INNER RESPONSIVE RTL FORM FOUNDATION START */
+[data-kes-v3-page="inner"] .kes-v3-inner-content {
+    min-inline-size: 0;
+    overflow-wrap: anywhere;
+}
+
+[data-kes-v3-page="inner"] .kes-v3-inner-content :where(
+    form,
+    fieldset,
+    label,
+    input,
+    select,
+    textarea,
+    button
+) {
+    box-sizing: border-box;
+    max-inline-size: 100%;
+}
+
+[data-kes-v3-page="inner"] .kes-v3-inner-content :where(
+    form,
+    fieldset
+) {
+    min-inline-size: 0;
+}
+
+[data-kes-v3-page="inner"] .kes-v3-inner-content :where(
+    input:not(
+        [type="checkbox"],
+        [type="radio"],
+        [type="submit"],
+        [type="button"],
+        [type="reset"],
+        [type="hidden"],
+        [type="file"]
+    ),
+    select,
+    textarea
+) {
+    inline-size: 100%;
+}
+
+[data-kes-v3-page="inner"] .kes-v3-inner-content textarea {
+    resize: vertical;
+}
+
+[data-kes-v3-page="inner"] .kes-v3-inner-content :where(
+    button,
+    [type="submit"],
+    [type="button"],
+    [type="reset"],
+    .btn
+) {
+    min-block-size: 44px;
+    touch-action: manipulation;
+}
+
+[data-kes-v3-page="inner"] .kes-v3-inner-content table {
+    display: block;
+    max-inline-size: 100%;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    -webkit-overflow-scrolling: touch;
+}
+
+[data-kes-v3-page="inner"] .kes-v3-inner-content :where(
+    .pagination,
+    nav[aria-label*="pagination" i] ul
+) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+html[dir="rtl"] [data-kes-v3-page="inner"] .kes-v3-inner-content {
+    text-align: right;
+}
+
+html[dir="rtl"] [data-kes-v3-page="inner"] .kes-v3-inner-content :where(
+    input,
+    select,
+    textarea
+) {
+    text-align: right;
+}
+
+html[dir="rtl"] [data-kes-v3-page="inner"] .kes-v3-inner-content :where(
+    input[type="email"],
+    input[type="tel"],
+    input[type="url"]
+) {
+    direction: ltr;
+    text-align: left;
+}
+
+html[dir="rtl"] [data-kes-v3-page="inner"] .kes-v3-inner-content :where(
+    .pagination,
+    nav[aria-label*="pagination" i] ul
+) {
+    direction: rtl;
+}
+
+@media (max-width: 991px) {
+    [data-kes-v3-page="inner"] .kes-v3-inner-content {
+        overflow-x: clip;
+    }
+
+    [data-kes-v3-page="inner"] .kes-v3-inner-content :where(
+        img,
+        video,
+        iframe,
+        object,
+        embed
+    ) {
+        block-size: auto;
+        max-inline-size: 100%;
+    }
+}
+
+@media (max-width: 767px) {
+    [data-kes-v3-page="inner"] .kes-v3-inner-content :where(
+        form button,
+        form [type="submit"],
+        form [type="button"],
+        form [type="reset"],
+        form .btn
+    ) {
+        inline-size: 100%;
+    }
+
+    [data-kes-v3-page="inner"] .kes-v3-inner-content table {
+        font-size: 0.9375rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    [data-kes-v3-page="inner"] .kes-v3-inner-content {
+        scroll-behavior: auto;
+    }
+}
+/* KES V3 INNER RESPONSIVE RTL FORM FOUNDATION END */
+/* KES V3 VISUAL UAT HEADER AND GALLERY FIX START */
+
+/*
+ * The V3 site header is intentionally absolute. Legacy inner-page hero
+ * breadcrumbs were designed for a normal-flow header, so desktop pages need
+ * extra clearance inside the hero rather than changing the shared header.
+ */
+@media (min-width: 901px) {
+    [data-kes-v3-page="inner"]
+    .kes-v3-inner-content
+    .kes-page-v2-breadcrumb {
+        position: relative;
+        z-index: 4;
+        margin-top: 64px;
+    }
+
+    /*
+     * The gallery detail hero already aligns its breadcrumb near the lower
+     * image focal area and did not show the collision in visual UAT.
+     */
+    [data-kes-v3-page="inner"]
+    .kes-gallery-detail-page
+    .kes-page-v2-breadcrumb {
+        margin-top: 0;
+    }
+}
+
+/*
+ * Chromium full-page capture can paint backdrop-filter outside these gallery
+ * glass surfaces. Keep the same visual hierarchy with opaque/translucent
+ * backgrounds, but remove the unstable backdrop compositing layer.
+ */
+[data-kes-v3-page="inner"] .kes-gallery-page .kes-gallery-content {
+    position: relative;
+    z-index: 2;
+    isolation: isolate;
+}
+
+[data-kes-v3-page="inner"] .kes-gallery-page .kes-gallery-filters {
+    position: relative;
+    z-index: 5;
+    background: #ffffff;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+}
+
+[data-kes-v3-page="inner"] .kes-gallery-page .kes-gallery-hero-logo {
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.14);
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    contain: paint;
+}
+
+[data-kes-v3-page="inner"]
+.kes-gallery-page
+:is(.kes-gallery-results-heading, .kes-gallery-grid) {
+    position: relative;
+    z-index: 1;
+}
+
+/*
+ * Avoid a partially animated listing section during full-page visual capture.
+ * Card-level interactions remain intact.
+ */
+body[data-kes-v3-page="inner"]
+.kes-gallery-page
+.kes-gallery-content.kes-reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+}
+
+/* KES V3 VISUAL UAT HEADER AND GALLERY FIX END */
+/* KES V3 COMPLETE VISIBLE NAVIGATION INNER CLEARANCE START */
+@media (min-width: 901px) {
+  [data-kes-v3-page="inner"] .kes-page-v2-breadcrumb {
+    margin-top: 112px;
+  }
+
+  [data-kes-v3-page="inner"] .kes-gallery-detail-page .kes-page-v2-breadcrumb {
+    margin-top: 48px;
+  }
+}
+
+@media (max-width: 900px) {
+  [data-kes-v3-page="inner"] .kes-v3-inner-content {
+    padding-top: 52px;
+  }
+}
+/* KES V3 COMPLETE VISIBLE NAVIGATION INNER CLEARANCE END */
+/* KES V3 INNER HERO CLEARANCE AND COMPOSITING FIX START */
+
+/*
+ * The service-tab strip is inside the absolute V3 header. Move the complete
+ * inner-page canvas below it instead of offsetting only the breadcrumb.
+ */
+@media (min-width: 901px) {
+    [data-kes-v3-page="inner"] .kes-v3-inner-content {
+        padding-top: 58px;
+    }
+
+    [data-kes-v3-page="inner"] .kes-page-v2-breadcrumb {
+        margin-top: 64px;
+    }
+}
+
+[data-kes-v3-page="inner"] .kes-page-v2-hero,
+[data-kes-v3-page="inner"] .kes-page-v2-hero-inner {
+    position: relative;
+    isolation: isolate;
+}
+
+[data-kes-v3-page="inner"] .kes-page-v2-hero h1,
+[data-kes-v3-page="inner"] .kes-page-v2-hero p,
+[data-kes-v3-page="inner"] .kes-page-v2-hero .kes-v2-section-label,
+[data-kes-v3-page="inner"] .kes-page-v2-hero .kes-page-v2-breadcrumb {
+    position: relative;
+    z-index: 4;
+}
+
+/*
+ * Legacy hero logos use backdrop blur. Full-page screenshots can paint that
+ * blur as horizontal bands across the title, so flatten only inner hero logos.
+ */
+[data-kes-v3-page="inner"] [class*="hero-logo"] {
+    isolation: isolate;
+    contain: paint;
+    filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+}
+
+@media (max-width: 900px) {
+    [data-kes-v3-page="inner"] .kes-v3-inner-content {
+        padding-top: 52px;
+    }
+}
+
+/* KES V3 INNER HERO CLEARANCE AND COMPOSITING FIX END */

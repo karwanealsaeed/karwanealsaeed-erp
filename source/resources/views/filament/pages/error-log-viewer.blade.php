@@ -1,12 +1,14 @@
 <x-filament-panels::page>
-    @php
+        <x-report-actions />
+
+@php
         $summary = $this->summary();
         $incidents = $this->incidents();
         $logFiles = $this->logFiles();
         $rawLog = $this->rawLog();
     @endphp
 
-    <div class="space-y-6">
+    <div class="kes-error-log-report space-y-6">
         <div class="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-900">
             <div class="flex flex-wrap items-start justify-between gap-4">
                 <div>
@@ -245,4 +247,64 @@
             <pre class="mt-4 max-h-[650px] overflow-auto whitespace-pre-wrap break-words rounded-xl bg-gray-950 p-5 text-xs leading-6 text-gray-100">{{ $rawLog['content'] }}</pre>
         </div>
     </div>
+
+    {{-- PHASE 16F-3D13 ERROR LOG RESPONSIVE CONTAINMENT START --}}
+    <style>
+        .kes-error-log-report {
+            width: 100% !important;
+            min-width: 0 !important;
+            max-width: 100% !important;
+            overflow-x: clip !important;
+        }
+
+        .kes-error-log-report > *,
+        .kes-error-log-report > * > *,
+        .kes-error-log-report .overflow-hidden,
+        .kes-error-log-report .overflow-x-auto {
+            min-width: 0 !important;
+            max-width: 100% !important;
+        }
+
+        .kes-error-log-report .overflow-x-auto {
+            display: block !important;
+            width: 100% !important;
+            overflow-x: auto !important;
+            overflow-y: visible !important;
+            overscroll-behavior-inline: contain;
+        }
+
+        .kes-error-log-report table {
+            width: 100% !important;
+            min-width: 1100px !important;
+        }
+
+        .kes-error-log-report pre {
+            display: block !important;
+            width: 100% !important;
+            min-width: 0 !important;
+            max-width: 100% !important;
+            overflow: auto !important;
+            white-space: pre-wrap !important;
+            overflow-wrap: anywhere !important;
+            word-break: break-word !important;
+        }
+
+        @media (max-width: 760px) {
+            .kes-error-log-report {
+                gap: .8rem !important;
+            }
+
+            .kes-error-log-report table {
+                font-size: .72rem !important;
+            }
+
+            .kes-error-log-report pre {
+                max-height: 24rem !important;
+                padding: .85rem !important;
+                font-size: .68rem !important;
+                line-height: 1.45 !important;
+            }
+        }
+    </style>
+    {{-- PHASE 16F-3D13 ERROR LOG RESPONSIVE CONTAINMENT END --}}
 </x-filament-panels::page>

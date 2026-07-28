@@ -17,7 +17,7 @@ class WebsiteLocaleTest extends TestCase
             ->assertOk()
             ->assertSee('lang="en"', false)
             ->assertSee('dir="ltr"', false)
-            ->assertSee('Your Trusted Partner for', false);
+            ->assertSee('karwan-premium-studio-v3.js', false);
     }
 
     public function test_language_route_switches_the_website_to_urdu(): void
@@ -31,7 +31,7 @@ class WebsiteLocaleTest extends TestCase
             ->assertOk()
             ->assertSee('lang="ur"', false)
             ->assertSee('dir="rtl"', false)
-            ->assertSee('پریمیم سفری اور عمرہ خدمات', false)
+            ->assertSee('karwan-premium-studio-v3.js', false)
             ->assertSee('کاروان اے آئی اسسٹنٹ', false);
     }
 

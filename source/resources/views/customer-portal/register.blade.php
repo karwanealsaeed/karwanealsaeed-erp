@@ -23,7 +23,7 @@
 
         <div class="cp-auth-card wide">
             <div class="cp-auth-head">
-                <span>Customer Portal</span>
+                <span>Agent Portal</span>
                 <h2>Create Account</h2>
                 <p>Register to access your bookings, invoices, vouchers and documents.</p>
             </div>
